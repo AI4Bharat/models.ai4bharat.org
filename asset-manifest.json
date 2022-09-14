@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/demo.ai4bharat.org/static/css/main.1c88a7c0.css",
-    "main.js": "/demo.ai4bharat.org/static/js/main.16446105.js",
+    "main.js": "/demo.ai4bharat.org/static/js/main.7f9889ae.js",
     "index.html": "/demo.ai4bharat.org/index.html",
     "main.1c88a7c0.css.map": "/demo.ai4bharat.org/static/css/main.1c88a7c0.css.map",
-    "main.16446105.js.map": "/demo.ai4bharat.org/static/js/main.16446105.js.map"
+    "main.7f9889ae.js.map": "/demo.ai4bharat.org/static/js/main.7f9889ae.js.map"
   },
   "entrypoints": [
     "static/css/main.1c88a7c0.css",
-    "static/js/main.16446105.js"
+    "static/js/main.7f9889ae.js"
   ]
 }
