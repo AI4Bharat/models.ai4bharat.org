@@ -1,0 +1,21 @@
+.nav-bar-header{
+    width: 250px;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.nav-bar-header-logo{
+    height: 50px;
+    width:50px
+}
+
+.title-orange{
+    color: #dc4419;
+    font-size: 1.5rem;
+}
+
+.nav-bar-header-title-container{
+    margin: 1.25rem;
+}
