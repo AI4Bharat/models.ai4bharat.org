@@ -4,7 +4,8 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import ASR from "./pages/ASR/ASR";
-import XLIT from "./pages/XLIT/XLIT";
+import XLit from "./pages/XLit/XLit";
+import Home from "./pages/Home/Home";
 
 const rootElement = document.getElementById("root");
 rootElement.style.minHeight = "100%";
@@ -15,8 +16,9 @@ root.render(
   <HashRouter>
     <Routes>
       <Route path="/" element={<App />}>
+        <Route index element={<Home />} />
         <Route path="asr" element={<ASR />} />
-        <Route path="xlit" element={<XLIT />} />
+        <Route path="xlit" element={<XLit />} />
       </Route>
     </Routes>
   </HashRouter>

@@ -6,7 +6,7 @@ import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
 import { xlitDocumentation } from "./xlitDocumentation";
 import { Button } from "@mui/material";
 
-export default class XLIT extends React.Component {
+export default class XLit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
