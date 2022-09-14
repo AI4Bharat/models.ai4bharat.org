@@ -308,6 +308,9 @@ pre {
 
 .a4b-home-container{
   display: flex;
+  height: 475px;
   margin: 10px;
-  flex-direction: ;
+  flex-direction: row;
+  justify-content: center;
+  padding: 50px;
 }
