@@ -24,8 +24,8 @@ export default class ASR extends React.Component {
       inferenceMode: "WebSocket",
       isStreaming: true,
       streaming: new StreamingClient(),
-      asrText: "Start Recording for ASR Inference....",
-      asrAPIResult: "Upload Audio File or Record for ASR Inference....",
+      asrText: "",
+      asrAPIResult: "",
       isRecording: true,
       audioChunks: [],
       audioFileContent: "",
@@ -224,10 +224,12 @@ export default class ASR extends React.Component {
           <div className="a4b-output">
             {this.setStreamingMicAnimation()}
             <textarea
+              placeholder="Start Recording for ASR Inference...."
               value={this.state.asrText}
               className="a4b-text"
             ></textarea>
           </div>
+
           <div className="documentation-container">
             <div className="a4b-box">
               <div className="a4b-box1">
@@ -276,7 +278,11 @@ export default class ASR extends React.Component {
         <div className="asr-interface">
           <div className="a4b-output">
             {this.renderRecordButton()}
-            <textarea value={this.state.asrAPIResult} className="a4b-text" />
+            <textarea
+              placeholder="Upload Audio File or Record for ASR Inference...."
+              value={this.state.asrAPIResult}
+              className="a4b-text"
+            />
           </div>
           <div>
             <div className="a4b-file-upload">
@@ -401,6 +407,7 @@ export default class ASR extends React.Component {
         <section className="title-section">
           <h1 className="title">
             <img
+              alt="a4blogo"
               width={100}
               height={100}
               src={require("../../media/ai4bharat.jpg")}
