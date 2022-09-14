@@ -40,7 +40,7 @@
   justify-content: center;
   align-items: center;
   display: flex;
-  background-color: #dc4419;
+  background-color: #eb7752;
   margin: 5px;
 }
 
@@ -57,7 +57,7 @@
   justify-content: center;
   align-items: center;
   display: flex;
-  background-color: #dc4419;
+  background-color: #eb7752;
   margin: 5px;
   animation: ease pulse 2s infinite;
 }
@@ -85,7 +85,7 @@
 }
 
 .asr-button {
-  background-color: #dc4419;
+  background-color: #eb7752;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -109,7 +109,7 @@
 }
 
 .orange-color {
-  color: #dc4419;
+  color: #eb7752;
 }
 
 .title-section {
@@ -128,7 +128,7 @@
 .nav {
   height: 3.25rem;
   width: auto;
-  background-color: #dc4419;
+  background-color: #eb7752;
   align-items: center;
   justify-items: center;
   display: flex;
@@ -163,13 +163,13 @@
 
 @keyframes pulse {
   0% {
-    background-color: #dc4419;
+    background-color: #eb7752;
   }
   50% {
     background-color: #f7c7ba;
   }
   100% {
-    background-color: #dc4419;
+    background-color: #eb7752;
   }
 }
 
@@ -256,7 +256,7 @@ pre {
 .nav-menu {
   width: 2.5rem;
   height: 2.5rem;
-  background-color: #dc4419;
+  background-color: #eb7752;
   border: 2px solid #ffffff;
   border-radius: 15px;
   margin: 0.5%;
@@ -304,4 +304,10 @@ pre {
   height: 50px;
   width:50px;
   margin: 30px;
+}
+
+.a4b-home-container{
+  display: flex;
+  margin: 10px;
+  flex-direction: ;
 }

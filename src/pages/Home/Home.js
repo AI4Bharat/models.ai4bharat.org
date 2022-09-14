@@ -22,6 +22,10 @@ export default class Home extends React.Component {
             Try real-time Language Models and Tools in one place!
           </p>
         </section>
+        <hr className="hr-split" />
+        <div className="a4b-home-container">
+
+        </div>
       </div>
     );
   }
