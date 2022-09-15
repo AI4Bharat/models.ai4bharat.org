@@ -128,7 +128,7 @@ export default class ASR extends React.Component {
           console.log("Starting Stream....");
           _this.state.streaming.startStreaming(
             function (transcript) {
-              console.log(transcript);
+              _this.setText(transcript);
             },
             (e) => {
               console.log("Encountered an error: ", e);
