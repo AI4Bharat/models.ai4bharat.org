@@ -7,7 +7,15 @@ import Typography from "@mui/material/Typography";
 import { models } from "./modelsAvailable";
 import { MdOutlineSettingsApplications } from "react-icons/md";
 import { Link } from "react-router-dom";
-import { FaHome } from "react-icons/fa";
+import { Box } from "@mui/material";
+import { FaKeyboard } from "react-icons/fa";
+import { HiArrowRight } from "react-icons/hi";
+import { BsFillMicFill } from "react-icons/bs";
+
+const modelIcons = {
+  xlit: <FaKeyboard size={35} className="a4b-home-card-logo" />,
+  asr: <BsFillMicFill size={35} className="a4b-home-card-logo" />,
+};
 
 export default class Home extends React.Component {
   render() {
@@ -24,7 +32,7 @@ export default class Home extends React.Component {
             Welcome to <span className="orange-color">AI4Bharat</span> Models.
           </h1>
           <p className="subtitle">
-            Try real-time Language Models and Tools in one place!
+            Try real-time Language Models and Tools in one place.
           </p>
         </section>
         <hr className="hr-split" />
@@ -32,64 +40,89 @@ export default class Home extends React.Component {
           {Object.entries(models).map(([path, cardContent]) => {
             return (
               <Card
-                sx={{ height: 275, width: "500px", margin: 5, display: "flex" }}
+                sx={{ position: "relative", borderRadius: 5, boxShadow: 10 }}
+                className="a4b-home-card"
               >
-                <CardActions
-                  sx={{
-                    height: "auto",
-                    width: "auto",
-                    backgroundColor: "#eb7752",
-                    position: "relative",
-                    bottom: 0,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
+                <Box className="a4b-home-card-logo-container">
+                  {modelIcons[path]}
+                </Box>
+                <CardContent className="a4b-home-card-content">
+                  <Typography
+                    sx={{ marginLeft: 1, overflow: "auto" }}
+                    variant="h5"
+                  >
+                    {cardContent.title}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      marginLeft: 1,
+                      marginTop: 1,
+                      overflow: "auto",
+                      height: 185,
+                      textAlign: "justify",
+                      paddingRight: 1,
+                    }}
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    {cardContent.about}
+                  </Typography>
+                </CardContent>
+                <CardActions className="a4b-home-card-actions">
+                  <Button
+                    href={cardContent.link}
+                    target="_blank"
+                    sx={{
+                      color: "white",
+                      height: 50,
+                      width: 150,
+                    }}
+                    size="small"
+                  >
+                    <div style={{ height: "100%", width: "70%" }}>
+                      <p style={{ textDecorationStyle: "solid" }}>Know More</p>
+                    </div>
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "30%",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <HiArrowRight size={20} />
+                    </div>
+                  </Button>
                   <Button
                     component={Link}
                     to={`/${path}`}
                     sx={{
-                      color: "#ffffff",
+                      color: "white",
+                      height: 50,
+                      width: 150,
                       display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      justifyItems: "center",
-                      height: "50%",
+                      justifyContent: "right",
                     }}
                     size="small"
                   >
-                    <MdOutlineSettingsApplications
-                      style={{ margin: "3px" }}
-                      size={"20px"}
-                    />
-                    Demo
-                  </Button>
-                  <Button
-                    href={cardContent.link}
-                    sx={{
-                      color: "#ffffff",
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      justifyItems: "center",
-                      height: "50%",
-                    }}
-                    size="small"
-                  >
-                    <FaHome style={{ margin: "5px" }} size={"20px"} />
-                    Home
+                    <div style={{ height: "100%", width: "auto" }}>
+                      <p style={{ textDecorationStyle: "solid" }}>Try it!</p>
+                    </div>
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <MdOutlineSettingsApplications
+                        style={{ margin: 5 }}
+                        size={20}
+                      />
+                    </div>
                   </Button>
                 </CardActions>
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {cardContent.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {cardContent.about}
-                  </Typography>
-                </CardContent>
               </Card>
             );
           })}
