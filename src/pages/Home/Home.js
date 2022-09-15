@@ -21,7 +21,7 @@ export default class Home extends React.Component {
               height={100}
               src={require("../../media/ai4bharat.jpg")}
             ></img>
-            Welcome to <span className="orange-color">AI4Bharat</span> Demos.
+            Welcome to <span className="orange-color">AI4Bharat</span> Models.
           </h1>
           <p className="subtitle">
             Try real-time Language Models and Tools in one place!
