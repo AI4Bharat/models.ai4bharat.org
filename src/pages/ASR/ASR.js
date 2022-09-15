@@ -408,8 +408,9 @@ export default class ASR extends React.Component {
           <h1 className="title">
             <img
               alt="a4blogo"
-              width={100}
-              height={100}
+              className="a4b-logo"
+              width={50}
+              height={50}
               src={require("../../media/ai4bharat.jpg")}
             ></img>
             <span className="orange-color">AI4Bharat </span>

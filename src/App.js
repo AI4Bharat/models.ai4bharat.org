@@ -17,7 +17,9 @@ class App extends React.Component {
         <div className="a4b-container">
           <Outlet/>
         </div>
-        <div className="nav"></div>
+        <div className="footer">
+
+        </div>
       </div>
     );
   }

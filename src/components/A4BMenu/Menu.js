@@ -24,7 +24,7 @@ export default class A4BMenu extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{ position: "relative" }}>
         <Button
           onClick={(event) => {
             this.setState({ anchorEl: event.currentTarget, open: true });
@@ -33,6 +33,8 @@ export default class A4BMenu extends React.Component {
           <HiOutlineMenu size={"2em"} className="nav-menu-logo" />
         </Button>
         <Menu
+          disableScrollLock={true}
+          sx={{ position: "absolute", zIndex: 10 }}
           open={this.state.open}
           anchorEl={this.state.anchorEl}
           onClose={() => {

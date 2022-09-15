@@ -90,9 +90,10 @@ export default class XLit extends React.Component {
         <section className="title-section">
           <h1 className="title">
             <img
+              className="a4b-logo"
               alt="a4blogo"
-              width={100}
-              height={100}
+              width={50}
+              height={50}
               src={require("../../media/ai4bharat.jpg")}
             ></img>
             <span className="orange-color">AI4Bharat </span>

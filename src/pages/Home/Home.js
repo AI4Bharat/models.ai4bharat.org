@@ -11,6 +11,16 @@ import { Box } from "@mui/material";
 import { FaKeyboard } from "react-icons/fa";
 import { HiArrowRight } from "react-icons/hi";
 import { BsFillMicFill } from "react-icons/bs";
+import { createTheme } from '@mui/material/styles';
+import { ThemeProvider } from "@mui/material";
+
+const theme = createTheme({
+  palette: {
+    action: {
+      disabled: "#ffffff",
+    },
+  },
+});
 
 const modelIcons = {
   xlit: <FaKeyboard size={35} className="a4b-home-card-logo" />,
@@ -18,15 +28,71 @@ const modelIcons = {
 };
 
 export default class Home extends React.Component {
+  renderModelHomeLink(link) {
+    if (link === "") {
+      return (
+        <Button
+          disabled
+          sx={{
+            color: "white",
+            height: 50,
+            width: 200,
+          }}
+          size="small"
+        >
+          <div style={{ height: "100%", width: "70%" }}>
+            <p style={{ textDecorationStyle: "solid" }}>Coming Soon!</p>
+          </div>
+          <div
+            style={{
+              height: "100%",
+              width: "30%",
+              display: "flex",
+              alignItems: "center",
+            }}
+          ></div>
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          href={link}
+          target="_blank"
+          sx={{
+            color: "white",
+            height: 50,
+            width: 200,
+          }}
+          size="small"
+        >
+          <div style={{ height: "100%", width: "70%" }}>
+            <p style={{ textDecorationStyle: "solid" }}>Know More</p>
+          </div>
+          <div
+            style={{
+              height: "100%",
+              width: "30%",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <HiArrowRight size={20} />
+          </div>
+        </Button>
+      );
+    }
+  }
+
   render() {
     return (
       <div>
         <section className="title-section">
           <h1 className="title">
             <img
+              className="a4b-logo"
               alt="a4blogo"
-              width={100}
-              height={100}
+              width={50}
+              height={50}
               src={require("../../media/ai4bharat.jpg")}
             ></img>
             Welcome to <span className="orange-color">AI4Bharat</span> Models.
@@ -69,59 +135,38 @@ export default class Home extends React.Component {
                   </Typography>
                 </CardContent>
                 <CardActions className="a4b-home-card-actions">
-                  <Button
-                    href={cardContent.link}
-                    target="_blank"
-                    sx={{
-                      color: "white",
-                      height: 50,
-                      width: 150,
-                    }}
-                    size="small"
-                  >
-                    <div style={{ height: "100%", width: "70%" }}>
-                      <p style={{ textDecorationStyle: "solid" }}>Know More</p>
-                    </div>
-                    <div
-                      style={{
-                        height: "100%",
-                        width: "30%",
+                  <ThemeProvider theme={theme}>
+                    {this.renderModelHomeLink(cardContent.link)}
+                    <Button
+                      component={Link}
+                      to={`/${path}`}
+                      sx={{
+                        color: "white",
+                        height: 50,
+                        width: 100,
                         display: "flex",
-                        alignItems: "center",
+                        justifyContent: "right",
                       }}
+                      size="small"
                     >
-                      <HiArrowRight size={20} />
-                    </div>
-                  </Button>
-                  <Button
-                    component={Link}
-                    to={`/${path}`}
-                    sx={{
-                      color: "white",
-                      height: 50,
-                      width: 150,
-                      display: "flex",
-                      justifyContent: "right",
-                    }}
-                    size="small"
-                  >
-                    <div style={{ height: "100%", width: "auto" }}>
-                      <p style={{ textDecorationStyle: "solid" }}>Try it!</p>
-                    </div>
-                    <div
-                      style={{
-                        height: "100%",
-                        width: "auto",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <MdOutlineSettingsApplications
-                        style={{ margin: 5 }}
-                        size={20}
-                      />
-                    </div>
-                  </Button>
+                      <div style={{ height: "100%", width: "auto" }}>
+                        <p style={{ textDecorationStyle: "solid" }}>Try it!</p>
+                      </div>
+                      <div
+                        style={{
+                          height: "100%",
+                          width: "auto",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <MdOutlineSettingsApplications
+                          style={{ margin: 5 }}
+                          size={20}
+                        />
+                      </div>
+                    </Button>
+                  </ThemeProvider>
                 </CardActions>
               </Card>
             );
