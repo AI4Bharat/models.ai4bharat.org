@@ -105,8 +105,8 @@ export default class ASR extends React.Component {
     this.setState({ isStreaming: true });
     this.setState({ isRecording: true });
     this.setState({
-      asrText: "Start Recording for ASR Inference....",
-      asrAPIResult: "Upload Audio File or Record for ASR Inference....",
+      asrText: "",
+      asrAPIResult: "",
     });
   }
 
