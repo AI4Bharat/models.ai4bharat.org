@@ -1,6 +1,6 @@
 {
   "name": "models.ai4bharat.org",
-  "homepage": "https://ai4bharat.github.io/models.ai4bharat.org",
+  "homepage": "https://models.ai4bharat.org",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
