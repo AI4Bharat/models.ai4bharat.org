@@ -24,8 +24,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "add-domain": "echo \"models.ai4bharat.org\" > build/CNAME",
-    "predeploy": "npm run build",
+    "predeploy": "echo \"models.ai4bharat.org\" > build/CNAME && npm run build",
     "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
