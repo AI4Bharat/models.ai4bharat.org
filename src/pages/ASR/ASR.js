@@ -1,19 +1,21 @@
 import React from "react";
 
-import { FaMicrophone, FaRegCopy } from "react-icons/fa";
-import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { streamingURL, asrAPIURL } from "../../config/config.js";
+import Select from "@mui/material/Select";
+import { FaMicrophone } from "react-icons/fa";
+import Documentation from "../../components/A4BDocumentation/Documentation.js";
+import { asrAPIURL, streamingURL } from "../../config/config.js";
 import {
-  asrStreamingDocumentation,
   asrAPIDocumentation,
+  asrStreamingDocumentation,
 } from "./asrDocumentation.js";
+import { Button } from "@mui/material";
+import { FaRegCopy } from "react-icons/fa";
 
 import {
-  StreamingClient,
   SocketStatus,
+  StreamingClient,
 } from "@project-sunbird/open-speech-streaming-client";
-import { Button } from "@mui/material";
 
 export default class ASR extends React.Component {
   constructor(props) {
@@ -33,6 +35,7 @@ export default class ASR extends React.Component {
       languageChoice: "hi",
       samplingRateChoice: 48000,
       processorChoice: [],
+      docExpanded: false,
     };
     this.languages = {
       hi: "Hindi",
@@ -175,48 +178,6 @@ export default class ASR extends React.Component {
     }
   }
 
-  renderSnippet(content) {
-    if (content.snippet) {
-      if (typeof content.snippet == "object") {
-        return (
-          <div className="a4b-snippet-container">
-            <pre>{JSON.stringify(content.snippet, null, 2)}</pre>
-            <div className="a4b-copy-container">
-              <Button
-                sx={{ height: 50, color: "#4a4a4a", borderColor: "#4a4a4a" }}
-                size="large"
-                variant="outlined"
-                onClick={() => {
-                  navigator.clipboard.writeText(content.snippet);
-                }}
-              >
-                <FaRegCopy size={"20px"} />
-              </Button>
-            </div>
-          </div>
-        );
-      } else {
-        return (
-          <div className="a4b-snippet-container">
-            <pre>{content.snippet}</pre>
-            <div className="a4b-copy-container">
-              <Button
-                sx={{ height: 50, color: "#4a4a4a", borderColor: "#4a4a4a" }}
-                size="large"
-                variant="outlined"
-                onClick={() => {
-                  navigator.clipboard.writeText(content.snippet);
-                }}
-              >
-                <FaRegCopy size={"20px"} />
-              </Button>
-            </div>
-          </div>
-        );
-      }
-    }
-  }
-
   setInferenceInterface() {
     if (this.state.inferenceMode === "WebSocket") {
       return (
@@ -229,48 +190,7 @@ export default class ASR extends React.Component {
               className="a4b-text"
             ></textarea>
           </div>
-
-          <div className="documentation-container">
-            <div className="a4b-box">
-              <div className="a4b-box1">
-                <h1 className="documentation-title">Documentation</h1>
-              </div>
-              <hr className="hr-split" />
-              <div className="a4b-box1">
-                <div className="text-15">
-                  Request Method: <b>GET (WebSocket)</b>
-                </div>
-              </div>
-              <br />
-              <div className="a4b-box1">
-                <div className="text-13">
-                  WebSocket Streaming URL:
-                  <a className="api-link" href={this.streamingURL}>
-                    {this.streamingURL}
-                  </a>
-                </div>
-              </div>
-              <hr className="hr-split" />
-              <div className="a4b-box1">
-                <h1 className="text-15">Usage:</h1>
-              </div>
-              {Object.entries(asrStreamingDocumentation).map(
-                ([key, content]) => {
-                  return (
-                    <div>
-                      <div className="a4b-box1">
-                        <h1 className="api-step-text">
-                          {`${key}. ${content.step}`}
-                        </h1>
-                      </div>
-                      {this.renderSnippet(content)}
-                    </div>
-                  );
-                }
-              )}
-              <br />
-            </div>
-          </div>
+          <Documentation documentation={asrStreamingDocumentation} />
         </div>
       );
     } else if (this.state.inferenceMode === "REST") {
@@ -311,45 +231,7 @@ export default class ASR extends React.Component {
               </span>
             </div>
           </div>
-          <div className="documentation-container">
-            <div className="a4b-box">
-              <div className="a4b-box1">
-                <h1 className="documentation-title">Documentation</h1>
-              </div>
-              <hr className="hr-split" />
-              <div className="a4b-box1">
-                <div className="text-15">
-                  Request Method: <b>POST</b>
-                </div>
-              </div>
-              <br />
-              <div className="a4b-box1">
-                <div className="text-13">
-                  API Endpoint:
-                  <a className="api-link" href={this.asrAPIURL}>
-                    {this.asrAPIURL}
-                  </a>
-                </div>
-              </div>
-              <hr className="hr-split" />
-              <div className="a4b-box1">
-                <h1 className="text-15">API Usage:</h1>
-              </div>
-              {Object.entries(asrAPIDocumentation).map(([key, content]) => {
-                return (
-                  <div>
-                    <div className="a4b-box1">
-                      <h1 className="api-step-text">
-                        {`${key}. ${content.step}`}
-                      </h1>
-                    </div>
-                    {this.renderSnippet(content)}
-                  </div>
-                );
-              })}
-              <br />
-            </div>
-          </div>
+          <Documentation documentation={asrAPIDocumentation} />
         </div>
       );
     }

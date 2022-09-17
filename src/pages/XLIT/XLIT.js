@@ -5,6 +5,7 @@ import { FaRegCopy } from "react-icons/fa";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
 import { xlitDocumentation } from "./xlitDocumentation";
 import { Button } from "@mui/material";
+import Documentation from "../../components/A4BDocumentation/Documentation";
 
 export default class XLit extends React.Component {
   constructor(props) {
@@ -128,62 +129,18 @@ export default class XLit extends React.Component {
         <div className="asr-interface">
           <div className="a4b-output">
             <IndicTransliterate
+              renderComponent={(props) => (
+                <textarea className="a4b-transliterate-text" {...props} />
+              )}
               value={this.state.transliteratedText}
               placeholder="Type your text here to transliterate...."
-              className="a4b-transliterate-text"
               onChangeText={(text) => {
                 this.setTransliteratedText(text);
               }}
               lang={this.state.languageChoice}
             />
           </div>
-          <div className="documentation-container">
-            <div className="a4b-box">
-              <div className="a4b-box1">
-                <h1 className="documentation-title">Documentation</h1>
-              </div>
-              <hr className="hr-split" />
-              <div className="a4b-box1">
-                <div className="text-15">
-                  <b>About</b>
-                </div>
-              </div>
-              <br />
-              <div className="a4b-box1">
-                <div className="api-step-text">
-                  <a href="https://www.npmjs.com/package/@ai4bharat/indic-transliterate">
-                    Indic Transliterate
-                  </a>{" "}
-                  is a frontend library to enable your users to type in many
-                  different languages of South Asia, and can be integrated into
-                  any React-based application. This library is a fork of
-                  react-transliterate, which uses Google Transliterate API which
-                  supports around 40 languages across the globe. In this module,
-                  our focus is to provide high-quality
-                  transliteration-suggestions for Indic languages, especially
-                  for low-resource languages like Kashmiri, Manipuri, etc.
-                  (which are not supported by Google).
-                </div>
-              </div>
-              <br />
-              <hr className="hr-split" />
-              <div className="a4b-box1">
-                <h1 className="text-15">Usage:</h1>
-              </div>
-              {Object.entries(xlitDocumentation).map(([key, content]) => {
-                return (
-                  <div>
-                    <div className="a4b-box1">
-                      <h1 className="api-step-text">
-                        {`${key}. ${content.step}`}
-                      </h1>
-                    </div>
-                    {this.renderSnippet(content)}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <Documentation documentation={xlitDocumentation} />
         </div>
       </div>
     );

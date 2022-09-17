@@ -17,7 +17,7 @@
 
 .a4b-transliterate-text {
   min-height: 50px;
-  height: 75px;
+  height: 400px;
   min-width: 1000px;
   width: auto;
   border-radius: 15px;
@@ -126,7 +126,7 @@
 }
 
 .nav {
-  height: 3.25rem;
+  height: 3.5rem;
   width: auto;
   background-color: #eb7752;
   align-items: center;
