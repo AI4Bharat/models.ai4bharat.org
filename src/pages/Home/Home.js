@@ -11,8 +11,10 @@ import { Box } from "@mui/material";
 import { FaKeyboard } from "react-icons/fa";
 import { HiArrowRight } from "react-icons/hi";
 import { BsFillMicFill } from "react-icons/bs";
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material";
+import { BiWorld } from "react-icons/bi";
+import { BsShield } from "react-icons/bs";
 
 const theme = createTheme({
   palette: {
@@ -25,6 +27,8 @@ const theme = createTheme({
 const modelIcons = {
   xlit: <FaKeyboard size={35} className="a4b-home-card-logo" />,
   asr: <BsFillMicFill size={35} className="a4b-home-card-logo" />,
+  nmt: <BiWorld size={35} className="a4b-home-card-logo" />,
+  nlg: <BsShield size={35} className="a4b-home-card-logo" />,
 };
 
 export default class Home extends React.Component {

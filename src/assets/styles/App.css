@@ -281,6 +281,7 @@ pre {
 
 .a4b-container {
   display: block;
+  min-height: 80vh;
   height: auto;
   width: 100%;
   background-color: #ffffff;
