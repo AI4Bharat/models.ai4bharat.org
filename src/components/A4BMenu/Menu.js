@@ -7,6 +7,7 @@ import { HiOutlineMenu } from "react-icons/hi";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { FaHome, FaRegFileAudio, FaRegKeyboard } from "react-icons/fa";
+import { BsShield } from "react-icons/bs";
 
 export default class A4BMenu extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ export default class A4BMenu extends React.Component {
       "": ["Home", <FaHome />],
       asr: ["Indic Speech-to-Text (ASR)", <FaRegFileAudio />],
       xlit: ["Indic Transliteration (XLit)", <FaRegKeyboard />],
+      nlg: ["Indic Natural Language Generation (NLG)", <BsShield/>],
     };
   }
 

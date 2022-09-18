@@ -6,6 +6,7 @@ import App from "./App";
 import ASR from "./pages/ASR/ASR";
 import XLit from "./pages/XLit/XLit";
 import Home from "./pages/Home/Home";
+import NLG from "./pages/NLG/NLG";
 
 const rootElement = document.getElementById("root");
 rootElement.style.minHeight = "100%";
@@ -19,6 +20,7 @@ root.render(
         <Route index element={<Home />} />
         <Route path="asr" element={<ASR />} />
         <Route path="xlit" element={<XLit />} />
+        <Route path="nlg" element={<NLG />} />
       </Route>
     </Routes>
   </HashRouter>
