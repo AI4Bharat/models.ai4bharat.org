@@ -10,34 +10,51 @@ export default class NMT extends React.Component {
     this.state = {
       languageChoice: "hi",
       transliteratedText: null,
+      translatedText: null,
     };
+
+    this.translationAPIEndpoint =
+      "https://hf.space/embed/ai4bharat/IndicTrans-Indic2English/+/api/predict/";
+
     this.languages = {
-      hi: "Hindi - हिंदी",
-      mr: "Marathi - मराठी",
-      as: "Assamese - অসমীয়া",
-      bn: "Bangla - বাংলা",
-      brx: "Boro - बड़ो",
-      gu: "Gujarati - ગુજરાતી",
-      kn: "	Kannada - ಕನ್ನಡ",
-      ks: "Kashmiri - كٲشُر",
-      gom: "Konkani Goan - कोंकणी",
-      mai: "Maithili - मैथिली",
-      ml: "Malayalam - മലയാളം",
-      mni: "Manipuri",
-      ne: "Nepali - नेपाली",
-      or: "Oriya - ଓଡ଼ିଆ",
-      pa: "Punjabi - ਪੰਜਾਬੀ",
-      sa: "Sanskrit - संस्कृतम्",
-      sd: "Sindhi - سنڌي",
-      si: "Sinhala - සිංහල",
-      ta: "Tamil - தமிழ்",
-      te: "Telugu - తెలుగు",
-      ur: "Urdu - اُردُو",
+      hi: ["Hindi - हिंदी", "Hindi"],
+      mr: ["Marathi - मराठी", "Marathi"],
+      as: ["Assamese - অসমীয়া", "Assamese"],
+      gu: ["Gujarati - ગુજરાતી", "Gujarati"],
+      kn: ["Kannada - ಕನ್ನಡ", "Kannada"],
+      ml: ["Malayalam - മലയാളം", "Malayalam"],
+      or: ["Oriya - ଓଡ଼ିଆ", "Odia"],
+      pa: ["Punjabi - ਪੰਜਾਬੀ", "Punjabi"],
+      ta: ["Tamil - தமிழ்", "Tamil"],
+      te: ["Telugu - తెలుగు", "Telugu"],
+      ur: ["Urdu - اُردُو", "Urdu"],
     };
+
+    this.getTranslation = this.getTranslation.bind(this);
   }
 
   setTransliteratedText(text) {
     this.setState({ transliteratedText: text });
+  }
+
+  getTranslation() {
+    const _this = this;
+    fetch(this.translationAPIEndpoint, {
+      method: "POST",
+      body: JSON.stringify({
+        data: [
+          _this.state.transliteratedText,
+          _this.languages[_this.state.languageChoice][1],
+        ],
+      }),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (json_response) {
+        _this.setState({ translatedText: json_response.data[0] });
+      });
   }
 
   render() {
@@ -74,14 +91,14 @@ export default class NMT extends React.Component {
               {Object.entries(this.languages).map(([language, optionText]) => {
                 return (
                   <MenuItem sx={{ margin: 1 }} value={language}>
-                    {optionText}
+                    {optionText[0]}
                   </MenuItem>
                 );
               })}
             </Select>
           </label>
         </div>
-        <div className="asr-interface">
+        <div className="a4b-interface">
           <div className="a4b-output">
             <IndicTransliterate
               renderComponent={(props) => (
@@ -95,6 +112,27 @@ export default class NMT extends React.Component {
               lang={this.state.languageChoice}
             />
           </div>
+          <div>
+            <Button
+              onClick={() => {
+                this.getTranslation();
+              }}
+              sx={{
+                backgroundColor: "#eb7752",
+                borderRadius: 15,
+                padding: "15px 32px",
+                ":hover": { backgroundColor: "#eb7752" },
+              }}
+              variant="contained"
+            >
+              Translate
+            </Button>
+          </div>
+          <textarea
+            value={this.state.translatedText}
+            placeholder="View Translated Input here....."
+            className="a4b-transliterate-text"
+          />
         </div>
       </div>
     );

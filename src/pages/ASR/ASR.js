@@ -181,7 +181,7 @@ export default class ASR extends React.Component {
   setInferenceInterface() {
     if (this.state.inferenceMode === "WebSocket") {
       return (
-        <div className="asr-interface">
+        <div className="a4b-interface">
           <div className="a4b-output">
             {this.setStreamingMicAnimation()}
             <textarea
@@ -195,7 +195,7 @@ export default class ASR extends React.Component {
       );
     } else if (this.state.inferenceMode === "REST") {
       return (
-        <div className="asr-interface">
+        <div className="a4b-interface">
           <div className="a4b-output">
             {this.renderRecordButton()}
             <textarea

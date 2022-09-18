@@ -126,7 +126,7 @@ export default class XLit extends React.Component {
             </Select>
           </label>
         </div>
-        <div className="asr-interface">
+        <div className="a4b-interface">
           <div className="a4b-output">
             <IndicTransliterate
               renderComponent={(props) => (

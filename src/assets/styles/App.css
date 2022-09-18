@@ -7,7 +7,7 @@
 .a4b-text {
   min-height: 50px;
   height: 400px;
-  min-width: 65%;
+  min-width: 50%;
   border-radius: 15px;
   padding: 15px;
   margin-left: 25px;
@@ -25,6 +25,7 @@
   margin-left: 25px;
   font-size: 1.3rem;
   color: #363636;
+  margin: 10px;
 }
 
 .a4b-mic {
@@ -79,7 +80,7 @@
   color: #4a4a4a;
 }
 
-.asr-interface {
+.a4b-interface {
   margin: 20px;
   height: auto;
 }
