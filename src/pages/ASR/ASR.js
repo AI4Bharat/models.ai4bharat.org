@@ -308,6 +308,9 @@ export default class ASR extends React.Component {
           <label className="a4b-option">
             Choose Your Language :
             <Select
+              MenuProps={{
+                disableScrollLock: true,
+              }}
               value={this.state.languageChoice}
               sx={{ borderRadius: 15 }}
               onChange={(e) => {
@@ -323,6 +326,9 @@ export default class ASR extends React.Component {
           <label className="a4b-option">
             Choose Interface Type :
             <Select
+              MenuProps={{
+                disableScrollLock: true,
+              }}
               value={this.state.inferenceMode}
               sx={{ borderRadius: 15 }}
               className="a4b-option-select"
@@ -338,6 +344,9 @@ export default class ASR extends React.Component {
             Choose Post Processor :
             <Select
               multiple
+              MenuProps={{
+                disableScrollLock: true,
+              }}
               value={this.state.processorChoice}
               sx={{ borderRadius: 15 }}
               onChange={(event) => {
@@ -361,6 +370,9 @@ export default class ASR extends React.Component {
           <label className="a4b-option">
             Choose Sample Rate :
             <Select
+              MenuProps={{
+                disableScrollLock: true,
+              }}
               sx={{ borderRadius: 15 }}
               value={this.state.samplingRateChoice}
               onChange={(e) => {

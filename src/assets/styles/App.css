@@ -2,12 +2,13 @@
   display: flex;
   justify-content: center;
   position: relative;
+  width: 100%;
 }
 
 .a4b-text {
   min-height: 50px;
   height: 400px;
-  min-width: 50%;
+  width: 80%;
   border-radius: 15px;
   padding: 15px;
   margin-left: 25px;
@@ -16,16 +17,18 @@
 }
 
 .a4b-transliterate-text {
-  min-height: 50px;
-  height: 400px;
-  min-width: 1000px;
-  width: auto;
+  height: 50vh;
+  width: 100%;
   border-radius: 15px;
   padding: 15px;
-  margin-left: 25px;
+  box-sizing: border-box;
   font-size: 1.3rem;
   color: #363636;
-  margin: 10px;
+}
+
+.a4b-transliterate-container {
+  height: 50vh;
+  width: 100%;
 }
 
 .a4b-mic {
@@ -70,8 +73,10 @@
 }
 
 .common-options {
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
 }
 
 .a4b-option {
@@ -136,7 +141,7 @@
 }
 
 .footer {
-  height:100px;
+  height: 100px;
   width: auto;
   background-color: #eb7752;
   align-items: center;
@@ -320,8 +325,9 @@ pre {
 }
 
 .a4b-home-container {
-  display: flex;
-  height: 475px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 10px));
+  height: auto;
   margin: 10px;
   flex-direction: row;
   justify-content: center;

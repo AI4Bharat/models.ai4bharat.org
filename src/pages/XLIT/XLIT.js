@@ -109,6 +109,9 @@ export default class XLit extends React.Component {
           <label className="a4b-option">
             Choose Your Language :
             <Select
+              MenuProps={{
+                disableScrollLock: true,
+              }}
               value={this.state.languageChoice}
               sx={{ borderRadius: 15 }}
               onChange={(e) => {
@@ -128,17 +131,18 @@ export default class XLit extends React.Component {
         </div>
         <div className="a4b-interface">
           <div className="a4b-output">
-            <IndicTransliterate
-              renderComponent={(props) => (
-                <textarea className="a4b-transliterate-text" {...props} />
-              )}
-              value={this.state.transliteratedText}
-              placeholder="Type your text here to transliterate...."
-              onChangeText={(text) => {
-                this.setTransliteratedText(text);
-              }}
-              lang={this.state.languageChoice}
-            />
+            <div className="a4b-transliterate-container">
+              <IndicTransliterate
+                className="a4b-transliterate-text"
+                renderComponent={(props) => <textarea {...props} />}
+                value={this.state.transliteratedText}
+                placeholder="Type your text here to transliterate...."
+                onChangeText={(text) => {
+                  this.setTransliteratedText(text);
+                }}
+                lang={this.state.languageChoice}
+              />
+            </div>
           </div>
           <Documentation documentation={xlitDocumentation} />
         </div>

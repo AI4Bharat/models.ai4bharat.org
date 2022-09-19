@@ -128,7 +128,7 @@ export default class Home extends React.Component {
                       marginLeft: 1,
                       marginTop: 1,
                       overflow: "auto",
-                      height: 185,
+                      height: 165,
                       textAlign: "justify",
                       paddingRight: 1,
                     }}

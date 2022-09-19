@@ -27,7 +27,7 @@ export default class NMT extends React.Component {
       pa: ["Punjabi - ਪੰਜਾਬੀ", "Punjabi"],
       ta: ["Tamil - தமிழ்", "Tamil"],
       te: ["Telugu - తెలుగు", "Telugu"],
-      ur: ["Urdu - اُردُو", "Urdu"],
+      bn: ["Bangla - বাংলা", "Bengali"],
     };
 
     this.getTranslation = this.getTranslation.bind(this);
@@ -81,6 +81,9 @@ export default class NMT extends React.Component {
           <label className="a4b-option">
             Choose Your Language :
             <Select
+              MenuProps={{
+                disableScrollLock: true,
+              }}
               value={this.state.languageChoice}
               sx={{ borderRadius: 15 }}
               onChange={(e) => {
@@ -100,17 +103,20 @@ export default class NMT extends React.Component {
         </div>
         <div className="a4b-interface">
           <div className="a4b-output">
-            <IndicTransliterate
-              renderComponent={(props) => (
-                <textarea className="a4b-transliterate-text" {...props} />
-              )}
-              value={this.state.transliteratedText}
-              placeholder="Type your text here to transliterate...."
-              onChangeText={(text) => {
-                this.setTransliteratedText(text);
-              }}
-              lang={this.state.languageChoice}
-            />
+            <div className="a4b-output">
+              <div className="a4b-transliterate-container">
+                <IndicTransliterate
+                  className="a4b-transliterate-text"
+                  renderComponent={(props) => <textarea {...props} />}
+                  value={this.state.transliteratedText}
+                  placeholder="Type your text here to transliterate...."
+                  onChangeText={(text) => {
+                    this.setTransliteratedText(text);
+                  }}
+                  lang={this.state.languageChoice}
+                />
+              </div>
+            </div>
           </div>
           <div>
             <Button
@@ -122,6 +128,7 @@ export default class NMT extends React.Component {
                 borderRadius: 15,
                 padding: "15px 32px",
                 ":hover": { backgroundColor: "#eb7752" },
+                margin:2.5
               }}
               variant="contained"
             >
