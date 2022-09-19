@@ -37,6 +37,16 @@ export default class XLit extends React.Component {
       te: "Telugu - తెలుగు",
       ur: "Urdu - اُردُو",
     };
+    this.sortedLanguages = {};
+  }
+
+  componentWillMount() {
+    const _this = this;
+    const languages = Object.keys(_this.languages);
+    languages.sort();
+    languages.forEach((key) => {
+      _this.sortedLanguages[key] = _this.languages[key];
+    });
   }
 
   setTransliteratedText(text) {
@@ -119,7 +129,7 @@ export default class XLit extends React.Component {
               }}
               className="a4b-option-select"
             >
-              {Object.entries(this.languages).map(([language, optionText]) => {
+              {Object.entries(this.sortedLanguages).map(([language, optionText]) => {
                 return (
                   <MenuItem sx={{ margin: 1 }} value={language}>
                     {optionText}

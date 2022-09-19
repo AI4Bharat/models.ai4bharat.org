@@ -3,6 +3,8 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
 import { Button } from "@mui/material";
+import Documentation from "../../components/A4BDocumentation/Documentation";
+import { nmtDocumentation } from "./nmtDocumentation";
 
 export default class NMT extends React.Component {
   constructor(props) {
@@ -11,10 +13,15 @@ export default class NMT extends React.Component {
       languageChoice: "hi",
       transliteratedText: null,
       translatedText: null,
+      mode: "en-ind",
     };
 
-    this.translationAPIEndpoint =
-      "https://hf.space/embed/ai4bharat/IndicTrans-Indic2English/+/api/predict/";
+    this.translationAPIEndpoint = {
+      "en-ind":
+        "https://hf.space/embed/ai4bharat/IndicTrans-English2Indic/+/api/predict/",
+      "ind-en":
+        "https://hf.space/embed/ai4bharat/IndicTrans-Indic2English/+/api/predict/",
+    };
 
     this.languages = {
       hi: ["Hindi - हिंदी", "Hindi"],
@@ -30,7 +37,18 @@ export default class NMT extends React.Component {
       bn: ["Bangla - বাংলা", "Bengali"],
     };
 
+    this.sortedLanguages = {};
+
     this.getTranslation = this.getTranslation.bind(this);
+  }
+
+  componentWillMount() {
+    const _this = this;
+    const languages = Object.keys(_this.languages);
+    languages.sort();
+    languages.forEach((key) => {
+      _this.sortedLanguages[key] = _this.languages[key];
+    });
   }
 
   setTransliteratedText(text) {
@@ -39,7 +57,7 @@ export default class NMT extends React.Component {
 
   getTranslation() {
     const _this = this;
-    fetch(this.translationAPIEndpoint, {
+    fetch(this.translationAPIEndpoint[this.state.mode], {
       method: "POST",
       body: JSON.stringify({
         data: [
@@ -91,13 +109,36 @@ export default class NMT extends React.Component {
               }}
               className="a4b-option-select"
             >
-              {Object.entries(this.languages).map(([language, optionText]) => {
-                return (
-                  <MenuItem sx={{ margin: 1 }} value={language}>
-                    {optionText[0]}
-                  </MenuItem>
-                );
-              })}
+              {Object.entries(this.sortedLanguages).map(
+                ([language, optionText]) => {
+                  return (
+                    <MenuItem sx={{ margin: 1 }} value={language}>
+                      {optionText[0]}
+                    </MenuItem>
+                  );
+                }
+              )}
+            </Select>
+          </label>
+          <label className="a4b-option">
+            Choose Mode:
+            <Select
+              sx={{ borderRadius: 15 }}
+              value={this.state.mode}
+              onChange={(e) => {
+                this.setState({ mode: e.target.value, transliteratedText: "" });
+              }}
+              className="a4b-option-select"
+              MenuProps={{
+                disableScrollLock: true,
+              }}
+            >
+              <MenuItem sx={{ margin: 1 }} value={"en-ind"}>
+                English-to-Indic
+              </MenuItem>
+              <MenuItem sx={{ margin: 1 }} value={"ind-en"}>
+                Indic-to-English
+              </MenuItem>
             </Select>
           </label>
         </div>
@@ -117,29 +158,30 @@ export default class NMT extends React.Component {
                 />
               </div>
             </div>
+            <div>
+              <Button
+                onClick={() => {
+                  this.getTranslation();
+                }}
+                sx={{
+                  backgroundColor: "#eb7752",
+                  borderRadius: 15,
+                  padding: "15px 32px",
+                  ":hover": { backgroundColor: "#eb7752" },
+                  margin: 2.5,
+                }}
+                variant="contained"
+              >
+                Translate
+              </Button>
+            </div>
+            <textarea
+              value={this.state.translatedText}
+              placeholder="View Translated Input here....."
+              className="a4b-transliterate-text"
+            />
           </div>
-          <div>
-            <Button
-              onClick={() => {
-                this.getTranslation();
-              }}
-              sx={{
-                backgroundColor: "#eb7752",
-                borderRadius: 15,
-                padding: "15px 32px",
-                ":hover": { backgroundColor: "#eb7752" },
-                margin:2.5
-              }}
-              variant="contained"
-            >
-              Translate
-            </Button>
-          </div>
-          <textarea
-            value={this.state.translatedText}
-            placeholder="View Translated Input here....."
-            className="a4b-transliterate-text"
-          />
+          <Documentation documentation={nmtDocumentation} />
         </div>
       </div>
     );
