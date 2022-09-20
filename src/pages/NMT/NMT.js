@@ -5,15 +5,16 @@ import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
 import { Button } from "@mui/material";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 import { nmtDocumentation } from "./nmtDocumentation";
+import { FaRegCopy } from "react-icons/fa";
 
 export default class NMT extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      languageChoice: "hi",
+      languageChoice: localStorage.getItem("tlLanguageChoice"),
       transliteratedText: null,
       translatedText: null,
-      mode: "en-ind",
+      mode: localStorage.getItem("tlMode"),
     };
 
     this.translationAPIEndpoint = {
@@ -106,6 +107,7 @@ export default class NMT extends React.Component {
               sx={{ borderRadius: 15 }}
               onChange={(e) => {
                 this.setState({ languageChoice: e.target.value });
+                localStorage.setItem("tlLanguageChoice", e.target.value);
               }}
               className="a4b-option-select"
             >
@@ -127,6 +129,7 @@ export default class NMT extends React.Component {
               value={this.state.mode}
               onChange={(e) => {
                 this.setState({ mode: e.target.value, transliteratedText: "" });
+                localStorage.setItem("tlMode", e.target.value);
               }}
               className="a4b-option-select"
               MenuProps={{
@@ -158,7 +161,7 @@ export default class NMT extends React.Component {
                 />
               </div>
             </div>
-            <div>
+            <div className="a4b-nmt-buttons">
               <Button
                 onClick={() => {
                   this.getTranslation();
@@ -173,6 +176,23 @@ export default class NMT extends React.Component {
                 variant="contained"
               >
                 Translate
+              </Button>
+              <Button
+                sx={{
+                  width: 10,
+                  height: 50,
+                  color: "#4a4a4a",
+                  borderColor: "#4a4a4a",
+                }}
+                size="large"
+                variant="outlined"
+                onClick={() => {
+                  if (this.state.translatedText) {
+                    navigator.clipboard.writeText(this.state.translatedText);
+                  }
+                }}
+              >
+                <FaRegCopy size={"20px"} />
               </Button>
             </div>
             <textarea

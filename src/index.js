@@ -4,7 +4,7 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import ASR from "./pages/ASR/ASR";
-import XLit from "./pages/XLit/XLit";
+import XLit from "./pages/XLIT/XLIT";
 import Home from "./pages/Home/Home";
 import NLG from "./pages/NLG/NLG";
 import NMT from "./pages/NMT/NMT";

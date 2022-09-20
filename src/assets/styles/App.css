@@ -5,6 +5,7 @@
   width: 100%;
 }
 
+
 .a4b-text {
   min-height: 50px;
   height: 400px;
@@ -181,9 +182,11 @@
   0% {
     background-color: #eb7752;
   }
+
   50% {
     background-color: #f7c7ba;
   }
+
   100% {
     background-color: #eb7752;
   }
@@ -391,4 +394,18 @@ pre {
 
 .a4b-logo {
   margin-right: 10px;
+}
+
+.a4b-nmt-buttons{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.a4b-asr-buttons{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }

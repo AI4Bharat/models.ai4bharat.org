@@ -11,7 +11,7 @@ export default class XLit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      languageChoice: "hi",
+      languageChoice: localStorage.getItem("tltLanguageChoice"),
       transliteratedText: null,
     };
     this.languages = {
@@ -126,21 +126,42 @@ export default class XLit extends React.Component {
               sx={{ borderRadius: 15 }}
               onChange={(e) => {
                 this.setState({ languageChoice: e.target.value });
+                localStorage.setItem("tltLanguageChoice", e.target.value);
               }}
               className="a4b-option-select"
             >
-              {Object.entries(this.sortedLanguages).map(([language, optionText]) => {
-                return (
-                  <MenuItem sx={{ margin: 1 }} value={language}>
-                    {optionText}
-                  </MenuItem>
-                );
-              })}
+              {Object.entries(this.sortedLanguages).map(
+                ([language, optionText]) => {
+                  return (
+                    <MenuItem sx={{ margin: 1 }} value={language}>
+                      {optionText}
+                    </MenuItem>
+                  );
+                }
+              )}
             </Select>
           </label>
         </div>
         <div className="a4b-interface">
           <div className="a4b-output">
+            <Button
+              sx={{
+                width: 10,
+                height: 50,
+                color: "#4a4a4a",
+                borderColor: "#4a4a4a",
+                marginRight: 1,
+              }}
+              size="large"
+              variant="outlined"
+              onClick={() => {
+                if (this.state.transliteratedText) {
+                  navigator.clipboard.writeText(this.state.transliteratedText);
+                }
+              }}
+            >
+              <FaRegCopy size={"20px"} />
+            </Button>
             <div className="a4b-transliterate-container">
               <IndicTransliterate
                 className="a4b-transliterate-text"

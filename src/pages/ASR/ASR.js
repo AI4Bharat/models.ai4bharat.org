@@ -2,24 +2,24 @@ import React from "react";
 
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { FaMicrophone } from "react-icons/fa";
+import { FaMicrophone, FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation.js";
 import { asrAPIURL, streamingURL } from "../../config/config.js";
 import {
   asrAPIDocumentation,
-  asrStreamingDocumentation,
+  asrStreamingDocumentation
 } from "./asrDocumentation.js";
 import { Button } from "@mui/material";
-import { FaRegCopy } from "react-icons/fa";
 
 import {
   SocketStatus,
-  StreamingClient,
+  StreamingClient
 } from "@project-sunbird/open-speech-streaming-client";
 
 export default class ASR extends React.Component {
   constructor(props) {
     super(props);
+    console.log(localStorage.getItem("processorChoice"))
     this.streamingURL = streamingURL;
     this.asrAPIURL = asrAPIURL;
     this.state = {
@@ -32,9 +32,9 @@ export default class ASR extends React.Component {
       audioChunks: [],
       audioFileContent: "",
       audioFileName: "No File Uploaded",
-      languageChoice: "hi",
-      samplingRateChoice: 48000,
-      processorChoice: [],
+      languageChoice: localStorage.getItem("languageChoice"),
+      samplingRateChoice: localStorage.getItem("samplingRateChoice"),
+      processorChoice: JSON.parse(localStorage.getItem("processorChoice"))["processors"],
       docExpanded: false,
     };
     this.languages = {
@@ -183,7 +183,21 @@ export default class ASR extends React.Component {
       return (
         <div className="a4b-interface">
           <div className="a4b-output">
-            {this.setStreamingMicAnimation()}
+            <div className="a4b-asr-buttons">
+              {this.setStreamingMicAnimation()}
+              <Button
+                sx={{ width: 10, height: 50, color: "#4a4a4a", borderColor: "#4a4a4a", marginTop: 1 }}
+                size="large"
+                variant="outlined"
+                onClick={() => {
+                  if (this.state.asrText) {
+                    navigator.clipboard.writeText(this.state.asrText);
+                  }
+                }}
+              >
+                <FaRegCopy size={"20px"} />
+              </Button>
+            </div>
             <textarea
               placeholder="Start Recording for ASR Inference...."
               value={this.state.asrText}
@@ -197,7 +211,21 @@ export default class ASR extends React.Component {
       return (
         <div className="a4b-interface">
           <div className="a4b-output">
-            {this.renderRecordButton()}
+            <div className="a4b-asr-buttons">
+              {this.setStreamingMicAnimation()}
+              <Button
+                sx={{ width: 10, height: 50, color: "#4a4a4a", borderColor: "#4a4a4a", marginTop: 1 }}
+                size="large"
+                variant="outlined"
+                onClick={() => {
+                  if (this.state.asrAPIResult) {
+                    navigator.clipboard.writeText(this.state.asrAPIResult);
+                  }
+                }}
+              >
+                <FaRegCopy size={"20px"} />
+              </Button>
+            </div>
             <textarea
               placeholder="Upload Audio File or Record for ASR Inference...."
               value={this.state.asrAPIResult}
@@ -315,6 +343,7 @@ export default class ASR extends React.Component {
               sx={{ borderRadius: 15 }}
               onChange={(e) => {
                 this.setState({ languageChoice: e.target.value });
+                localStorage.setItem("languageChoice", e.target.value)
               }}
               className="a4b-option-select"
             >
@@ -355,6 +384,7 @@ export default class ASR extends React.Component {
                 } = event;
                 let choices =
                   typeof value === "string" ? value.split(",") : value;
+                localStorage.setItem("processorChoice", JSON.stringify({ processors: choices }))
                 this.setState({ processorChoice: choices });
                 console.log(choices);
               }}
@@ -376,6 +406,7 @@ export default class ASR extends React.Component {
               sx={{ borderRadius: 15 }}
               value={this.state.samplingRateChoice}
               onChange={(e) => {
+                localStorage.setItem("samplingRateChoice", e.target.value)
                 this.setState({ samplingRateChoice: e.target.value });
               }}
               className="a4b-option-select"
