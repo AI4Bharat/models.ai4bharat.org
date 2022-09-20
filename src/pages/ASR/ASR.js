@@ -212,7 +212,7 @@ export default class ASR extends React.Component {
         <div className="a4b-interface">
           <div className="a4b-output">
             <div className="a4b-asr-buttons">
-              {this.setStreamingMicAnimation()}
+              {this.renderRecordButton()}
               <Button
                 sx={{ width: 10, height: 50, color: "#4a4a4a", borderColor: "#4a4a4a", marginTop: 1 }}
                 size="large"
