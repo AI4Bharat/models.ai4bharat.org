@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import ASR from "./pages/ASR/ASR";
@@ -15,7 +15,7 @@ rootElement.style.height = "auto";
 rootElement.style.width = "100%";
 const root = ReactDOM.createRoot(rootElement);
 root.render(
-  <HashRouter>
+  <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
@@ -25,5 +25,5 @@ root.render(
         <Route path="nmt" element={<NMT />} />
       </Route>
     </Routes>
-  </HashRouter>
+  </BrowserRouter>
 );
