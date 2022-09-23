@@ -45,7 +45,7 @@
   justify-content: center;
   align-items: center;
   display: flex;
-  background-color: #eb7752;
+  background-color: #f06b42;
   margin: 5px;
 }
 
@@ -62,7 +62,7 @@
   justify-content: center;
   align-items: center;
   display: flex;
-  background-color: #eb7752;
+  background-color: #f06b42;
   margin: 5px;
   animation: ease pulse 2s infinite;
 }
@@ -76,8 +76,6 @@
 .common-options {
   justify-content: center;
   align-items: center;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
 }
 
 .a4b-option {
@@ -92,7 +90,7 @@
 }
 
 .asr-button {
-  background-color: #eb7752;
+  background-color: #f06b42;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -116,7 +114,7 @@
 }
 
 .orange-color {
-  color: #eb7752;
+  color: #f06b42;
 }
 
 .title-section {
@@ -135,7 +133,7 @@
 .nav {
   height: 3.5rem;
   width: auto;
-  background-color: #eb7752;
+  background-color: #f06b42;
   align-items: center;
   justify-items: center;
   display: flex;
@@ -144,7 +142,7 @@
 .footer {
   height: 100px;
   width: auto;
-  background-color: #eb7752;
+  background-color: #f06b42;
   align-items: center;
   justify-items: center;
   display: flex;
@@ -180,7 +178,7 @@
 
 @keyframes pulse {
   0% {
-    background-color: #eb7752;
+    background-color: #f06b42;
   }
 
   50% {
@@ -188,7 +186,7 @@
   }
 
   100% {
-    background-color: #eb7752;
+    background-color: #f06b42;
   }
 }
 
@@ -275,7 +273,7 @@ pre {
 .nav-menu {
   width: 2.5rem;
   height: 2.5rem;
-  background-color: #eb7752;
+  background-color: #f06b42;
   border: 2px solid #ffffff;
   border-radius: 15px;
   margin: 0.5%;
@@ -352,7 +350,7 @@ pre {
 }
 
 .a4b-home-card-logo {
-  color: #eb7752;
+  color: #f06b42;
   margin: 1rem;
 }
 
@@ -364,7 +362,7 @@ pre {
 }
 
 .a4b-home-card-actions {
-  background-color: #eb7752;
+  background-color: #f06b42;
   height: 50px;
   width: 100%;
   bottom: 0;
@@ -407,5 +405,12 @@ pre {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  align-items: center;
+}
+
+.a4b-tts-convert{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
 }

@@ -5,16 +5,15 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { models } from "./modelsAvailable";
-import { MdOutlineSettingsApplications } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { Box } from "@mui/material";
-import { FaKeyboard } from "react-icons/fa";
+import { FaKeyboard, FaLaptopCode } from "react-icons/fa";
 import { HiArrowRight } from "react-icons/hi";
 import { BsFillMicFill } from "react-icons/bs";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material";
 import { BiWorld } from "react-icons/bi";
-import { BsShield } from "react-icons/bs";
+import { BsShield,BsSoundwave} from "react-icons/bs";
 
 const theme = createTheme({
   palette: {
@@ -29,6 +28,7 @@ const modelIcons = {
   asr: <BsFillMicFill size={35} className="a4b-home-card-logo" />,
   nmt: <BiWorld size={35} className="a4b-home-card-logo" />,
   nlg: <BsShield size={35} className="a4b-home-card-logo" />,
+  tts: <BsSoundwave size={35} className="a4b-home-card-logo" />,
 };
 
 export default class Home extends React.Component {
@@ -164,10 +164,7 @@ export default class Home extends React.Component {
                           alignItems: "center",
                         }}
                       >
-                        <MdOutlineSettingsApplications
-                          style={{ margin: 5 }}
-                          size={20}
-                        />
+                        <FaLaptopCode style={{ margin: 5 }} size={20} />
                       </div>
                     </Button>
                   </ThemeProvider>

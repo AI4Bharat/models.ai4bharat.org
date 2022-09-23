@@ -11,10 +11,10 @@ export default class NMT extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      languageChoice: localStorage.getItem("tlLanguageChoice"),
+      from: "en",
+      to: "hi",
       transliteratedText: null,
       translatedText: null,
-      mode: localStorage.getItem("tlMode"),
     };
 
     this.translationAPIEndpoint = {
@@ -36,6 +36,7 @@ export default class NMT extends React.Component {
       ta: ["Tamil - தமிழ்", "Tamil"],
       te: ["Telugu - తెలుగు", "Telugu"],
       bn: ["Bangla - বাংলা", "Bengali"],
+      en: ["English - English", "English"],
     };
 
     this.sortedLanguages = {};
@@ -56,15 +57,30 @@ export default class NMT extends React.Component {
     this.setState({ transliteratedText: text });
   }
 
+  getLanguageChoice(from, to) {
+    if (from === "en") {
+      return this.languages[to][1];
+    } else if (to == "en") {
+      return this.languages[from][1];
+    }
+  }
+
   getTranslation() {
     const _this = this;
-    fetch(this.translationAPIEndpoint[this.state.mode], {
+    let apiURL = null;
+    if (this.state.from == "en") {
+      apiURL = this.translationAPIEndpoint["en-ind"];
+    } else if (this.state.to == "en") {
+      apiURL = this.translationAPIEndpoint["ind-en"];
+    }
+    
+
+    let languageChoice = this.getLanguageChoice(this.state.from, this.state.to);
+
+    fetch(apiURL, {
       method: "POST",
       body: JSON.stringify({
-        data: [
-          _this.state.transliteratedText,
-          _this.languages[_this.state.languageChoice][1],
-        ],
+        data: [_this.state.transliteratedText, languageChoice],
       }),
       headers: { "Content-Type": "application/json" },
     })
@@ -98,50 +114,55 @@ export default class NMT extends React.Component {
         <hr className="hr-split" />
         <div className="common-options">
           <label className="a4b-option">
-            Choose Your Language :
+            From:
             <Select
               MenuProps={{
                 disableScrollLock: true,
               }}
-              value={this.state.languageChoice}
               sx={{ borderRadius: 15 }}
-              onChange={(e) => {
-                this.setState({ languageChoice: e.target.value });
-                localStorage.setItem("tlLanguageChoice", e.target.value);
-              }}
               className="a4b-option-select"
+              value={this.state.from}
+              onChange={(e) => {
+                this.setState({ from: e.target.value });
+              }}
             >
               {Object.entries(this.sortedLanguages).map(
                 ([language, optionText]) => {
-                  return (
-                    <MenuItem sx={{ margin: 1 }} value={language}>
-                      {optionText[0]}
-                    </MenuItem>
-                  );
+                  if (language !== this.state.to) {
+                    return (
+                      <MenuItem sx={{ margin: 1 }} value={language}>
+                        {optionText[0]}
+                      </MenuItem>
+                    );
+                  }
                 }
               )}
             </Select>
           </label>
           <label className="a4b-option">
-            Choose Mode:
+            To:
             <Select
-              sx={{ borderRadius: 15 }}
-              value={this.state.mode}
-              onChange={(e) => {
-                this.setState({ mode: e.target.value, transliteratedText: "" });
-                localStorage.setItem("tlMode", e.target.value);
-              }}
               className="a4b-option-select"
+              value={this.state.to}
+              sx={{ borderRadius: 15 }}
               MenuProps={{
                 disableScrollLock: true,
               }}
+              onChange={(e) => {
+                this.setState({ to: e.target.value });
+              }}
             >
-              <MenuItem sx={{ margin: 1 }} value={"en-ind"}>
-                English-to-Indic
-              </MenuItem>
-              <MenuItem sx={{ margin: 1 }} value={"ind-en"}>
-                Indic-to-English
-              </MenuItem>
+              {Object.entries(this.sortedLanguages).map(
+                ([language, optionText]) => {
+                  if (language !== this.state.from) {
+                    return (
+                      <MenuItem sx={{ margin: 1 }} value={language}>
+                        {optionText[0]}
+                      </MenuItem>
+                    );
+                  }
+                }
+              )}
             </Select>
           </label>
         </div>
@@ -151,13 +172,14 @@ export default class NMT extends React.Component {
               <div className="a4b-transliterate-container">
                 <IndicTransliterate
                   className="a4b-transliterate-text"
+                  enabled={this.state.from !== "en"}
                   renderComponent={(props) => <textarea {...props} />}
                   value={this.state.transliteratedText}
                   placeholder="Type your text here to transliterate...."
                   onChangeText={(text) => {
                     this.setTransliteratedText(text);
                   }}
-                  lang={this.state.languageChoice}
+                  lang={this.state.from}
                 />
               </div>
             </div>
@@ -167,10 +189,10 @@ export default class NMT extends React.Component {
                   this.getTranslation();
                 }}
                 sx={{
-                  backgroundColor: "#eb7752",
+                  backgroundColor: "#f06b42",
                   borderRadius: 15,
                   padding: "15px 32px",
-                  ":hover": { backgroundColor: "#eb7752" },
+                  ":hover": { backgroundColor: "#f06b42" },
                   margin: 2.5,
                 }}
                 variant="contained"

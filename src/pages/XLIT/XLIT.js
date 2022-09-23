@@ -53,48 +53,6 @@ export default class XLit extends React.Component {
     this.setState({ transliteratedText: text });
   }
 
-  renderSnippet(content) {
-    if (content.snippet) {
-      if (typeof content.snippet == "object") {
-        return (
-          <div className="a4b-snippet-container">
-            <pre>{JSON.stringify(content.snippet, null, 2)}</pre>
-            <div className="a4b-copy-container">
-              <Button
-                sx={{ height: 50, color: "#4a4a4a", borderColor: "#4a4a4a" }}
-                size="large"
-                variant="outlined"
-                onClick={() => {
-                  navigator.clipboard.writeText(content.snippet);
-                }}
-              >
-                <FaRegCopy size={"20px"} />
-              </Button>
-            </div>
-          </div>
-        );
-      } else {
-        return (
-          <div className="a4b-snippet-container">
-            <pre>{content.snippet}</pre>
-            <div className="a4b-copy-container">
-              <Button
-                sx={{ height: 50, color: "#4a4a4a", borderColor: "#4a4a4a" }}
-                size="large"
-                variant="outlined"
-                onClick={() => {
-                  navigator.clipboard.writeText(content.snippet);
-                }}
-              >
-                <FaRegCopy size={"20px"} />
-              </Button>
-            </div>
-          </div>
-        );
-      }
-    }
-  }
-
   render() {
     return (
       <div>
@@ -117,7 +75,7 @@ export default class XLit extends React.Component {
         <hr className="hr-split" />
         <div className="common-options">
           <label className="a4b-option">
-            Choose Your Language :
+            Language :
             <Select
               MenuProps={{
                 disableScrollLock: true,

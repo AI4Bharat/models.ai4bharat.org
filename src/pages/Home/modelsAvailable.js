@@ -20,6 +20,11 @@ const models = {
       "IndicBART is a multilingual, sequence-to-sequence pre-trained model focusing on Indic languages and English. It currently supports 11 Indian languages and is based on the mBART architecture. You can use IndicBART model to build natural language generation applications for Indian languages by finetuning the model with supervised training data for tasks like machine translation, summarization, question generation, etc.",
     link: "https://ai4bharat.org/language-generation",
   },
+  tts:{
+    title: "Indic Text-to-Speech",
+    about:"Indic-TTS is an on-going research focusing on building multispeaker text-to-speech models for Indic languages. TTS involves two different models - an acoustic model, which is responsible for generating waveform for a given text; and a vocoder model, which is responsible for synthesizing voice from the generated waveform. Currently, we use FastPitch and HiFi-GAN models.",
+    link:""
+  }
 };
 
 export { models };

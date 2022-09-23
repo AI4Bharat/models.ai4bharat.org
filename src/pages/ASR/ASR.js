@@ -152,7 +152,6 @@ export default class ASR extends React.Component {
 
   onStreamClosed() {
     console.log("Stream Closed");
-    this.setState({ asrText: "Start Recording for ASR Inference...." });
     this.state.streaming.stopStreaming();
     this.state.streaming.disconnect();
   }
@@ -212,7 +211,8 @@ export default class ASR extends React.Component {
         <div className="a4b-interface">
           <div className="a4b-output">
             <div className="a4b-asr-buttons">
-              {this.renderRecordButton()}
+              {this.renderRecordButton
+              ()}
               <Button
                 sx={{ width: 10, height: 50, color: "#4a4a4a", borderColor: "#4a4a4a", marginTop: 1 }}
                 size="large"
@@ -334,7 +334,7 @@ export default class ASR extends React.Component {
         <hr className="hr-split" />
         <div className="common-options">
           <label className="a4b-option">
-            Choose Your Language :
+            Language :
             <Select
               MenuProps={{
                 disableScrollLock: true,
@@ -353,7 +353,7 @@ export default class ASR extends React.Component {
             </Select>
           </label>
           <label className="a4b-option">
-            Choose Interface Type :
+            Interface Type :
             <Select
               MenuProps={{
                 disableScrollLock: true,
@@ -370,7 +370,7 @@ export default class ASR extends React.Component {
             </Select>
           </label>
           <label className="a4b-option">
-            Choose Post Processor :
+            Post Processor :
             <Select
               multiple
               MenuProps={{
@@ -398,7 +398,7 @@ export default class ASR extends React.Component {
             </Select>
           </label>
           <label className="a4b-option">
-            Choose Sample Rate :
+            Sample Rate :
             <Select
               MenuProps={{
                 disableScrollLock: true,

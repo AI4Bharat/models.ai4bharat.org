@@ -8,6 +8,7 @@ import XLit from "./pages/XLIT/XLIT";
 import Home from "./pages/Home/Home";
 import NLG from "./pages/NLG/NLG";
 import NMT from "./pages/NMT/NMT";
+import TTS from "./pages/TTS/TTS";
 
 const rootElement = document.getElementById("root");
 rootElement.style.minHeight = "100%";
@@ -23,6 +24,7 @@ root.render(
         <Route path="xlit" element={<XLit />} />
         <Route path="nlg" element={<NLG />} />
         <Route path="nmt" element={<NMT />} />
+        <Route path="tts" element={<TTS />} />
       </Route>
     </Routes>
   </HashRouter>

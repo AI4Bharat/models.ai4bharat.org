@@ -4,6 +4,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import { Button } from "@mui/material";
 import { FaRegCopy } from "react-icons/fa";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default class Documentation extends React.Component {
   accordionStyle = {
@@ -98,6 +99,7 @@ export default class Documentation extends React.Component {
       <div className="documentation-container">
         <Accordion expanded={this.state.docExpanded} sx={this.accordionStyle}>
           <AccordionSummary
+            expandIcon={<ExpandMoreIcon sx={{height:50,width:50}}/>}
             onClick={() => {
               this.setState({ docExpanded: !this.state.docExpanded });
             }}
