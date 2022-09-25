@@ -22,6 +22,7 @@ export default class NMT extends React.Component {
         "https://hf.space/embed/ai4bharat/IndicTrans-English2Indic/+/api/predict/",
       "ind-en":
         "https://hf.space/embed/ai4bharat/IndicTrans-Indic2English/+/api/predict/",
+      "ind-ind": "https://22829.gradio.app/api/predict",
     };
 
     this.languages = {
@@ -59,28 +60,30 @@ export default class NMT extends React.Component {
 
   getLanguageChoice(from, to) {
     if (from === "en") {
-      return this.languages[to][1];
-    } else if (to == "en") {
-      return this.languages[from][1];
+      return [this.languages[to][1]];
+    } else if (to === "en") {
+      return [this.languages[from][1]];
+    } else {
+      return [this.languages[from][1], this.languages[to][1]];
     }
   }
 
   getTranslation() {
     const _this = this;
     let apiURL = null;
-    if (this.state.from == "en") {
+    if (this.state.from === "en") {
       apiURL = this.translationAPIEndpoint["en-ind"];
-    } else if (this.state.to == "en") {
+    } else if (this.state.to === "en") {
       apiURL = this.translationAPIEndpoint["ind-en"];
+    } else {
+      apiURL = this.translationAPIEndpoint["ind-ind"];
     }
-    
 
     let languageChoice = this.getLanguageChoice(this.state.from, this.state.to);
-
     fetch(apiURL, {
       method: "POST",
       body: JSON.stringify({
-        data: [_this.state.transliteratedText, languageChoice],
+        data: [_this.state.transliteratedText, ...languageChoice],
       }),
       headers: { "Content-Type": "application/json" },
     })
@@ -128,13 +131,11 @@ export default class NMT extends React.Component {
             >
               {Object.entries(this.sortedLanguages).map(
                 ([language, optionText]) => {
-                  if (language !== this.state.to) {
-                    return (
-                      <MenuItem sx={{ margin: 1 }} value={language}>
-                        {optionText[0]}
-                      </MenuItem>
-                    );
-                  }
+                  return (
+                    <MenuItem sx={{ margin: 1 }} value={language}>
+                      {optionText[0]}
+                    </MenuItem>
+                  );
                 }
               )}
             </Select>
@@ -154,13 +155,11 @@ export default class NMT extends React.Component {
             >
               {Object.entries(this.sortedLanguages).map(
                 ([language, optionText]) => {
-                  if (language !== this.state.from) {
-                    return (
-                      <MenuItem sx={{ margin: 1 }} value={language}>
-                        {optionText[0]}
-                      </MenuItem>
-                    );
-                  }
+                  return (
+                    <MenuItem sx={{ margin: 1 }} value={language}>
+                      {optionText[0]}
+                    </MenuItem>
+                  );
                 }
               )}
             </Select>
