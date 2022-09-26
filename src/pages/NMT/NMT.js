@@ -22,7 +22,8 @@ export default class NMT extends React.Component {
         "https://hf.space/embed/ai4bharat/IndicTrans-English2Indic/+/api/predict/",
       "ind-en":
         "https://hf.space/embed/ai4bharat/IndicTrans-Indic2English/+/api/predict/",
-      "ind-ind": "https://22829.gradio.app/api/predict",
+      "ind-ind":
+        "https://hf.space/embed/ai4bharat/IndicTrans-Indic2Indic/+/api/predict",
     };
 
     this.languages = {
