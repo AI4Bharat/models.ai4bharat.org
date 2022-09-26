@@ -4,6 +4,8 @@ import MenuItem from "@mui/material/MenuItem";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
 import { Button } from "@mui/material";
 import { FaRegCopy } from "react-icons/fa";
+import Documentation from "../../components/A4BDocumentation/Documentation";
+import { nlgDocumentation } from "./nlgDocumentation";
 
 export default class NLG extends React.Component {
   constructor(props) {
@@ -197,6 +199,7 @@ export default class NLG extends React.Component {
               className="a4b-transliterate-text"
             />
           </div>
+          <Documentation documentation={nlgDocumentation} />
         </div>
       </div>
     );
