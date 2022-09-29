@@ -2,7 +2,6 @@ import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import React from "react";
-import { FaPlay } from "react-icons/fa";
 
 export default class TTS extends React.Component {
   constructor(props) {
@@ -15,6 +14,7 @@ export default class TTS extends React.Component {
       voiceGender: "male",
       transliteratedText: null,
       audioComponent: null,
+      audioHidden: true,
     };
 
     this.languages = {
@@ -56,7 +56,7 @@ export default class TTS extends React.Component {
         var apiResult = JSON.parse(result);
         var audioContent = apiResult["audio"][0]["audioContent"];
         var audio = "data:audio/wav;base64," + audioContent;
-        this.setState({ audioComponent: audio });
+        this.setState({ audioComponent: audio, audioHidden: false });
       });
   }
 
@@ -129,10 +129,9 @@ export default class TTS extends React.Component {
           <div className="a4b-output">
             <div className="a4b-transliterate-container">
               <IndicTransliterate
-                className="a4b-transliterate-text"
-                renderComponent={(props) => <textarea {...props} />}
+                renderComponent={(props) => <textarea className="a4b-transliterate-text" {...props} />}
                 value={this.state.transliteratedText}
-                placeholder="Type your text here to transliterate...."
+                placeholder="Type your text here to convert...."
                 onChangeText={(text) => {
                   this.setState({ transliteratedText: text });
                 }}
@@ -144,7 +143,11 @@ export default class TTS extends React.Component {
             <button onClick={this.getAudioOutput} className="asr-button">
               Convert
             </button>
-            <audio src={this.state.audioComponent} controls />
+            <audio
+              hidden={this.state.audioHidden}
+              src={this.state.audioComponent}
+              controls
+            />
           </div>
         </div>
       </div>

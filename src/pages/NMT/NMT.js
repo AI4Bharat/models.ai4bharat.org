@@ -167,7 +167,7 @@ export default class NMT extends React.Component {
           </label>
         </div>
         <div className="a4b-interface">
-          <div className="a4b-output">
+          <div className="a4b-output-grid">
             <div className="a4b-output">
               <div className="a4b-transliterate-container">
                 <IndicTransliterate

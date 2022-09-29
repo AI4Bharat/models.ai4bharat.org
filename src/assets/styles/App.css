@@ -5,6 +5,13 @@
   width: 100%;
 }
 
+.a4b-output-grid {
+  display: grid;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
 .a4b-text {
   min-height: 50px;
   height: 400px;
@@ -17,6 +24,16 @@
 }
 
 .a4b-transliterate-text {
+  width: calc(100vw - 20px); 
+  height: 25vh;
+  border-radius: 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 1.3rem;
+  color: #363636;
+}
+
+.a4b-output-text {
   height: 30vh;
   width: 100%;
   border-radius: 15px;
@@ -388,6 +405,7 @@ pre {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 10px;
 }
 
 .a4b-asr-buttons {
@@ -409,7 +427,7 @@ pre {
   width: 100%;
   background-color: #dbdbdb;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, auto));
+  grid-template-columns: repeat(auto-fit, minmax(450px, auto));
   padding-bottom: 20px;
 }
 
@@ -443,7 +461,6 @@ pre {
   background-color: #dbdbdb;
   grid-area: "about";
   margin-left: 20px;
-  margin-right: 20px;
 }
 
 .footer-contact-content {

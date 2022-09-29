@@ -14,7 +14,7 @@ export default class NLG extends React.Component {
     this.apiURL = "https://hf.space/embed/ai4bharat/IndicNLG/+/api/predict/";
 
     this.state = {
-      languageChoice: "Hindi",
+      languageChoice:"hi",
       task: "IndicSentenceSummarization",
       transliteratedText: "",
       generatedText: "",
@@ -62,7 +62,7 @@ export default class NLG extends React.Component {
         data: [
           _this.state.transliteratedText,
           _this.state.task,
-          _this.state.languageChoice,
+          this.languages[_this.state.languageChoice][1],
         ],
       }),
       headers: { "Content-Type": "application/json" },
@@ -112,7 +112,7 @@ export default class NLG extends React.Component {
               {Object.entries(this.sortedLanguages).map(
                 ([language, optionText]) => {
                   return (
-                    <MenuItem sx={{ margin: 1 }} value={optionText[1]}>
+                    <MenuItem sx={{ margin: 1 }} value={language}>
                       {optionText[0]}
                     </MenuItem>
                   );
@@ -144,12 +144,11 @@ export default class NLG extends React.Component {
           </label>
         </div>
         <div className="a4b-interface">
-          <div className="a4b-output">
+          <div className="a4b-output-grid">
             <div className="a4b-output">
               <div className="a4b-transliterate-container">
                 <IndicTransliterate
-                  className="a4b-transliterate-text"
-                  renderComponent={(props) => <textarea {...props} />}
+                  renderComponent={(props) => <textarea className="a4b-transliterate-text" {...props} />}
                   value={this.state.transliteratedText}
                   placeholder="Type your text here...."
                   onChangeText={(text) => {
@@ -196,7 +195,7 @@ export default class NLG extends React.Component {
             <textarea
               value={this.state.generatedText}
               placeholder="View Generated Text here....."
-              className="a4b-transliterate-text"
+              className="a4b-output-text"
             />
           </div>
           <Documentation documentation={nlgDocumentation} />
