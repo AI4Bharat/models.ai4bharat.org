@@ -6,15 +6,17 @@ import { Button } from "@mui/material";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 import { nmtDocumentation } from "./nmtDocumentation";
 import { FaRegCopy } from "react-icons/fa";
+import LinearProgress from "@mui/material/LinearProgress";
 
 export default class NMT extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      from: "en",
-      to: "hi",
+      from: localStorage.getItem("nmtLanguageFrom"),
+      to: localStorage.getItem("nmtLanguageTo"),
       transliteratedText: null,
       translatedText: null,
+      isFetching: false,
     };
 
     this.translationAPIEndpoint = {
@@ -71,6 +73,7 @@ export default class NMT extends React.Component {
 
   getTranslation() {
     const _this = this;
+    _this.setState({ isFetching: true });
     let apiURL = null;
     if (this.state.from === "en") {
       apiURL = this.translationAPIEndpoint["en-ind"];
@@ -92,8 +95,27 @@ export default class NMT extends React.Component {
         return response.json();
       })
       .then(function (json_response) {
-        _this.setState({ translatedText: json_response.data[0] });
+        _this.setState({
+          translatedText: json_response.data[0],
+          isFetching: false,
+        });
       });
+  }
+
+  showProgress() {
+    if (this.state.isFetching) {
+      return (
+        <LinearProgress
+          sx={{
+            backgroundColor: "#fbdad0",
+            "& .MuiLinearProgress-bar": {
+              backgroundColor: "#f06b42",
+            },
+            margin: 5,
+          }}
+        />
+      );
+    }
   }
 
   render() {
@@ -128,6 +150,7 @@ export default class NMT extends React.Component {
               value={this.state.from}
               onChange={(e) => {
                 this.setState({ from: e.target.value });
+                localStorage.setItem("nmtLanguageFrom", e.target.value);
               }}
             >
               {Object.entries(this.sortedLanguages).map(
@@ -152,6 +175,7 @@ export default class NMT extends React.Component {
               }}
               onChange={(e) => {
                 this.setState({ to: e.target.value });
+                localStorage.setItem("nmtLanguageTo", e.target.value);
               }}
             >
               {Object.entries(this.sortedLanguages).map(
@@ -167,6 +191,7 @@ export default class NMT extends React.Component {
           </label>
         </div>
         <div className="a4b-interface">
+          {this.showProgress()}
           <div className="a4b-output-grid">
             <div className="a4b-output">
               <div className="a4b-transliterate-container">

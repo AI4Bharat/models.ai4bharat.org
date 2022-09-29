@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import { FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 import { nlgDocumentation } from "./nlgDocumentation";
+import LinearProgress from "@mui/material/LinearProgress";
 
 export default class NLG extends React.Component {
   constructor(props) {
@@ -14,10 +15,11 @@ export default class NLG extends React.Component {
     this.apiURL = "https://hf.space/embed/ai4bharat/IndicNLG/+/api/predict/";
 
     this.state = {
-      languageChoice:"hi",
-      task: "IndicSentenceSummarization",
+      languageChoice: localStorage.getItem("nlgLanguageChoice"),
+      task: localStorage.getItem("nlgTaskChoice"),
       transliteratedText: "",
       generatedText: "",
+      isFetching: false,
     };
 
     this.languages = {
@@ -56,6 +58,7 @@ export default class NLG extends React.Component {
 
   getGeneratedText() {
     const _this = this;
+    _this.setState({ isFetching: true });
     fetch(_this.apiURL, {
       method: "POST",
       body: JSON.stringify({
@@ -71,8 +74,27 @@ export default class NLG extends React.Component {
         return response.json();
       })
       .then(function (json_response) {
-        _this.setState({ generatedText: json_response.data[0] });
+        _this.setState({
+          generatedText: json_response.data[0],
+          isFetching: false,
+        });
       });
+  }
+
+  showProgress() {
+    if (this.state.isFetching) {
+      return (
+        <LinearProgress
+          sx={{
+            backgroundColor: "#fbdad0",
+            "& .MuiLinearProgress-bar": {
+              backgroundColor: "#f06b42",
+            },
+            margin: 5,
+          }}
+        />
+      );
+    }
   }
 
   render() {
@@ -107,6 +129,7 @@ export default class NLG extends React.Component {
               value={this.state.languageChoice}
               onChange={(e) => {
                 this.setState({ languageChoice: e.target.value });
+                localStorage.setItem("nlgLanguageChoice", e.target.value);
               }}
             >
               {Object.entries(this.sortedLanguages).map(
@@ -131,6 +154,7 @@ export default class NLG extends React.Component {
               value={this.state.task}
               onChange={(e) => {
                 this.setState({ task: e.target.value });
+                localStorage.setItem("nlgTaskChoice", e.target.value);
               }}
             >
               {this.tasks.map((task) => {
@@ -144,11 +168,14 @@ export default class NLG extends React.Component {
           </label>
         </div>
         <div className="a4b-interface">
+          {this.showProgress()}
           <div className="a4b-output-grid">
             <div className="a4b-output">
               <div className="a4b-transliterate-container">
                 <IndicTransliterate
-                  renderComponent={(props) => <textarea className="a4b-transliterate-text" {...props} />}
+                  renderComponent={(props) => (
+                    <textarea className="a4b-transliterate-text" {...props} />
+                  )}
                   value={this.state.transliteratedText}
                   placeholder="Type your text here...."
                   onChangeText={(text) => {

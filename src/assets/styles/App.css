@@ -24,7 +24,7 @@
 }
 
 .a4b-transliterate-text {
-  width: calc(100vw - 100px); 
+  width: calc(100vw - 50px); 
   height: 25vh;
   border-radius: 15px;
   padding: 15px;

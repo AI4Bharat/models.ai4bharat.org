@@ -16,6 +16,8 @@ import {
   StreamingClient
 } from "@project-sunbird/open-speech-streaming-client";
 
+import LinearProgress from "@mui/material/LinearProgress";
+
 export default class ASR extends React.Component {
   constructor(props) {
     super(props);
@@ -32,10 +34,11 @@ export default class ASR extends React.Component {
       audioChunks: [],
       audioFileContent: "",
       audioFileName: "No File Uploaded",
-      languageChoice: localStorage.getItem("languageChoice"),
+      languageChoice: localStorage.getItem("asrLanguageChoice"),
       samplingRateChoice: localStorage.getItem("samplingRateChoice"),
       processorChoice: JSON.parse(localStorage.getItem("processorChoice"))["processors"],
       docExpanded: false,
+      isFetching: false,
     };
     this.languages = {
       hi: "Hindi",
@@ -61,6 +64,8 @@ export default class ASR extends React.Component {
   getASROutput(asrInput) {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+
+    this.setState({ isFetching: true });
 
     var payload = JSON.stringify({
       config: {
@@ -98,7 +103,7 @@ export default class ASR extends React.Component {
       .then((result) => {
         console.log(result);
         var apiResponse = JSON.parse(result);
-        this.setState({ asrAPIResult: apiResponse["output"][0]["source"] });
+        this.setState({ asrAPIResult: apiResponse["output"][0]["source"],isFetching: false });
       })
       .catch((error) => console.log("error", error));
   }
@@ -209,6 +214,7 @@ export default class ASR extends React.Component {
     } else if (this.state.inferenceMode === "REST") {
       return (
         <div className="a4b-interface">
+          {this.showProgress()}
           <div className="a4b-output">
             <div className="a4b-asr-buttons">
               {this.renderRecordButton
@@ -311,6 +317,22 @@ export default class ASR extends React.Component {
     }
   }
 
+  showProgress() {
+    if (this.state.isFetching) {
+      return (
+        <LinearProgress
+          sx={{
+            backgroundColor: "#fbdad0",
+            "& .MuiLinearProgress-bar": {
+              backgroundColor: "#f06b42",
+            },
+            margin: 5,
+          }}
+        />
+      );
+    }
+  }
+
   render() {
     return (
       <div>
@@ -343,7 +365,7 @@ export default class ASR extends React.Component {
               sx={{ borderRadius: 15 }}
               onChange={(e) => {
                 this.setState({ languageChoice: e.target.value });
-                localStorage.setItem("languageChoice", e.target.value)
+                localStorage.setItem("asrLanguageChoice", e.target.value)
               }}
               className="a4b-option-select"
             >

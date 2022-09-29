@@ -2,6 +2,9 @@ import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import React from "react";
+import LinearProgress from "@mui/material/LinearProgress";
+import { ttsDocumentation } from "./ttsDocumentation";
+import Documentation from "../../components/A4BDocumentation/Documentation";
 
 export default class TTS extends React.Component {
   constructor(props) {
@@ -10,11 +13,12 @@ export default class TTS extends React.Component {
     this.ttsURL = "https://tts-api.ai4bharat.org/";
 
     this.state = {
-      languageChoice: "hi",
-      voiceGender: "male",
+      languageChoice: localStorage.getItem("ttsLanguageChoice"),
+      voiceGender: localStorage.getItem("ttsVoiceGender"),
       transliteratedText: null,
       audioComponent: null,
       audioHidden: true,
+      isFetching: false,
     };
 
     this.languages = {
@@ -51,13 +55,36 @@ export default class TTS extends React.Component {
     };
 
     fetch(this.ttsURL, requestOptions)
-      .then((response) => response.text())
+      .then((response) => {
+        this.setState({ isFetching: true });
+        return response.text();
+      })
       .then((result) => {
         var apiResult = JSON.parse(result);
         var audioContent = apiResult["audio"][0]["audioContent"];
         var audio = "data:audio/wav;base64," + audioContent;
-        this.setState({ audioComponent: audio, audioHidden: false });
+        this.setState({
+          isFetching: false,
+          audioComponent: audio,
+          audioHidden: false,
+        });
       });
+  }
+
+  showProgress() {
+    if (this.state.isFetching) {
+      return (
+        <LinearProgress
+          sx={{
+            backgroundColor: "#fbdad0",
+            "& .MuiLinearProgress-bar": {
+              backgroundColor: "#f06b42",
+            },
+            margin: 5,
+          }}
+        />
+      );
+    }
   }
 
   render() {
@@ -90,6 +117,7 @@ export default class TTS extends React.Component {
               value={this.state.languageChoice}
               onChange={(e) => {
                 this.setState({ languageChoice: e.target.value });
+                localStorage.setItem("ttsLanguageChoice", e.target.value);
               }}
               sx={{ borderRadius: 15 }}
               className="a4b-option-select"
@@ -112,6 +140,7 @@ export default class TTS extends React.Component {
               value={this.state.voiceGender}
               onChange={(e) => {
                 this.setState({ voiceGender: e.target.value });
+                localStorage.setItem("ttsVoiceGender", e.target.value);
               }}
               sx={{ borderRadius: 15 }}
               className="a4b-option-select"
@@ -126,10 +155,13 @@ export default class TTS extends React.Component {
           </label>
         </div>
         <div className="a4b-interface">
+          {this.showProgress()}
           <div className="a4b-output">
             <div className="a4b-transliterate-container">
               <IndicTransliterate
-                renderComponent={(props) => <textarea className="a4b-transliterate-text" {...props} />}
+                renderComponent={(props) => (
+                  <textarea className="a4b-transliterate-text" {...props} />
+                )}
                 value={this.state.transliteratedText}
                 placeholder="Type your text here to convert...."
                 onChangeText={(text) => {
@@ -149,6 +181,7 @@ export default class TTS extends React.Component {
               controls
             />
           </div>
+          <Documentation documentation={ttsDocumentation} />
         </div>
       </div>
     );

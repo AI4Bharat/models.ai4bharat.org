@@ -8,8 +8,10 @@ import { TiLocation } from "react-icons/ti";
 class App extends React.Component {
   constructor(props) {
     super(props);
-    if (!localStorage.getItem("languageChoice"))
-      localStorage.setItem("languageChoice", "hi");
+
+    // ASR Option Choices
+    if (!localStorage.getItem("asrLanguageChoice"))
+      localStorage.setItem("asrLanguageChoice", "hi");
     if (!localStorage.getItem("samplingRateChoice"))
       localStorage.setItem("samplingRateChoice", 16000);
     if (!localStorage.getItem("processorChoice"))
@@ -17,12 +19,31 @@ class App extends React.Component {
         "processorChoice",
         JSON.stringify({ processors: [] })
       );
-    if (!localStorage.getItem("tlLanguageChoice"))
-      localStorage.setItem("tlLanguageChoice", "hi");
+
+    // XLit Option Choices
     if (!localStorage.getItem("tltLanguageChoice"))
       localStorage.setItem("tltLanguageChoice", "hi");
-    if (!localStorage.getItem("tlMode"))
-      localStorage.setItem("tlMode", "en-ind");
+
+    // NLG Option Choices
+    if (!localStorage.getItem("nlgLanguageChoice"))
+      localStorage.setItem("nlgLanguageChoice", "hi");
+
+    if (!localStorage.getItem("nlgTaskChoice"))
+      localStorage.setItem("nlgTaskChoice", "IndicSentenceSummarization");
+
+    // NMT Option Choices
+    if (!localStorage.getItem("nmtLanguageFrom"))
+      localStorage.setItem("nmtLanguageFrom", "hi");
+
+    if (!localStorage.getItem("nmtLanguageTo"))
+      localStorage.setItem("nmtLanguageTo", "en");
+
+    // TTS Option Choices
+    if (!localStorage.getItem("ttsLanguageChoice"))
+      localStorage.setItem("ttsLanguageChoice", "hi");
+
+    if (!localStorage.getItem("ttsVoiceGender"))
+      localStorage.setItem("ttsVoiceGender", "male");
   }
 
   render() {
