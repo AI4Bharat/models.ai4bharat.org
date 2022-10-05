@@ -1,64 +1,94 @@
 import React from "react";
 
+import { asrAPIURL, streamingURL } from "../../config/config.js";
+import {
+  asrAPIDocumentation,
+  asrStreamingDocumentation,
+} from "./asrDocumentation.js";
+
+import {
+  SocketStatus,
+  StreamingClient,
+} from "@project-sunbird/open-speech-streaming-client";
+
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { FaMicrophone, FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation.js";
-import { asrAPIURL, streamingURL } from "../../config/config.js";
-import {
-  asrAPIDocumentation,
-  asrStreamingDocumentation
-} from "./asrDocumentation.js";
-import { Button } from "@mui/material";
-
-import {
-  SocketStatus,
-  StreamingClient
-} from "@project-sunbird/open-speech-streaming-client";
-
 import LinearProgress from "@mui/material/LinearProgress";
+
+import { Button } from "@mui/material";
 
 export default class ASR extends React.Component {
   constructor(props) {
     super(props);
-    console.log(localStorage.getItem("processorChoice"))
+
     this.streamingURL = streamingURL;
     this.asrAPIURL = asrAPIURL;
-    this.state = {
-      inferenceMode: "WebSocket",
-      isStreaming: true,
-      streaming: new StreamingClient(),
-      asrText: "",
-      asrAPIResult: "",
-      isRecording: true,
-      audioChunks: [],
-      audioFileContent: "",
-      audioFileName: "No File Uploaded",
-      languageChoice: localStorage.getItem("asrLanguageChoice"),
-      samplingRateChoice: localStorage.getItem("samplingRateChoice"),
-      processorChoice: JSON.parse(localStorage.getItem("processorChoice"))["processors"],
-      docExpanded: false,
-      isFetching: false,
-    };
+
     this.languages = {
       hi: "Hindi",
       mr: "Marathi",
-      "hi+en": "Hindi+English",
-      "mr+en": "Marathi+English",
     };
     this.samplingRates = [48000, 16000, 8000];
     this.postProcessors = {
       numbers_only: "Numbers Only",
     };
-    this.recorder = null;
-    this.toggleStreaming = this.toggleStreaming.bind(this);
-    this.onStreamOpen = this.onStreamOpen.bind(this);
-    this.onStreamClosed = this.onStreamClosed.bind(this);
-    this.setText = this.setText.bind(this);
+
+    this.state = {
+      inferenceMode: "WebSocket",
+      languageChoice: localStorage.getItem("asrLanguageChoice"),
+      samplingRateChoice: localStorage.getItem("samplingRateChoice"),
+      processorChoice: JSON.parse(localStorage.getItem("processorChoice"))[
+        "processors"
+      ],
+      asrText: "",
+      asrAPIResult: "",
+      streaming: new StreamingClient(),
+      isStreaming: false,
+      audioFileName: "No File Uploaded",
+      isFetching: false,
+      isRecording: false,
+      audioChunks: [],
+    };
+
+    this.openStream = this.openStream.bind(this);
+    this.closeStream = this.closeStream.bind(this);
+    this.handleModeChange = this.handleModeChange.bind(this);
     this.setInferenceMode = this.setInferenceMode.bind(this);
     this.getASROutput = this.getASROutput.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
+  }
+
+  startRecording() {
+    const _this = this;
+    _this.setState({ isRecording: !_this.state.isRecording });
+    _this.setState({ asrAPIResult: "Recording Audio...." });
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      _this.recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+      _this.recorder.ondataavailable = (e) => {
+        _this.state.audioChunks.push(e.data);
+      };
+      _this.recorder.onstop = (e) => {
+        console.log("Recording Stopped");
+      };
+      _this.recorder.start(0.5);
+    });
+  }
+
+  stopRecording() {
+    const _this = this;
+    _this.setState({ isRecording: !_this.state.isRecording });
+    _this.recorder.stop();
+    let blob = new Blob(_this.state.audioChunks, { type: "audio/wav" });
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      var base64Data = reader.result.split(",")[1];
+      this.getASROutput(base64Data);
+      _this.setState({ audioChunks: [] });
+    };
   }
 
   getASROutput(asrInput) {
@@ -103,28 +133,79 @@ export default class ASR extends React.Component {
       .then((result) => {
         console.log(result);
         var apiResponse = JSON.parse(result);
-        this.setState({ asrAPIResult: apiResponse["output"][0]["source"],isFetching: false });
+        this.setState({
+          asrAPIResult: apiResponse["output"][0]["source"],
+          isFetching: false,
+        });
       })
       .catch((error) => console.log("error", error));
   }
 
   setInferenceMode(mode) {
     this.setState({ inferenceMode: mode });
-    this.setState({ isStreaming: true });
-    this.setState({ isRecording: true });
+    this.setState({ isStreaming: false });
     this.setState({
       asrText: "",
       asrAPIResult: "",
     });
   }
 
-  onStreamOpen() {
-    console.log("Stream Started");
+  renderStreamButton() {
     const _this = this;
-    _this.setState({ asrText: "Detecting Audio...." });
+    if (_this.state.isStreaming) {
+      return (
+        <button onClick={_this.closeStream} className="a4b-mic-recording">
+          <FaMicrophone className="a4b-mic-logo" />
+        </button>
+      );
+    } else {
+      return (
+        <button onClick={_this.openStream} className="a4b-mic">
+          <FaMicrophone className="a4b-mic-logo" />
+        </button>
+      );
+    }
+  }
+
+  renderRecordButton() {
+    if (this.state.isRecording) {
+      return (
+        <button onClick={this.stopRecording} className="a4b-mic-recording">
+          <FaMicrophone className="a4b-mic-logo" />
+        </button>
+      );
+    } else {
+      return (
+        <button onClick={this.startRecording} className="a4b-mic">
+          <FaMicrophone className="a4b-mic-logo" />
+        </button>
+      );
+    }
+  }
+
+  showProgress() {
+    if (this.state.isFetching) {
+      return (
+        <LinearProgress
+          sx={{
+            backgroundColor: "#fbdad0",
+            "& .MuiLinearProgress-bar": {
+              backgroundColor: "#f06b42",
+            },
+            margin: 5,
+          }}
+        />
+      );
+    }
+  }
+
+  openStream() {
+    const _this = this;
+    _this.setState({ isStreaming: true, asrText: "Detecting Audio...." });
     console.log(
       `Starting ASR with Language: ${_this.state.languageChoice} Sampling Rate: ${_this.state.samplingRateChoice} and Processors: ${_this.state.processorChoice} ...`
     );
+
     _this.state.streaming.connect(
       _this.streamingURL,
       _this.state.languageChoice,
@@ -136,7 +217,7 @@ export default class ASR extends React.Component {
           console.log("Starting Stream....");
           _this.state.streaming.startStreaming(
             function (transcript) {
-              _this.setText(transcript);
+              _this.setState({ asrText: transcript });
             },
             (e) => {
               console.log("Encountered an error: ", e);
@@ -151,46 +232,42 @@ export default class ASR extends React.Component {
     );
   }
 
-  setText(text) {
-    this.setState({ asrText: text });
+  closeStream() {
+    const _this = this;
+    if (_this.state.asrText === "Detecting Audio....") {
+      _this.setState({ asrText: "" });
+    }
+    _this.state.streaming.stopStreaming();
+    _this.state.streaming.disconnect();
+    _this.setState({ isStreaming: false });
+    console.log("Closed");
   }
 
-  onStreamClosed() {
-    console.log("Stream Closed");
-    this.state.streaming.stopStreaming();
-    this.state.streaming.disconnect();
-  }
-
-  toggleStreaming() {
-    this.setState({ isStreaming: !this.state.isStreaming });
-    this.state.isStreaming ? this.onStreamOpen() : this.onStreamClosed();
-  }
-
-  setStreamingMicAnimation() {
-    if (this.state.isStreaming) {
-      return (
-        <button onClick={this.toggleStreaming} className="a4b-mic">
-          <FaMicrophone className="a4b-mic-logo" />
-        </button>
-      );
-    } else {
-      return (
-        <button onClick={this.toggleStreaming} className="a4b-mic-recording">
-          <FaMicrophone className="a4b-mic-logo" />
-        </button>
-      );
+  handleModeChange() {
+    const _this = this;
+    if (_this.state.isStreaming) {
+      _this.state.streaming.stopStreaming();
+      _this.state.streaming.disconnect();
+      console.log("Mode Change, Closing Stream");
     }
   }
 
   setInferenceInterface() {
-    if (this.state.inferenceMode === "WebSocket") {
+    const _this = this;
+    if (_this.state.inferenceMode === "WebSocket") {
       return (
         <div className="a4b-interface">
           <div className="a4b-output">
             <div className="a4b-asr-buttons">
-              {this.setStreamingMicAnimation()}
+              {_this.renderStreamButton()}
               <Button
-                sx={{ width: 10, height: 50, color: "#4a4a4a", borderColor: "#4a4a4a", marginTop: 1 }}
+                sx={{
+                  width: 10,
+                  height: 50,
+                  color: "#4a4a4a",
+                  borderColor: "#4a4a4a",
+                  marginTop: 1,
+                }}
                 size="large"
                 variant="outlined"
                 onClick={() => {
@@ -217,10 +294,15 @@ export default class ASR extends React.Component {
           {this.showProgress()}
           <div className="a4b-output">
             <div className="a4b-asr-buttons">
-              {this.renderRecordButton
-              ()}
+              {_this.renderRecordButton()}
               <Button
-                sx={{ width: 10, height: 50, color: "#4a4a4a", borderColor: "#4a4a4a", marginTop: 1 }}
+                sx={{
+                  width: 10,
+                  height: 50,
+                  color: "#4a4a4a",
+                  borderColor: "#4a4a4a",
+                  marginTop: 1,
+                }}
                 size="large"
                 variant="outlined"
                 onClick={() => {
@@ -271,68 +353,6 @@ export default class ASR extends React.Component {
     }
   }
 
-  startRecording() {
-    const _this = this;
-    _this.setState({ isRecording: !_this.state.isRecording });
-    _this.setState({ asrAPIResult: "Recording Audio...." });
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      _this.recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
-      _this.recorder.ondataavailable = (e) => {
-        _this.state.audioChunks.push(e.data);
-      };
-      _this.recorder.onstop = (e) => {
-        console.log("Recording Stopped");
-      };
-      _this.recorder.start(0.5);
-    });
-  }
-
-  stopRecording() {
-    const _this = this;
-    _this.setState({ isRecording: !_this.state.isRecording });
-    _this.recorder.stop();
-    let blob = new Blob(_this.state.audioChunks, { type: "audio/wav" });
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onloadend = () => {
-      var base64Data = reader.result.split(",")[1];
-      this.getASROutput(base64Data);
-      _this.setState({ audioChunks: [] });
-    };
-  }
-
-  renderRecordButton() {
-    if (this.state.isRecording) {
-      return (
-        <button onClick={this.startRecording} className="a4b-mic">
-          <FaMicrophone className="a4b-mic-logo" />
-        </button>
-      );
-    } else {
-      return (
-        <button onClick={this.stopRecording} className="a4b-mic-recording">
-          <FaMicrophone className="a4b-mic-logo" />
-        </button>
-      );
-    }
-  }
-
-  showProgress() {
-    if (this.state.isFetching) {
-      return (
-        <LinearProgress
-          sx={{
-            backgroundColor: "#fbdad0",
-            "& .MuiLinearProgress-bar": {
-              backgroundColor: "#f06b42",
-            },
-            margin: 5,
-          }}
-        />
-      );
-    }
-  }
-
   render() {
     return (
       <div>
@@ -358,14 +378,15 @@ export default class ASR extends React.Component {
           <label className="a4b-option">
             Language :
             <Select
+              disabled={this.state.isStreaming || this.state.isRecording}
               MenuProps={{
                 disableScrollLock: true,
               }}
               value={this.state.languageChoice}
               sx={{ borderRadius: 15 }}
               onChange={(e) => {
-                this.setState({ languageChoice: e.target.value });
-                localStorage.setItem("asrLanguageChoice", e.target.value)
+                this.setState({ languageChoice: e.target.value, asrText: "" });
+                localStorage.setItem("asrLanguageChoice", e.target.value);
               }}
               className="a4b-option-select"
             >
@@ -377,6 +398,7 @@ export default class ASR extends React.Component {
           <label className="a4b-option">
             Interface Type :
             <Select
+              disabled={this.state.isStreaming || this.state.isRecording}
               MenuProps={{
                 disableScrollLock: true,
               }}
@@ -385,6 +407,7 @@ export default class ASR extends React.Component {
               className="a4b-option-select"
               onChange={(e) => {
                 this.setInferenceMode(e.target.value);
+                this.handleModeChange();
               }}
             >
               <MenuItem value="WebSocket">Streaming (WebSocket)</MenuItem>
@@ -394,6 +417,7 @@ export default class ASR extends React.Component {
           <label className="a4b-option">
             Post Processor :
             <Select
+              disabled={this.state.isStreaming || this.state.isRecording}
               multiple
               MenuProps={{
                 disableScrollLock: true,
@@ -406,8 +430,11 @@ export default class ASR extends React.Component {
                 } = event;
                 let choices =
                   typeof value === "string" ? value.split(",") : value;
-                localStorage.setItem("processorChoice", JSON.stringify({ processors: choices }))
-                this.setState({ processorChoice: choices });
+                localStorage.setItem(
+                  "processorChoice",
+                  JSON.stringify({ processors: choices })
+                );
+                this.setState({ processorChoice: choices, asrText: "" });
                 console.log(choices);
               }}
               className="a4b-option-select"
@@ -422,14 +449,17 @@ export default class ASR extends React.Component {
           <label className="a4b-option">
             Sample Rate :
             <Select
+              disabled={this.state.isStreaming || this.state.isRecording}
               MenuProps={{
                 disableScrollLock: true,
               }}
               sx={{ borderRadius: 15 }}
               value={this.state.samplingRateChoice}
               onChange={(e) => {
-                localStorage.setItem("samplingRateChoice", e.target.value)
-                this.setState({ samplingRateChoice: e.target.value });
+                localStorage.setItem("samplingRateChoice", e.target.value);
+                this.setState({
+                  samplingRateChoice: e.target.value,
+                });
               }}
               className="a4b-option-select"
             >
