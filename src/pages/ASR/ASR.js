@@ -27,13 +27,15 @@ export default class ASR extends React.Component {
     this.asrAPIURL = asrAPIURL;
 
     this.languages = {
-      hi: "Hindi",
-      mr: "Marathi",
+      hi: {
+        text: "Hindi",
+        streaming: true,
+        rest: true,
+        processors: { numbers_only: "Numbers Only" },
+      },
+      mr: { text: "Marathi", streaming: true, rest: true, processors: {} },
     };
     this.samplingRates = [48000, 16000, 8000];
-    this.postProcessors = {
-      numbers_only: "Numbers Only",
-    };
 
     this.state = {
       inferenceMode: "WebSocket",
@@ -353,6 +355,28 @@ export default class ASR extends React.Component {
     }
   }
 
+  renderModeChoice() {
+    let choices = [];
+    if (this.languages[this.state.languageChoice].streaming) {
+      choices.push(
+        <MenuItem value="WebSocket">Streaming (WebSocket)</MenuItem>
+      );
+    }
+    if (this.languages[this.state.languageChoice].rest) {
+      choices.push(<MenuItem value="REST">REST (API)</MenuItem>);
+    }
+    return choices;
+  }
+
+  renderProcessorChoice() {
+    let choices = [];
+    const processors = this.languages[this.state.languageChoice].processors;
+    Object.entries(processors).map(([processor, text]) => {
+      choices.push(<MenuItem value={processor}>{text}</MenuItem>);
+    });
+    return choices;
+  }
+
   render() {
     return (
       <div>
@@ -391,7 +415,7 @@ export default class ASR extends React.Component {
               className="a4b-option-select"
             >
               {Object.entries(this.languages).map(([language, optionText]) => {
-                return <MenuItem value={language}>{optionText}</MenuItem>;
+                return <MenuItem value={language}>{optionText.text}</MenuItem>;
               })}
             </Select>
           </label>
@@ -410,8 +434,7 @@ export default class ASR extends React.Component {
                 this.handleModeChange();
               }}
             >
-              <MenuItem value="WebSocket">Streaming (WebSocket)</MenuItem>
-              <MenuItem value="REST">REST</MenuItem>
+              {this.renderModeChoice()}
             </Select>
           </label>
           <label className="a4b-option">
@@ -439,11 +462,7 @@ export default class ASR extends React.Component {
               }}
               className="a4b-option-select"
             >
-              {Object.entries(this.postProcessors).map(
-                ([processor, optionText]) => {
-                  return <MenuItem value={processor}>{optionText}</MenuItem>;
-                }
-              )}
+              {this.renderProcessorChoice()}
             </Select>
           </label>
           <label className="a4b-option">
