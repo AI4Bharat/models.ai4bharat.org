@@ -1,8 +1,8 @@
-import { streamingURL, asrAPIURL } from "../../config/config.js";
+import { ASR_STREAMING_URL, ASR_REST_URL } from "../../config/config.js";
 
 const asrStreamingDocumentation = {
   method: "GET (WebSocket)",
-  url: streamingURL,
+  url: ASR_STREAMING_URL,
   steps: {
     1: {
       step: "Install the Open Speech Streaming Client Library.",
@@ -18,7 +18,7 @@ const asrStreamingDocumentation = {
     },
     3: {
       step: "Set the streaming url to point to the streaming server.",
-      snippet: `streaming_url = "${streamingURL}"`,
+      snippet: `streaming_url = "${ASR_STREAMING_URL}"`,
     },
     4: {
       step: "Set the language code, sampling rate and the post processors parameters.",
@@ -73,11 +73,11 @@ const asrStreamingDocumentation = {
 
 const asrAPIDocumentation = {
   method: "POST (API Request)",
-  url: asrAPIURL,
+  url: ASR_REST_URL,
   steps: {
     1: {
       step: "Set the API Endpoint.",
-      snippet: `api_url = "${asrAPIURL}"`,
+      snippet: `api_url = "${ASR_REST_URL}"`,
     },
     2: {
       step: "Set the headers to accept JSON payload.",

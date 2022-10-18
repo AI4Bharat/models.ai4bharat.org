@@ -1,6 +1,11 @@
 import React from "react";
 
-import { asrAPIURL, streamingURL } from "../../config/config.js";
+import {
+  ASR_REST_URL,
+  ASR_STREAMING_URL,
+  ASR_LANGUAGE_CONFIGS,
+  LANGUAGE_KEY_TEXT,
+} from "../../config/config.js";
 import {
   asrAPIDocumentation,
   asrStreamingDocumentation,
@@ -23,18 +28,9 @@ export default class ASR extends React.Component {
   constructor(props) {
     super(props);
 
-    this.streamingURL = streamingURL;
-    this.asrAPIURL = asrAPIURL;
-
-    this.languages = {
-      hi: {
-        text: "Hindi",
-        streaming: true,
-        rest: true,
-        processors: { numbers_only: "Numbers Only" },
-      },
-      mr: { text: "Marathi", streaming: true, rest: true, processors: {} },
-    };
+    this.ASR_STREAMING_URL = ASR_STREAMING_URL;
+    this.ASR_REST_URL = ASR_REST_URL;
+    this.ASR_LANGUAGE_CONFIGS = ASR_LANGUAGE_CONFIGS;
     this.samplingRates = [48000, 16000, 8000];
 
     this.state = {
@@ -130,7 +126,7 @@ export default class ASR extends React.Component {
 
     console.log(payload);
 
-    fetch(`${this.asrAPIURL + this.state.languageChoice}`, requestOptions)
+    fetch(`${this.ASR_REST_URL + this.state.languageChoice}`, requestOptions)
       .then((response) => response.text())
       .then((result) => {
         console.log(result);
@@ -209,7 +205,7 @@ export default class ASR extends React.Component {
     );
 
     _this.state.streaming.connect(
-      _this.streamingURL,
+      _this.ASR_STREAMING_URL,
       _this.state.languageChoice,
       _this.state.samplingRateChoice,
       _this.state.processorChoice,
@@ -355,25 +351,38 @@ export default class ASR extends React.Component {
     }
   }
 
-  renderModeChoice() {
+  renderLanguageChoice() {
     let choices = [];
-    if (this.languages[this.state.languageChoice].streaming) {
-      choices.push(
-        <MenuItem value="WebSocket">Streaming (WebSocket)</MenuItem>
-      );
+    if (this.state.inferenceMode === "WebSocket") {
+      this.ASR_LANGUAGE_CONFIGS.streaming.map((language) => {
+        choices.push(
+          <MenuItem value={language}>{LANGUAGE_KEY_TEXT[language]}</MenuItem>
+        );
+      });
     }
-    if (this.languages[this.state.languageChoice].rest) {
-      choices.push(<MenuItem value="REST">REST (API)</MenuItem>);
+    if (this.state.inferenceMode === "REST") {
+      this.ASR_LANGUAGE_CONFIGS.rest.map((language) => {
+        choices.push(
+          <MenuItem value={language}>{LANGUAGE_KEY_TEXT[language]}</MenuItem>
+        );
+      });
     }
     return choices;
   }
 
   renderProcessorChoice() {
     let choices = [];
-    const processors = this.languages[this.state.languageChoice].processors;
-    Object.entries(processors).map(([processor, text]) => {
-      choices.push(<MenuItem value={processor}>{text}</MenuItem>);
-    });
+    if (this.state.languageChoice in ASR_LANGUAGE_CONFIGS.processors) {
+      Object.entries(
+        ASR_LANGUAGE_CONFIGS.processors[this.state.languageChoice]
+      ).map(([processor, processorAttributes]) => {
+        if (processorAttributes[0]) {
+          choices.push(
+            <MenuItem value={processor}>{processorAttributes[1]}</MenuItem>
+          );
+        }
+      });
+    }
     return choices;
   }
 
@@ -400,26 +409,6 @@ export default class ASR extends React.Component {
         <hr className="hr-split" />
         <div className="common-options">
           <label className="a4b-option">
-            Language :
-            <Select
-              disabled={this.state.isStreaming || this.state.isRecording}
-              MenuProps={{
-                disableScrollLock: true,
-              }}
-              value={this.state.languageChoice}
-              sx={{ borderRadius: 15 }}
-              onChange={(e) => {
-                this.setState({ languageChoice: e.target.value, asrText: "" });
-                localStorage.setItem("asrLanguageChoice", e.target.value);
-              }}
-              className="a4b-option-select"
-            >
-              {Object.entries(this.languages).map(([language, optionText]) => {
-                return <MenuItem value={language}>{optionText.text}</MenuItem>;
-              })}
-            </Select>
-          </label>
-          <label className="a4b-option">
             Interface Type :
             <Select
               disabled={this.state.isStreaming || this.state.isRecording}
@@ -434,7 +423,26 @@ export default class ASR extends React.Component {
                 this.handleModeChange();
               }}
             >
-              {this.renderModeChoice()}
+              <MenuItem value="WebSocket">Streaming (WebSocket)</MenuItem>
+              <MenuItem value="REST">REST (API)</MenuItem>
+            </Select>
+          </label>
+          <label className="a4b-option">
+            Language :
+            <Select
+              disabled={this.state.isStreaming || this.state.isRecording}
+              MenuProps={{
+                disableScrollLock: true,
+              }}
+              value={this.state.languageChoice}
+              sx={{ borderRadius: 15 }}
+              onChange={(e) => {
+                this.setState({ languageChoice: e.target.value, asrText: "" });
+                localStorage.setItem("asrLanguageChoice", e.target.value);
+              }}
+              className="a4b-option-select"
+            >
+              {this.renderLanguageChoice()}
             </Select>
           </label>
           <label className="a4b-option">
