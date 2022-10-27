@@ -24,7 +24,7 @@
 }
 
 .a4b-transliterate-text {
-  width: calc(100vw - 100px); 
+  width: calc(100vw - 100px);
   height: 25vh;
   border-radius: 15px;
   padding: 15px;
@@ -485,4 +485,18 @@ pre {
   font-size: 1rem;
   color: #4a4a4a;
   text-decoration: none;
+}
+
+.tts-sample-table {
+  width: 100%;
+}
+
+th,
+td {
+  padding: 10px;
+  border-radius: 50px;
+}
+
+.tts-sample-head {
+  background-color: #f06b42;
 }
