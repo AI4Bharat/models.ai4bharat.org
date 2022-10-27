@@ -1,8 +1,10 @@
+import React from "react";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
+
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import React from "react";
 import LinearProgress from "@mui/material/LinearProgress";
+
 import { ttsDocumentation } from "./ttsDocumentation";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 
