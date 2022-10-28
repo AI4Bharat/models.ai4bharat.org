@@ -500,3 +500,7 @@ td {
 .tts-sample-head {
   background-color: #f06b42;
 }
+
+.tts-sample-table-container {
+  overflow-x: scroll;
+}
