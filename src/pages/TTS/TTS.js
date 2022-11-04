@@ -43,6 +43,7 @@ export default class TTS extends React.Component {
   }
 
   getAudioOutput() {
+    this.setState({ isFetching: true });
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -69,17 +70,17 @@ export default class TTS extends React.Component {
 
     fetch(this.ttsURL, requestOptions)
       .then((response) => {
-        this.setState({ isFetching: true });
         return response.text();
       })
       .then((result) => {
         var apiResult = JSON.parse(result);
         var audioContent = apiResult["audio"][0]["audioContent"];
-        var audio = "data:audio/wav;base64," + audioContent;
+        var audio = new Audio("data:audio/wav;base64," + audioContent);
+        audio.play();
         this.setState({
           isFetching: false,
-          audioComponent: audio,
-          audioHidden: false,
+          // audioComponent: audio,
+          //   audioHidden: false,
         });
       });
   }

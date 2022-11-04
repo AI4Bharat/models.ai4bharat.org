@@ -148,7 +148,7 @@
 
 .nav {
   height: 3.5rem;
-  width: auto;
+  width: inherit;
   background-color: #f06b42;
   align-items: center;
   justify-items: center;
@@ -303,7 +303,7 @@ pre {
 .a4b-page-container {
   height: auto;
   display: block;
-  width: 100%;
+  width: auto;
   text-align: center;
   align-content: center;
   justify-content: flex-start;
@@ -424,7 +424,7 @@ pre {
 
 .footer {
   height: auto;
-  width: 100%;
+  width: inherit;
   background-color: #dbdbdb;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(450px, auto));
@@ -503,4 +503,8 @@ td {
 
 .tts-sample-table-container {
   overflow-x: scroll;
+}
+
+.a4b-component-container {
+  width: auto;
 }

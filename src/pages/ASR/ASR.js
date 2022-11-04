@@ -1,8 +1,7 @@
 import React from "react";
 
 import {
-  ASR_REST_URL,
-  ASR_STREAMING_URL,
+  ASR_STREAMING_URLS,
   ASR_LANGUAGE_CONFIGS,
   LANGUAGE_KEY_TEXT,
 } from "../../config/config.js";
@@ -28,8 +27,6 @@ export default class ASR extends React.Component {
   constructor(props) {
     super(props);
 
-    this.ASR_STREAMING_URL = ASR_STREAMING_URL;
-    this.ASR_REST_URL = ASR_REST_URL;
     this.ASR_LANGUAGE_CONFIGS = ASR_LANGUAGE_CONFIGS;
     this.samplingRates = [48000, 16000, 8000];
 
@@ -125,8 +122,10 @@ export default class ASR extends React.Component {
     };
 
     console.log(payload);
-
-    fetch(`${this.ASR_REST_URL + this.state.languageChoice}`, requestOptions)
+    const ASR_REST_URL = `${ASR_STREAMING_URLS.at(
+      ASR_LANGUAGE_CONFIGS.streaming.indexOf(this.state.languageChoice)
+    )}/asr/v1/recognize/${this.state.languageChoice}`.replace("wss", "https");
+    fetch(ASR_REST_URL, requestOptions)
       .then((response) => response.text())
       .then((result) => {
         console.log(result);
@@ -205,7 +204,9 @@ export default class ASR extends React.Component {
     );
 
     _this.state.streaming.connect(
-      _this.ASR_STREAMING_URL,
+      ASR_STREAMING_URLS.at(
+        ASR_LANGUAGE_CONFIGS.streaming.indexOf(_this.state.languageChoice)
+      ),
       _this.state.languageChoice,
       _this.state.samplingRateChoice,
       _this.state.processorChoice,
@@ -358,6 +359,7 @@ export default class ASR extends React.Component {
         choices.push(
           <MenuItem value={language}>{LANGUAGE_KEY_TEXT[language]}</MenuItem>
         );
+        return true;
       });
     }
     if (this.state.inferenceMode === "REST") {
@@ -365,6 +367,7 @@ export default class ASR extends React.Component {
         choices.push(
           <MenuItem value={language}>{LANGUAGE_KEY_TEXT[language]}</MenuItem>
         );
+        return true;
       });
     }
     return choices;
@@ -381,6 +384,7 @@ export default class ASR extends React.Component {
             <MenuItem value={processor}>{processorAttributes[1]}</MenuItem>
           );
         }
+        return true;
       });
     }
     return choices;

@@ -17,26 +17,29 @@ const LANGUAGE_KEY_TEXT = {
   pa: "Panjabi - ਪੰਜਾਬੀ",
   sa: "Sanskrit - संस्कृतम्",
   ur: "Urdu - اُردُو",
+  en: "English - English",
+  ne: "Nepali - नेपाली",
+  si: "Sinhala - සිංහල",
 };
 
 // ASR Endpoints
-const ASR_STREAMING_URL = "https://asr-api.ai4bharat.org/";
-const ASR_REST_URL = "https://asr-api.ai4bharat.org/asr/v1/recognize/";
+const ASR_STREAMING_URLS =
+  "wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://ai4b-dev-asr.ulcacontrib.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://ai4b-dev-asr.ulcacontrib.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://ai4b-dev-asr.ulcacontrib.org,wss://ai4b-dev-asr.ulcacontrib.org,wss://asr-api.ai4bharat.org".split(
+    ","
+  );
 
 //ASR Language Configs
 const ASR_LANGUAGE_CONFIGS = {
-  streaming: ["en", "gu", "ml", "kn", "pa", "sa", "ur", "or", "bn", "hi", "mr"],
-  rest: ["hi", "mr"],
+  streaming: "bn,en,gu,hi,kn,ml,mr,ne,or,pa,sa,si,ta,te,ur".split(","),
+  rest: "bn,en,gu,hi,kn,ml,mr,ne,or,pa,sa,si,ta,te,ur".split(","),
   processors: {
     hi: {
+      numbers_only: [true, "Numbers Only"],
+    },
+    mr: {
       numbers_only: [true, "Numbers Only"],
     },
   },
 };
 
-export {
-  ASR_STREAMING_URL,
-  ASR_REST_URL,
-  ASR_LANGUAGE_CONFIGS,
-  LANGUAGE_KEY_TEXT,
-};
+export { ASR_STREAMING_URLS, ASR_LANGUAGE_CONFIGS, LANGUAGE_KEY_TEXT };

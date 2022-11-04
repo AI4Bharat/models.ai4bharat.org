@@ -98,7 +98,7 @@ export default class Home extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="a4b-component-container">
         <section className="title-section">
           <h1 className="title">
             <img
