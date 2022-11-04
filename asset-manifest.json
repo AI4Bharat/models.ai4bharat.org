@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.f4e8bef8.css",
-    "main.js": "/static/js/main.e75a5686.js",
+    "main.css": "/static/css/main.c9669486.css",
+    "main.js": "/static/js/main.ead936b3.js",
     "static/media/train_gujaratifemale_00545_b.wav": "/static/media/train_gujaratifemale_00545_b.722d77154740cb5ada6c.wav",
     "static/media/train_gujaratifemale_00545_c.wav": "/static/media/train_gujaratifemale_00545_c.9e6509da92d050b075ab.wav",
     "static/media/train_gujaratifemale_00545_a.wav": "/static/media/train_gujaratifemale_00545_a.e22f997da597991326df.wav",
@@ -85,11 +85,11 @@
     "static/media/train_bodofullfemale_00538_b.wav": "/static/media/train_bodofullfemale_00538_b.7ab5e85a089dc1d680a9.wav",
     "static/media/train_manipurimale_00235_b.wav": "/static/media/train_manipurimale_00235_b.8696531ab8b703766ca9.wav",
     "index.html": "/index.html",
-    "main.f4e8bef8.css.map": "/static/css/main.f4e8bef8.css.map",
-    "main.e75a5686.js.map": "/static/js/main.e75a5686.js.map"
+    "main.c9669486.css.map": "/static/css/main.c9669486.css.map",
+    "main.ead936b3.js.map": "/static/js/main.ead936b3.js.map"
   },
   "entrypoints": [
-    "static/css/main.f4e8bef8.css",
-    "static/js/main.e75a5686.js"
+    "static/css/main.c9669486.css",
+    "static/js/main.ead936b3.js"
   ]
 }
