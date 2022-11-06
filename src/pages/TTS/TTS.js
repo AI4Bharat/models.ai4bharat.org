@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import LinearProgress from "@mui/material/LinearProgress";
+import Skeleton from "@mui/material/Skeleton";
 
 import { ttsDocumentation } from "./ttsDocumentation";
 import Documentation from "../../components/A4BDocumentation/Documentation";
@@ -226,11 +227,15 @@ export default class TTS extends React.Component {
             <button onClick={this.getAudioOutput} className="asr-button">
               Convert
             </button>
-            <audio
-              hidden={this.state.audioHidden}
-              src={this.state.audioComponent}
-              controls
-            />
+            {this.state.isFetching ? (
+              <Skeleton sx={{ height: 80, width: 300, bgcolor: "#fbdad0" }} />
+            ) : (
+              <audio
+                hidden={this.state.audioHidden}
+                src={this.state.audioComponent}
+                controls
+              />
+            )}
           </div>
           <Documentation documentation={ttsDocumentation} />
         </div>
