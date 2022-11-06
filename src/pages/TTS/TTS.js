@@ -123,7 +123,7 @@ export default class TTS extends React.Component {
             <Button
               color="warning"
               component={Link}
-              to={`/tts`}
+              to={`/tts/samples`}
               sx={{
                 height: 50,
                 margin: 2,
