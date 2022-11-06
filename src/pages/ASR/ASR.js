@@ -2,6 +2,7 @@ import React from "react";
 
 import {
   ASR_STREAMING_URLS,
+  ASR_REST_URLS,
   ASR_LANGUAGE_CONFIGS,
   LANGUAGE_KEY_TEXT,
 } from "../../config/config.js";
@@ -122,9 +123,9 @@ export default class ASR extends React.Component {
     };
 
     console.log(payload);
-    const ASR_REST_URL = `${ASR_STREAMING_URLS.at(
-      ASR_LANGUAGE_CONFIGS.streaming.indexOf(this.state.languageChoice)
-    )}/asr/v1/recognize/${this.state.languageChoice}`.replace("wss", "https");
+    const ASR_REST_URL = `${
+      ASR_REST_URLS[this.state.languageChoice]
+    }/asr/v1/recognize/${this.state.languageChoice}`;
     fetch(ASR_REST_URL, requestOptions)
       .then((response) => response.text())
       .then((result) => {
@@ -204,9 +205,7 @@ export default class ASR extends React.Component {
     );
 
     _this.state.streaming.connect(
-      ASR_STREAMING_URLS.at(
-        ASR_LANGUAGE_CONFIGS.streaming.indexOf(_this.state.languageChoice)
-      ),
+      ASR_STREAMING_URLS[_this.state.languageChoice],
       _this.state.languageChoice,
       _this.state.samplingRateChoice,
       _this.state.processorChoice,

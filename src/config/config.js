@@ -23,10 +23,41 @@ const LANGUAGE_KEY_TEXT = {
 };
 
 // ASR Endpoints
-const ASR_STREAMING_URLS =
-  "wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://ai4b-dev-asr.ulcacontrib.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://ai4b-dev-asr.ulcacontrib.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://asr-api.ai4bharat.org,wss://ai4b-dev-asr.ulcacontrib.org,wss://ai4b-dev-asr.ulcacontrib.org,wss://asr-api.ai4bharat.org".split(
-    ","
-  );
+const ASR_STREAMING_URLS = {
+  bn: "wss://asr-api.ai4bharat.org",
+  en: "wss://asr-api.ai4bharat.org",
+  gu: "wss://asr-api.ai4bharat.org",
+  hi: "wss://ai4b-dev-asr.ulcacontrib.org",
+  kn: "wss://asr-api.ai4bharat.org",
+  ml: "wss://asr-api.ai4bharat.org",
+  mr: "wss://ai4b-dev-asr.ulcacontrib.org",
+  ne: "wss://asr-api.ai4bharat.org",
+  or: "wss://asr-api.ai4bharat.org",
+  pa: "wss://asr-api.ai4bharat.org",
+  sa: "wss://asr-api.ai4bharat.org",
+  si: "wss://asr-api.ai4bharat.org",
+  ta: "wss://ai4b-dev-asr.ulcacontrib.org",
+  te: "wss://ai4b-dev-asr.ulcacontrib.org",
+  ur: "wss://asr-api.ai4bharat.org",
+};
+
+const ASR_REST_URLS = {
+  bn: "https://asr-api.ai4bharat.org",
+  en: "https://asr-api.ai4bharat.org",
+  gu: "https://asr-api.ai4bharat.org",
+  hi: "https://asr-api.ai4bharat.org",
+  kn: "https://asr-api.ai4bharat.org",
+  ml: "https://asr-api.ai4bharat.org",
+  mr: "https://asr-api.ai4bharat.org",
+  ne: "https://asr-api.ai4bharat.org",
+  or: "https://asr-api.ai4bharat.org",
+  pa: "https://asr-api.ai4bharat.org",
+  sa: "https://asr-api.ai4bharat.org",
+  si: "https://asr-api.ai4bharat.org",
+  ta: "https://ai4b-dev-asr.ulcacontrib.org",
+  te: "https://ai4b-dev-asr.ulcacontrib.org",
+  ur: "https://asr-api.ai4bharat.org",
+};
 
 //ASR Language Configs
 const ASR_LANGUAGE_CONFIGS = {
@@ -42,4 +73,9 @@ const ASR_LANGUAGE_CONFIGS = {
   },
 };
 
-export { ASR_STREAMING_URLS, ASR_LANGUAGE_CONFIGS, LANGUAGE_KEY_TEXT };
+export {
+  ASR_STREAMING_URLS,
+  ASR_REST_URLS,
+  ASR_LANGUAGE_CONFIGS,
+  LANGUAGE_KEY_TEXT,
+};

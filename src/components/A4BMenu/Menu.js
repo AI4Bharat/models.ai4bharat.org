@@ -55,6 +55,7 @@ export default class A4BMenu extends React.Component {
                 onClick={() => {
                   this.setState({ anchorEl: null, open: false });
                 }}
+                key={page}
               >
                 <ListItemText
                   sx={{

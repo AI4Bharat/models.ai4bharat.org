@@ -121,6 +121,7 @@ export default class Home extends React.Component {
               <Card
                 sx={{ position: "relative", borderRadius: 5, boxShadow: 10 }}
                 className="a4b-home-card"
+                key={path}
               >
                 <Box className="a4b-home-card-logo-container">
                   {modelIcons[path]}

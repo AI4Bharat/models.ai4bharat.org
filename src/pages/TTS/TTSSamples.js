@@ -1,4 +1,7 @@
 import React from "react";
+import Button from "@mui/material/Button";
+import { FaLaptopCode } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default class TTSSamples extends React.Component {
   render() {
@@ -18,6 +21,40 @@ export default class TTSSamples extends React.Component {
           </h1>
           <p className="subtitle">
             Check out some of the sample TTS Outputs here!
+            <Button
+              color="warning"
+              component={Link}
+              to={`/tts`}
+              sx={{
+                height: 50,
+                margin: 2,
+                width: 100,
+                display: "flex",
+                justifyContent: "right",
+              }}
+              size="small"
+            >
+              <div style={{ height: "100%", width: "auto" }}>
+                <p
+                  style={{
+                    textDecorationStyle: "solid",
+                    fontWeight: 600,
+                  }}
+                >
+                  Try it!
+                </p>
+              </div>
+              <div
+                style={{
+                  height: "100%",
+                  width: "auto",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <FaLaptopCode style={{ margin: 5 }} size={20} />
+              </div>
+            </Button>
           </p>
         </section>
         <div touch-action="none" className="tts-sample-table-container">

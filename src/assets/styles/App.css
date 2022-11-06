@@ -144,6 +144,10 @@
 .subtitle {
   position: relative;
   font-size: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .nav {

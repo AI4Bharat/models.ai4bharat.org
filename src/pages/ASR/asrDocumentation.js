@@ -1,12 +1,8 @@
-import { ASR_STREAMING_URLS, ASR_LANGUAGE_CONFIGS } from "../../config/config";
+import { ASR_STREAMING_URLS, ASR_REST_URLS } from "../../config/config";
 
-const ASR_STREAMING_URL = ASR_STREAMING_URLS.at(
-  ASR_LANGUAGE_CONFIGS.streaming.indexOf("hi")
-);
+const ASR_STREAMING_URL = ASR_STREAMING_URLS["hi"];
 
-const ASR_REST_URL = `${ASR_STREAMING_URLS.at(
-  ASR_LANGUAGE_CONFIGS.streaming.indexOf("hi")
-)}/asr/v1/recognize/${"hi"}`.replace("wss", "https");
+const ASR_REST_URL = `${ASR_REST_URLS["hi"]}/asr/v1/recognize/${"hi"}`;
 
 const asrStreamingDocumentation = {
   method: "GET (WebSocket)",

@@ -1,5 +1,8 @@
 import React from "react";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
+import Button from "@mui/material/Button";
+import { FaLaptopCode } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -75,12 +78,11 @@ export default class TTS extends React.Component {
       .then((result) => {
         var apiResult = JSON.parse(result);
         var audioContent = apiResult["audio"][0]["audioContent"];
-        var audio = new Audio("data:audio/wav;base64," + audioContent);
-        audio.play();
+        var audio = "data:audio/wav;base64," + audioContent;
         this.setState({
           isFetching: false,
-          // audioComponent: audio,
-          //   audioHidden: false,
+          audioComponent: audio,
+          audioHidden: false,
         });
       });
   }
@@ -118,6 +120,41 @@ export default class TTS extends React.Component {
           </h1>
           <p className="subtitle">
             Convert text to speech in real-time across various Indian Languages!
+            <Button
+              color="warning"
+              component={Link}
+              to={`/tts`}
+              sx={{
+                height: 50,
+                margin: 2,
+                width: 100,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              size="small"
+            >
+              <div style={{ height: "100%", width: "auto" }}>
+                <p
+                  style={{
+                    textDecorationStyle: "solid",
+                    fontWeight: 600,
+                  }}
+                >
+                  Samples
+                </p>
+              </div>
+              <div
+                style={{
+                  height: "100%",
+                  width: "auto",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <FaLaptopCode style={{ margin: 5 }} size={20} />
+              </div>
+            </Button>
           </p>
         </section>
         <hr className="hr-split" />
