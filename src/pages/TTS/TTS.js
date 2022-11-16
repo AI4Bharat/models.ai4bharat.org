@@ -12,19 +12,29 @@ import Skeleton from "@mui/material/Skeleton";
 import { ttsDocumentation } from "./ttsDocumentation";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 
+import { io } from "socket.io-client";
+
 export default class TTS extends React.Component {
   constructor(props) {
     super(props);
 
     this.ttsURL = "https://tts-api.ai4bharat.org/";
 
+    this.modes = {
+      REST: "REST (API)",
+      WebSocket: "Streaming (WebSocket)",
+    };
+
     this.state = {
       languageChoice: localStorage.getItem("ttsLanguageChoice"),
       voiceGender: localStorage.getItem("ttsVoiceGender"),
       transliteratedText: null,
+      streamingText: null,
       audioComponent: null,
+      streamingAudio: null,
       audioHidden: true,
       isFetching: false,
+      inferenceMode: "REST",
     };
 
     this.languages = {
@@ -100,6 +110,121 @@ export default class TTS extends React.Component {
             margin: 5,
           }}
         />
+      );
+    }
+  }
+
+  getStreamingOutput(e) {
+    const SOCKET_URL = "wss://tts-api.ai4bharat.org/tts";
+    var socket_tts = io(SOCKET_URL, {
+      path: "/tts_socket.io",
+      transport: ["websocket"],
+      upgrade: false,
+    });
+    if (e.key === " ") {
+      this.request = {
+        input: [
+          {
+            source: this.state.streamingText,
+          },
+        ],
+        config: {
+          gender: this.state.voiceGender,
+          language: {
+            sourceLanguage: this.state.languageChoice,
+          },
+        },
+      };
+      this.setState({ isFetching: true });
+      socket_tts.emit("infer", this.request, (response) => {
+        if (response["audio"]) {
+          let arrayString =
+            "data:audio/wav;base64," + response["audio"][0]["audioContent"];
+          this.setState({
+            isFetching: false,
+            streamingAudio: arrayString,
+            audioHidden: false,
+          });
+          var ttsStreamingAudio = new Audio(arrayString);
+          ttsStreamingAudio.play();
+        }
+      });
+    }
+  }
+
+  setInferenceInterface() {
+    const _this = this;
+    if (_this.state.inferenceMode === "REST") {
+      return (
+        <div className="a4b-interface">
+          {this.showProgress()}
+          <div className="a4b-output">
+            <div className="a4b-transliterate-container">
+              <IndicTransliterate
+                renderComponent={(props) => (
+                  <textarea className="a4b-transliterate-text" {...props} />
+                )}
+                value={this.state.transliteratedText}
+                placeholder="Type your text here to convert...."
+                onChangeText={(text) => {
+                  this.setState({ transliteratedText: text });
+                }}
+                lang={this.state.languageChoice}
+              />
+            </div>
+          </div>
+          <div className="a4b-tts-convert">
+            <button onClick={this.getAudioOutput} className="asr-button">
+              Convert
+            </button>
+            {this.state.isFetching ? (
+              <Skeleton sx={{ height: 80, width: 300, bgcolor: "#fbdad0" }} />
+            ) : (
+              <audio
+                hidden={this.state.audioHidden}
+                src={this.state.audioComponent}
+                controls
+              />
+            )}
+          </div>
+          <Documentation documentation={ttsDocumentation} />
+        </div>
+      );
+    } else if (_this.state.inferenceMode === "WebSocket") {
+      return (
+        <div classname="a4b-interface">
+          {this.showProgress()}
+          <div className="a4b-output">
+            <div className="a4b-transliterate-container">
+              <IndicTransliterate
+                onKeyUp={(e) => {
+                  _this.getStreamingOutput(e);
+                }}
+                renderComponent={(props) => (
+                  <textarea className="a4b-transliterate-text" {...props} />
+                )}
+                value={_this.state.streamingText}
+                placeholder="Type your text here to convert...."
+                onChangeText={(text) => {
+                  _this.setState({ streamingText: text });
+                }}
+                lang={_this.state.languageChoice}
+              />
+            </div>
+          </div>
+          <div className="a4b-tts-convert">
+            {_this.state.isFetching ? (
+              <Skeleton sx={{ height: 80, width: 300, bgcolor: "#fbdad0" }} />
+            ) : (
+              <audio
+                id="a4b-tts-streaming"
+                hidden={_this.state.audioHidden}
+                src={_this.state.streamingAudio}
+                controls
+              />
+            )}
+          </div>
+        </div>
       );
     }
   }
@@ -184,6 +309,32 @@ export default class TTS extends React.Component {
             </Select>
           </label>
           <label className="a4b-option">
+            Interface Type:
+            <Select
+              MenuProps={{
+                disableScrollLock: true,
+              }}
+              value={this.state.inferenceMode}
+              onChange={(e) => {
+                this.setState({
+                  inferenceMode: e.target.value,
+                  transliteratedText: null,
+                  streamingText: null,
+                });
+              }}
+              sx={{ borderRadius: 15 }}
+              className="a4b-option-select"
+            >
+              {Object.entries(this.modes).map(([language, optionText]) => {
+                return (
+                  <MenuItem sx={{ margin: 1 }} value={language}>
+                    {optionText}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </label>
+          <label className="a4b-option">
             Voice:
             <Select
               MenuProps={{
@@ -206,39 +357,7 @@ export default class TTS extends React.Component {
             </Select>
           </label>
         </div>
-        <div className="a4b-interface">
-          {this.showProgress()}
-          <div className="a4b-output">
-            <div className="a4b-transliterate-container">
-              <IndicTransliterate
-                renderComponent={(props) => (
-                  <textarea className="a4b-transliterate-text" {...props} />
-                )}
-                value={this.state.transliteratedText}
-                placeholder="Type your text here to convert...."
-                onChangeText={(text) => {
-                  this.setState({ transliteratedText: text });
-                }}
-                lang={this.state.languageChoice}
-              />
-            </div>
-          </div>
-          <div className="a4b-tts-convert">
-            <button onClick={this.getAudioOutput} className="asr-button">
-              Convert
-            </button>
-            {this.state.isFetching ? (
-              <Skeleton sx={{ height: 80, width: 300, bgcolor: "#fbdad0" }} />
-            ) : (
-              <audio
-                hidden={this.state.audioHidden}
-                src={this.state.audioComponent}
-                controls
-              />
-            )}
-          </div>
-          <Documentation documentation={ttsDocumentation} />
-        </div>
+        {this.setInferenceInterface()}
       </div>
     );
   }
