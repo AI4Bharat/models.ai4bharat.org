@@ -19,15 +19,6 @@ export default class NMT extends React.Component {
       isFetching: false,
     };
 
-    this.translationAPIEndpoint = {
-      "en-ind":
-        "https://hf.space/embed/ai4bharat/IndicTrans-English2Indic/+/api/predict/",
-      "ind-en":
-        "https://hf.space/embed/ai4bharat/IndicTrans-Indic2English/+/api/predict/",
-      "ind-ind":
-        "https://hf.space/embed/ai4bharat/IndicTrans-Indic2Indic/+/api/predict/",
-    };
-
     this.languages = {
       hi: ["Hindi - हिंदी", "Hindi"],
       mr: ["Marathi - मराठी", "Marathi"],
@@ -61,33 +52,17 @@ export default class NMT extends React.Component {
     this.setState({ transliteratedText: text });
   }
 
-  getLanguageChoice(from, to) {
-    if (from === "en") {
-      return [this.languages[to][1]];
-    } else if (to === "en") {
-      return [this.languages[from][1]];
-    } else {
-      return [this.languages[from][1], this.languages[to][1]];
-    }
-  }
-
   getTranslation() {
     const _this = this;
     _this.setState({ isFetching: true });
-    let apiURL = null;
-    if (this.state.from === "en") {
-      apiURL = this.translationAPIEndpoint["en-ind"];
-    } else if (this.state.to === "en") {
-      apiURL = this.translationAPIEndpoint["ind-en"];
-    } else {
-      apiURL = this.translationAPIEndpoint["ind-ind"];
-    }
+    let apiURL = "https://nmt-api.ai4bharat.org/translate_sentence/";
 
-    let languageChoice = this.getLanguageChoice(this.state.from, this.state.to);
     fetch(apiURL, {
       method: "POST",
       body: JSON.stringify({
-        data: [_this.state.transliteratedText, ...languageChoice],
+        text: _this.state.transliteratedText,
+        source_language: _this.state.from,
+        target_language: _this.state.to,
       }),
       headers: { "Content-Type": "application/json" },
     })
@@ -96,7 +71,7 @@ export default class NMT extends React.Component {
       })
       .then(function (json_response) {
         _this.setState({
-          translatedText: json_response.data[0],
+          translatedText: json_response.text,
           isFetching: false,
         });
       });
