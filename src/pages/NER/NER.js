@@ -3,6 +3,8 @@ import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { Button } from "@mui/material";
+import Documentation from "../../components/A4BDocumentation/Documentation";
+import { nerDocumentation } from "./nerDocumentation";
 
 const tag2Color = {
   "B-LOC": ["#ffcccc", "#ff0000"],
@@ -174,6 +176,7 @@ export default class NER extends React.Component {
               <NEROutput data={this.state.nerOutput} />
             </div>
           </div>
+          <Documentation documentation={nerDocumentation} />
         </div>
       </>
     );
