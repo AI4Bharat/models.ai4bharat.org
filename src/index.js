@@ -9,6 +9,7 @@ import Home from "./pages/Home/Home";
 import NLG from "./pages/NLG/NLG";
 import NMT from "./pages/NMT/NMT";
 import TTS from "./pages/TTS/TTS";
+import NER from "./pages/NER/NER";
 import TTSSamples from "./pages/TTS/TTSSamples";
 
 const rootElement = document.getElementById("root");
@@ -25,6 +26,7 @@ root.render(
         <Route path="xlit" element={<XLit />} />
         <Route path="nlg" element={<NLG />} />
         <Route path="nmt" element={<NMT />} />
+        <Route path="ner" element={<NER />} />
         <Route path="tts">
           <Route path="" element={<TTS />} />
           <Route path="samples" element={<TTSSamples />} />

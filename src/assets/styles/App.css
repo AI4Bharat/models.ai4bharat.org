@@ -512,3 +512,13 @@ td {
 .a4b-component-container {
   width: auto;
 }
+
+.a4b-ner-output {
+  border: solid 1px;
+  border-radius: 15px;
+  height: 25vh;
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  font-size: 1.25rem;
+}

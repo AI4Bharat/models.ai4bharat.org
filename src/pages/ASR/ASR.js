@@ -405,8 +405,7 @@ export default class ASR extends React.Component {
             Speech-to-Text using {this.state.inferenceMode}
           </h1>
           <p className="subtitle">
-            Run speech models in <strong>real-time</strong> for Indian
-            Languages!
+            Run speech models in <strong>real-time</strong> for Indian Languages!
           </p>
         </section>
         <hr className="hr-split" />

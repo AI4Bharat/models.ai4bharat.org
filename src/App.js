@@ -44,6 +44,10 @@ class App extends React.Component {
 
     if (!localStorage.getItem("ttsVoiceGender"))
       localStorage.setItem("ttsVoiceGender", "male");
+
+    // NER Option Choices
+    if (!localStorage.getItem("nerLanguageChoice"))
+      localStorage.setItem("nerLanguageChoice", "hi");
   }
 
   render() {

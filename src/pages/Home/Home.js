@@ -13,7 +13,7 @@ import { BsFillMicFill } from "react-icons/bs";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material";
 import { BiWorld } from "react-icons/bi";
-import { BsSoundwave, BsFileTextFill } from "react-icons/bs";
+import { BsSoundwave, BsFileTextFill, BsTagFill } from "react-icons/bs";
 
 const theme = createTheme({
   palette: {
@@ -30,6 +30,7 @@ const modelIcons = {
   nlg: <BsFileTextFill size={35} className="a4b-home-card-logo" />,
   tts: <BsSoundwave size={35} className="a4b-home-card-logo" />,
   bert: <FaLanguage size={35} className="a4b-home-card-logo" />,
+  ner: <BsTagFill size={35} className="a4b-home-card-logo" />,
 };
 
 export default class Home extends React.Component {
