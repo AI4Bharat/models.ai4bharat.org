@@ -27,17 +27,17 @@ const ASR_STREAMING_URLS = {
   bn: "wss://asr-api.ai4bharat.org",
   en: "wss://asr-api.ai4bharat.org",
   gu: "wss://asr-api.ai4bharat.org",
-  hi: "wss://ai4b-dev-asr.ulcacontrib.org",
+  hi: "wss://asr-api.ai4bharat.org",
   kn: "wss://asr-api.ai4bharat.org",
   ml: "wss://asr-api.ai4bharat.org",
-  mr: "wss://ai4b-dev-asr.ulcacontrib.org",
+  mr: "wss://asr-api.ai4bharat.org",
   ne: "wss://asr-api.ai4bharat.org",
   or: "wss://asr-api.ai4bharat.org",
   pa: "wss://asr-api.ai4bharat.org",
   sa: "wss://asr-api.ai4bharat.org",
   si: "wss://asr-api.ai4bharat.org",
-  ta: "wss://ai4b-dev-asr.ulcacontrib.org",
-  te: "wss://ai4b-dev-asr.ulcacontrib.org",
+  ta: "wss://asr-api.ai4bharat.org",
+  te: "wss://asr-api.ai4bharat.org",
   ur: "wss://asr-api.ai4bharat.org",
 };
 
@@ -54,8 +54,8 @@ const ASR_REST_URLS = {
   pa: "https://asr-api.ai4bharat.org",
   sa: "https://asr-api.ai4bharat.org",
   si: "https://asr-api.ai4bharat.org",
-  ta: "https://ai4b-dev-asr.ulcacontrib.org",
-  te: "https://ai4b-dev-asr.ulcacontrib.org",
+  ta: "https://asr-api.ai4bharat.org",
+  te: "https://asr-api.ai4bharat.org",
   ur: "https://asr-api.ai4bharat.org",
 };
 
