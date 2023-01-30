@@ -24,10 +24,13 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 import { Button } from "@mui/material";
 
+import AudioReactRecorder, {
+  RecordState,
+} from "../../components/audio-react-recorder/src/index.js";
+
 export default class ASR extends React.Component {
   constructor(props) {
     super(props);
-
     this.ASR_LANGUAGE_CONFIGS = ASR_LANGUAGE_CONFIGS;
     this.samplingRates = [48000, 16000, 8000];
 
@@ -45,7 +48,7 @@ export default class ASR extends React.Component {
       audioFileName: "No File Uploaded",
       isFetching: false,
       isRecording: false,
-      audioChunks: [],
+      recordState: RecordState.NONE,
     };
 
     this.openStream = this.openStream.bind(this);
@@ -55,41 +58,71 @@ export default class ASR extends React.Component {
     this.getASROutput = this.getASROutput.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
+    this.onStopRecording = this.onStopRecording.bind(this);
   }
 
   startRecording() {
     const _this = this;
-    _this.setState({ isRecording: !_this.state.isRecording });
-    _this.setState({ asrAPIResult: "Recording Audio...." });
-    navigator.mediaDevices
-      .getUserMedia({
-        audio: { channelCount: 1, sampleRate: _this.state.samplingRateChoice },
-      })
-      .then((stream) => {
-        _this.recorder = new MediaRecorder(stream);
-        _this.recorder.ondataavailable = (e) => {
-          _this.state.audioChunks.push(e.data);
-        };
-        _this.recorder.onstop = (e) => {
-          console.log("Recording Stopped");
-        };
-        _this.recorder.start(0.5);
-      });
+    _this.setState({
+      recordState: RecordState.START,
+      isRecording: !_this.state.isRecording,
+      asrAPIResult: "Recording Audio....",
+    });
   }
 
   stopRecording() {
     const _this = this;
-    _this.setState({ isRecording: !_this.state.isRecording });
-    _this.recorder.stop();
-    let blob = new Blob(_this.state.audioChunks, { type: "audio/wav" });
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onloadend = () => {
+    _this.setState({
+      recordState: RecordState.STOP,
+      isRecording: !_this.state.isRecording,
+    });
+  }
+
+  onStopRecording(data) {
+    const _this = this;
+    var reader = new FileReader();
+    reader.readAsDataURL(data.blob);
+    reader.onloadend = function () {
       var base64Data = reader.result.split(",")[1];
-      this.getASROutput(base64Data);
-      _this.setState({ audioChunks: [] });
+      var audio = new Audio("data:audio/wav;base64," + base64Data);
+      audio.play();
+      _this.getASROutput(base64Data);
     };
   }
+
+  // startRecording() {
+  //   const _this = this;
+  //   _this.setState({ isRecording: !_this.state.isRecording });
+  //   _this.setState({ asrAPIResult: "Recording Audio...." });
+  //   navigator.mediaDevices
+  //     .getUserMedia({
+  //       audio: { channelCount: 1, sampleRate: _this.state.samplingRateChoice },
+  //     })
+  //     .then((stream) => {
+  //       _this.recorder = new MediaRecorder(stream);
+  //       _this.recorder.ondataavailable = (e) => {
+  //         _this.state.audioChunks.push(e.data);
+  //       };
+  //       _this.recorder.onstop = (e) => {
+  //         console.log("Recording Stopped");
+  //       };
+  //       _this.recorder.start(0.5);
+  //     });
+  // }
+
+  // stopRecording() {
+  //   const _this = this;
+  //   _this.setState({ isRecording: !_this.state.isRecording });
+  //   _this.recorder.stop();
+  //   let blob = new Blob(_this.state.audioChunks, { type: "audio/wav" });
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(blob);
+  //   reader.onloadend = () => {
+  //     var base64Data = reader.result.split(",")[1];
+  //     this.getASROutput(base64Data);
+  //     _this.setState({ audioChunks: [] });
+  //   };
+  // }
 
   getASROutput(asrInput) {
     var myHeaders = new Headers();
@@ -296,6 +329,13 @@ export default class ASR extends React.Component {
           {this.showProgress()}
           <div className="a4b-output">
             <div className="a4b-asr-buttons">
+              <div style={{ display: "none" }}>
+                <AudioReactRecorder
+                  state={this.state.recordState}
+                  onStop={this.onStopRecording}
+                  style={{ display: "none" }}
+                />
+              </div>
               {_this.renderRecordButton()}
               <Button
                 sx={{
