@@ -61,16 +61,20 @@ export default class ASR extends React.Component {
     const _this = this;
     _this.setState({ isRecording: !_this.state.isRecording });
     _this.setState({ asrAPIResult: "Recording Audio...." });
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      _this.recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
-      _this.recorder.ondataavailable = (e) => {
-        _this.state.audioChunks.push(e.data);
-      };
-      _this.recorder.onstop = (e) => {
-        console.log("Recording Stopped");
-      };
-      _this.recorder.start(0.5);
-    });
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: { channelCount: 1, sampleRate: _this.state.samplingRateChoice },
+      })
+      .then((stream) => {
+        _this.recorder = new MediaRecorder(stream);
+        _this.recorder.ondataavailable = (e) => {
+          _this.state.audioChunks.push(e.data);
+        };
+        _this.recorder.onstop = (e) => {
+          console.log("Recording Stopped");
+        };
+        _this.recorder.start(0.5);
+      });
   }
 
   stopRecording() {
@@ -405,7 +409,8 @@ export default class ASR extends React.Component {
             Speech-to-Text using {this.state.inferenceMode}
           </h1>
           <p className="subtitle">
-            Run speech models in <strong>real-time</strong> for Indian Languages!
+            Run speech models in <strong>real-time</strong> for Indian
+            Languages!
           </p>
         </section>
         <hr className="hr-split" />
@@ -493,7 +498,7 @@ export default class ASR extends React.Component {
               className="a4b-option-select"
             >
               {this.samplingRates.map((value, index) => {
-                return <MenuItem value={value}>{`${value} kHz`}</MenuItem>;
+                return <MenuItem value={value}>{`${value} Hz`}</MenuItem>;
               })}
             </Select>
           </label>
