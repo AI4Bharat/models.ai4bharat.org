@@ -24,10 +24,11 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 import { Button } from "@mui/material";
 
+import Recorder from "recorderjs";
+
 export default class ASR extends React.Component {
   constructor(props) {
     super(props);
-
     this.ASR_LANGUAGE_CONFIGS = ASR_LANGUAGE_CONFIGS;
     this.samplingRates = [48000, 16000, 8000];
 
@@ -46,6 +47,7 @@ export default class ASR extends React.Component {
       isFetching: false,
       isRecording: false,
       audioChunks: [],
+      audioStream: null,
     };
 
     this.openStream = this.openStream.bind(this);
@@ -55,6 +57,7 @@ export default class ASR extends React.Component {
     this.getASROutput = this.getASROutput.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
+    this.handleRecording = this.handleRecording.bind(this);
   }
 
   startRecording() {
@@ -63,32 +66,39 @@ export default class ASR extends React.Component {
     _this.setState({ asrAPIResult: "Recording Audio...." });
     navigator.mediaDevices
       .getUserMedia({
-        audio: { channelCount: 1, sampleRate: _this.state.samplingRateChoice },
+        audio: true,
+        video: false,
       })
       .then((stream) => {
-        _this.recorder = new MediaRecorder(stream);
-        _this.recorder.ondataavailable = (e) => {
-          _this.state.audioChunks.push(e.data);
-        };
-        _this.recorder.onstop = (e) => {
-          console.log("Recording Stopped");
-        };
-        _this.recorder.start(0.5);
+        _this.gumStream = stream;
+        var AudioContext = window.AudioContext || window.webkitAudioContext;
+        var audioContext = new AudioContext();
+        var input = audioContext.createMediaStreamSource(stream);
+        _this.recorder = new Recorder(input, { numChannels: 1 });
+        _this.recorder.record();
+        console.log("Recording started");
       });
   }
 
-  stopRecording() {
+  handleRecording(blob) {
     const _this = this;
-    _this.setState({ isRecording: !_this.state.isRecording });
-    _this.recorder.stop();
-    let blob = new Blob(_this.state.audioChunks, { type: "audio/wav" });
     const reader = new FileReader();
     reader.readAsDataURL(blob);
     reader.onloadend = () => {
       var base64Data = reader.result.split(",")[1];
-      this.getASROutput(base64Data);
-      _this.setState({ audioChunks: [] });
+      var audio = new Audio("data:audio/wav;base64," + base64Data);
+      audio.play();
+      _this.getASROutput(base64Data);
     };
+  }
+
+  stopRecording() {
+    console.log("Stopping Recording...");
+    const _this = this;
+    _this.setState({ isRecording: !_this.state.isRecording });
+    _this.recorder.stop();
+    _this.gumStream.getAudioTracks()[0].stop();
+    _this.recorder.exportWAV(_this.handleRecording, "audio/wav", 16000);
   }
 
   getASROutput(asrInput) {
