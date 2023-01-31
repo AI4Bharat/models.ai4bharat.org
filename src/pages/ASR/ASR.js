@@ -24,7 +24,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 import { Button } from "@mui/material";
 
-import Recorder from "recorderjs";
+import Recorder from "./Recorder";
 
 export default class ASR extends React.Component {
   constructor(props) {
@@ -58,6 +58,8 @@ export default class ASR extends React.Component {
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
     this.handleRecording = this.handleRecording.bind(this);
+
+    console.log(window.Recorder);
   }
 
   startRecording() {
@@ -73,6 +75,7 @@ export default class ASR extends React.Component {
         _this.gumStream = stream;
         var AudioContext = window.AudioContext || window.webkitAudioContext;
         var audioContext = new AudioContext();
+        console.log(audioContext);
         var input = audioContext.createMediaStreamSource(stream);
         _this.recorder = new Recorder(input, { numChannels: 1 });
         _this.recorder.record();
@@ -116,7 +119,7 @@ export default class ASR extends React.Component {
           value: "transcript",
         },
         audioFormat: "wav",
-        samplingRate: this.state.samplingRateChoice,
+        samplingRate: 16000,
         postProcessors:
           this.state.processorChoice.length === 0
             ? null
@@ -372,7 +375,9 @@ export default class ASR extends React.Component {
     if (this.state.inferenceMode === "WebSocket") {
       this.ASR_LANGUAGE_CONFIGS.streaming.map((language) => {
         choices.push(
-          <MenuItem key={language} value={language}>{LANGUAGE_KEY_TEXT[language]}</MenuItem>
+          <MenuItem key={language} value={language}>
+            {LANGUAGE_KEY_TEXT[language]}
+          </MenuItem>
         );
         return true;
       });
@@ -380,7 +385,9 @@ export default class ASR extends React.Component {
     if (this.state.inferenceMode === "REST") {
       this.ASR_LANGUAGE_CONFIGS.rest.map((language) => {
         choices.push(
-          <MenuItem key={language} value={language}>{LANGUAGE_KEY_TEXT[language]}</MenuItem>
+          <MenuItem key={language} value={language}>
+            {LANGUAGE_KEY_TEXT[language]}
+          </MenuItem>
         );
         return true;
       });
@@ -396,7 +403,9 @@ export default class ASR extends React.Component {
       ).map(([processor, processorAttributes]) => {
         if (processorAttributes[0]) {
           choices.push(
-            <MenuItem key={processor} value={processor}>{processorAttributes[1]}</MenuItem>
+            <MenuItem key={processor} value={processor}>
+              {processorAttributes[1]}
+            </MenuItem>
           );
         }
         return true;
@@ -510,7 +519,9 @@ export default class ASR extends React.Component {
               className="a4b-option-select"
             >
               {this.samplingRates.map((value, index) => {
-                return <MenuItem key={value} value={value}>{`${value} Hz`}</MenuItem>;
+                return (
+                  <MenuItem key={value} value={value}>{`${value} Hz`}</MenuItem>
+                );
               })}
             </Select>
           </label>

@@ -1,21 +1,41 @@
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Recorder = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
+
+module.exports = require("./recorder").Recorder;
+
+},{"./recorder":2}],2:[function(require,module,exports){
 'use strict';
+
+var _createClass = (function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+})();
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.Recorder = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _inlineWorker = require('inline-worker');
 
 var _inlineWorker2 = _interopRequireDefault(_inlineWorker);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
 
-var Recorder = exports.Recorder = function () {
+var Recorder = exports.Recorder = (function () {
     function Recorder(source, cfg) {
         var _this = this;
 
@@ -56,10 +76,10 @@ var Recorder = exports.Recorder = function () {
         this.worker = new _inlineWorker2.default(function () {
             var recLength = 0,
                 recBuffers = [],
-                sampleRate = void 0,
-                numChannels = void 0;
+                sampleRate = undefined,
+                numChannels = undefined;
 
-            this.onmessage = function (e) {
+            self.onmessage = function (e) {
                 switch (e.data.command) {
                     case 'init':
                         init(e.data.config);
@@ -68,7 +88,7 @@ var Recorder = exports.Recorder = function () {
                         record(e.data.buffer);
                         break;
                     case 'exportWAV':
-                        exportWAV(e.data.type);
+                        exportWAV(e.data.type, e.data.rate);
                         break;
                     case 'getBuffer':
                         getBuffer();
@@ -92,21 +112,51 @@ var Recorder = exports.Recorder = function () {
                 recLength += inputBuffer[0].length;
             }
 
-            function exportWAV(type) {
+            function downsampleBuffer(buffer, rate) {
+                if (rate == sampleRate) {
+                    return buffer;
+                }
+                if (rate > sampleRate) {
+                    throw "downsampling rate show be smaller than original sample rate";
+                }
+                var sampleRateRatio = sampleRate / rate;
+                var newLength = Math.round(buffer.length / sampleRateRatio);
+                var result = new Float32Array(newLength);
+                var offsetResult = 0;
+                var offsetBuffer = 0;
+                while (offsetResult < result.length) {
+                    var nextOffsetBuffer = Math.round((offsetResult + 1) * sampleRateRatio);
+                     // Use average value of skipped samples
+                    var accum = 0, count = 0;
+                    for (var i = offsetBuffer; i < nextOffsetBuffer && i < buffer.length; i++) {
+                        accum += buffer[i];
+                        count++;
+                    }
+                    result[offsetResult] = accum / count;
+                    // Or you can simply get rid of the skipped samples:
+                    // result[offsetResult] = buffer[nextOffsetBuffer];
+                    offsetResult++;
+                    offsetBuffer = nextOffsetBuffer;
+                }
+                return result;
+            }
+
+            function exportWAV(type, rate) {
                 var buffers = [];
                 for (var channel = 0; channel < numChannels; channel++) {
                     buffers.push(mergeBuffers(recBuffers[channel], recLength));
                 }
-                var interleaved = void 0;
+                var interleaved = undefined;
                 if (numChannels === 2) {
                     interleaved = interleave(buffers[0], buffers[1]);
                 } else {
                     interleaved = buffers[0];
                 }
-                var dataview = encodeWAV(interleaved);
+                var downsampledBuffer = downsampleBuffer(interleaved, rate);
+                var dataview = encodeWAV(downsampledBuffer, rate);
                 var audioBlob = new Blob([dataview], { type: type });
 
-                this.postMessage({ command: 'exportWAV', data: audioBlob });
+                self.postMessage({ command: 'exportWAV', data: audioBlob });
             }
 
             function getBuffer() {
@@ -114,7 +164,7 @@ var Recorder = exports.Recorder = function () {
                 for (var channel = 0; channel < numChannels; channel++) {
                     buffers.push(mergeBuffers(recBuffers[channel], recLength));
                 }
-                this.postMessage({ command: 'getBuffer', data: buffers });
+                self.postMessage({ command: 'getBuffer', data: buffers });
             }
 
             function clear() {
@@ -167,7 +217,7 @@ var Recorder = exports.Recorder = function () {
                 }
             }
 
-            function encodeWAV(samples) {
+            function encodeWAV(samples, rate) {
                 var buffer = new ArrayBuffer(44 + samples.length * 2);
                 var view = new DataView(buffer);
 
@@ -186,9 +236,9 @@ var Recorder = exports.Recorder = function () {
                 /* channel count */
                 view.setUint16(22, numChannels, true);
                 /* sample rate */
-                view.setUint32(24, sampleRate, true);
+                view.setUint32(24, rate, true);
                 /* byte rate (sample rate * block align) */
-                view.setUint32(28, sampleRate * 4, true);
+                view.setUint32(28, rate * 4, true);
                 /* block align (channel count * bytes per sample) */
                 view.setUint16(32, numChannels * 2, true);
                 /* bits per sample */
@@ -247,8 +297,9 @@ var Recorder = exports.Recorder = function () {
         }
     }, {
         key: 'exportWAV',
-        value: function exportWAV(cb, mimeType) {
+        value: function exportWAV(cb, mimeType, rate) {
             mimeType = mimeType || this.config.mimeType;
+            rate = rate || this.context.sampleRate;
             cb = cb || this.config.callback;
             if (!cb) throw new Error('Callback not set');
 
@@ -256,7 +307,8 @@ var Recorder = exports.Recorder = function () {
 
             this.worker.postMessage({
                 command: 'exportWAV',
-                type: mimeType
+                type: mimeType,
+                rate: rate
             });
         }
     }], [{
@@ -273,6 +325,65 @@ var Recorder = exports.Recorder = function () {
     }]);
 
     return Recorder;
-}();
+})();
 
 exports.default = Recorder;
+
+},{"inline-worker":3}],3:[function(require,module,exports){
+"use strict";
+
+module.exports = require("./inline-worker");
+},{"./inline-worker":4}],4:[function(require,module,exports){
+(function (global){
+"use strict";
+
+var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+var WORKER_ENABLED = !!(global === global.window && global.URL && global.Blob && global.Worker);
+
+var InlineWorker = (function () {
+  function InlineWorker(func, self) {
+    var _this = this;
+
+    _classCallCheck(this, InlineWorker);
+
+    if (WORKER_ENABLED) {
+      var functionBody = func.toString().trim().match(/^function\s*\w*\s*\([\w\s,]*\)\s*{([\w\W]*?)}$/)[1];
+      var url = global.URL.createObjectURL(new global.Blob([functionBody], { type: "text/javascript" }));
+
+      return new global.Worker(url);
+    }
+
+    this.self = self;
+    this.self.postMessage = function (data) {
+      setTimeout(function () {
+        _this.onmessage({ data: data });
+      }, 0);
+    };
+
+    setTimeout(function () {
+      func.call(self);
+    }, 0);
+  }
+
+  _createClass(InlineWorker, {
+    postMessage: {
+      value: function postMessage(data) {
+        var _this = this;
+
+        setTimeout(function () {
+          _this.self.onmessage({ data: data });
+        }, 0);
+      }
+    }
+  });
+
+  return InlineWorker;
+})();
+
+module.exports = InlineWorker;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}]},{},[1])(1)
+});
