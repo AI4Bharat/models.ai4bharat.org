@@ -12,7 +12,7 @@ export default class XLit extends React.Component {
     super(props);
     this.state = {
       languageChoice: localStorage.getItem("tltLanguageChoice"),
-      transliteratedText: null,
+      transliteratedText: "",
     };
     this.languages = {
       hi: "Hindi - हिंदी",
@@ -91,7 +91,7 @@ export default class XLit extends React.Component {
               {Object.entries(this.sortedLanguages).map(
                 ([language, optionText]) => {
                   return (
-                    <MenuItem sx={{ margin: 1 }} value={language}>
+                    <MenuItem key={language} sx={{ margin: 1 }} value={language}>
                       {optionText}
                     </MenuItem>
                   );

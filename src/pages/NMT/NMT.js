@@ -14,8 +14,8 @@ export default class NMT extends React.Component {
     this.state = {
       from: localStorage.getItem("nmtLanguageFrom"),
       to: localStorage.getItem("nmtLanguageTo"),
-      transliteratedText: null,
-      translatedText: null,
+      transliteratedText: "",
+      translatedText: "",
       isFetching: false,
     };
 
@@ -131,7 +131,7 @@ export default class NMT extends React.Component {
               {Object.entries(this.sortedLanguages).map(
                 ([language, optionText]) => {
                   return (
-                    <MenuItem sx={{ margin: 1 }} value={language}>
+                    <MenuItem key={language} sx={{ margin: 1 }} value={language}>
                       {optionText[0]}
                     </MenuItem>
                   );
@@ -156,7 +156,7 @@ export default class NMT extends React.Component {
               {Object.entries(this.sortedLanguages).map(
                 ([language, optionText]) => {
                   return (
-                    <MenuItem sx={{ margin: 1 }} value={language}>
+                    <MenuItem key={language} sx={{ margin: 1 }} value={language}>
                       {optionText[0]}
                     </MenuItem>
                   );
@@ -221,6 +221,7 @@ export default class NMT extends React.Component {
               value={this.state.translatedText}
               placeholder="View Translated Input here....."
               className="a4b-transliterate-text"
+              readOnly
             />
           </div>
           <Documentation documentation={nmtDocumentation} />

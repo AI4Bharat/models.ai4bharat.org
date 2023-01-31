@@ -294,6 +294,7 @@ export default class ASR extends React.Component {
             <textarea
               placeholder="Start Recording for ASR Inference...."
               value={this.state.asrText}
+              readOnly
               className="a4b-text"
             ></textarea>
           </div>
@@ -329,6 +330,7 @@ export default class ASR extends React.Component {
             <textarea
               placeholder="Upload Audio File or Record for ASR Inference...."
               value={this.state.asrAPIResult}
+              readOnly
               className="a4b-text"
             />
           </div>
@@ -370,7 +372,7 @@ export default class ASR extends React.Component {
     if (this.state.inferenceMode === "WebSocket") {
       this.ASR_LANGUAGE_CONFIGS.streaming.map((language) => {
         choices.push(
-          <MenuItem value={language}>{LANGUAGE_KEY_TEXT[language]}</MenuItem>
+          <MenuItem key={language} value={language}>{LANGUAGE_KEY_TEXT[language]}</MenuItem>
         );
         return true;
       });
@@ -378,7 +380,7 @@ export default class ASR extends React.Component {
     if (this.state.inferenceMode === "REST") {
       this.ASR_LANGUAGE_CONFIGS.rest.map((language) => {
         choices.push(
-          <MenuItem value={language}>{LANGUAGE_KEY_TEXT[language]}</MenuItem>
+          <MenuItem key={language} value={language}>{LANGUAGE_KEY_TEXT[language]}</MenuItem>
         );
         return true;
       });
@@ -394,7 +396,7 @@ export default class ASR extends React.Component {
       ).map(([processor, processorAttributes]) => {
         if (processorAttributes[0]) {
           choices.push(
-            <MenuItem value={processor}>{processorAttributes[1]}</MenuItem>
+            <MenuItem key={processor} value={processor}>{processorAttributes[1]}</MenuItem>
           );
         }
         return true;
@@ -508,7 +510,7 @@ export default class ASR extends React.Component {
               className="a4b-option-select"
             >
               {this.samplingRates.map((value, index) => {
-                return <MenuItem value={value}>{`${value} Hz`}</MenuItem>;
+                return <MenuItem key={value} value={value}>{`${value} Hz`}</MenuItem>;
               })}
             </Select>
           </label>

@@ -135,7 +135,7 @@ export default class NLG extends React.Component {
               {Object.entries(this.sortedLanguages).map(
                 ([language, optionText]) => {
                   return (
-                    <MenuItem sx={{ margin: 1 }} value={language}>
+                    <MenuItem key={language} sx={{ margin: 1 }} value={language}>
                       {optionText[0]}
                     </MenuItem>
                   );
@@ -159,7 +159,7 @@ export default class NLG extends React.Component {
             >
               {this.tasks.map((task) => {
                 return (
-                  <MenuItem sx={{ margin: 1 }} value={task}>
+                  <MenuItem key={task} sx={{ margin: 1 }} value={task}>
                     {task}
                   </MenuItem>
                 );
@@ -223,6 +223,7 @@ export default class NLG extends React.Component {
               value={this.state.generatedText}
               placeholder="View Generated Text here....."
               className="a4b-output-text"
+              readOnly
             />
           </div>
           <Documentation documentation={nlgDocumentation} />
