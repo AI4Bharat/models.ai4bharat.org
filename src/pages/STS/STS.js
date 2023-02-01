@@ -108,7 +108,7 @@ export default class STS extends React.Component {
   getASROutput(asrInput) {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", "6aedc50e-6549-40e1-8d32-81c61d6f04de");
+    myHeaders.append("Authorization", process.env.REACT_APP_API_KEY);
 
     this.setState({ isFetching: true });
 
