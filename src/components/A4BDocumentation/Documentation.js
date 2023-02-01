@@ -121,7 +121,7 @@ export default class Documentation extends React.Component {
             {Object.entries(this.props.documentation.steps).map(
               ([key, content]) => {
                 return (
-                  <div>
+                  <div key={key}>
                     <div className="a4b-box1">
                       <h1 className="api-step-text">
                         {`${key}. ${content.step}`}

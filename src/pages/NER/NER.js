@@ -56,7 +56,7 @@ export default class NER extends React.Component {
     super(props);
     this.state = {
       languageChoice: localStorage.getItem("nerLanguageChoice"),
-      transliteratedText: null,
+      transliteratedText: "",
       nerOutput: [],
     };
 

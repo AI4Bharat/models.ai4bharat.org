@@ -45,6 +45,13 @@ const models = {
       "IndicNER is a model trained to complete the task of identifying named entities from sentences in Indian languages. Our model is specifically fine-tuned to the 11 Indian languages mentioned above over millions of sentences. The model is then benchmarked over a human annotated testset and multiple other publicly available Indian NER datasets. The 11 languages covered by IndicNER are: Assamese, Bengali, Gujarati, Hindi, Kannada, Malayalam, Marathi, Oriya, Punjabi, Tamil, Telugu.",
     link: "https://huggingface.co/ai4bharat/IndicNER",
   },
+  sts: {
+    path: "sts",
+    title: "Indic Speech2Speech (Experimental)",
+    about:
+      "Indic Speech2Speech interface combines the power of ASR, NMT and TTS to convert speech from one language to speech in another language.",
+    link: "",
+  },
 };
 
 export { models };

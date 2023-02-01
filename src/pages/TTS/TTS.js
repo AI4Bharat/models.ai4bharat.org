@@ -28,8 +28,8 @@ export default class TTS extends React.Component {
     this.state = {
       languageChoice: localStorage.getItem("ttsLanguageChoice"),
       voiceGender: localStorage.getItem("ttsVoiceGender"),
-      transliteratedText: null,
-      streamingText: null,
+      transliteratedText: "",
+      streamingText: "",
       audioComponent: null,
       streamingAudio: null,
       audioHidden: true,
@@ -259,29 +259,12 @@ export default class TTS extends React.Component {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                textAlign: "center",
+                flexDirection: "row"
               }}
               size="small"
             >
-              <div style={{ height: "100%", width: "auto" }}>
-                <p
-                  style={{
-                    textDecorationStyle: "solid",
-                    fontWeight: 600,
-                  }}
-                >
-                  Samples
-                </p>
-              </div>
-              <div
-                style={{
-                  height: "100%",
-                  width: "auto",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <FaLaptopCode style={{ margin: 5 }} size={20} />
-              </div>
+              <FaLaptopCode style={{ margin: 5 }} size={30} />
             </Button>
           </p>
         </section>
@@ -303,7 +286,7 @@ export default class TTS extends React.Component {
             >
               {Object.entries(this.languages).map(([language, optionText]) => {
                 return (
-                  <MenuItem sx={{ margin: 1 }} value={language}>
+                  <MenuItem key={language} sx={{ margin: 1 }} value={language}>
                     {optionText}
                   </MenuItem>
                 );
@@ -329,7 +312,7 @@ export default class TTS extends React.Component {
             >
               {Object.entries(this.modes).map(([language, optionText]) => {
                 return (
-                  <MenuItem sx={{ margin: 1 }} value={language}>
+                  <MenuItem key={language} sx={{ margin: 1 }} value={language}>
                     {optionText}
                   </MenuItem>
                 );

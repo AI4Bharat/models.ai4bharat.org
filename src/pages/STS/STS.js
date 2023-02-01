@@ -2,14 +2,13 @@ import React from "react";
 
 import {
   ASR_STREAMING_URLS,
-  ASR_REST_URLS,
   ASR_LANGUAGE_CONFIGS,
   LANGUAGE_KEY_TEXT,
 } from "../../config/config.js";
 import {
   asrAPIDocumentation,
   asrStreamingDocumentation,
-} from "./asrDocumentation.js";
+} from "./stsDocumentation.js";
 
 import {
   SocketStatus,
@@ -22,24 +21,22 @@ import { FaMicrophone, FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation.js";
 import LinearProgress from "@mui/material/LinearProgress";
 
-import { Button } from "@mui/material";
+import { Button, Box } from "@mui/material";
 
-import Recorder from "./Recorder";
+import Recorder from "../ASR/Recorder.js";
 
-export default class ASR extends React.Component {
+export default class STS extends React.Component {
   constructor(props) {
     super(props);
     this.ASR_LANGUAGE_CONFIGS = ASR_LANGUAGE_CONFIGS;
     this.samplingRates = [48000, 16000, 8000];
 
     this.state = {
-      inferenceMode: "WebSocket",
-      languageChoice: localStorage.getItem("asrLanguageChoice"),
-      samplingRateChoice: localStorage.getItem("samplingRateChoice"),
-      processorChoice: JSON.parse(localStorage.getItem("processorChoice"))[
-        "processors"
-      ],
+      inferenceMode: "REST",
+      sourceLanguage: "en",
+      targetLanguage: "hi",
       asrText: "",
+      asrAPISource: "",
       asrAPIResult: "",
       streaming: new StreamingClient(),
       isStreaming: false,
@@ -48,7 +45,10 @@ export default class ASR extends React.Component {
       isRecording: false,
       audioChunks: [],
       audioStream: null,
+      audioSource: null,
       audioData: null,
+      voiceGender: "male",
+      latency: null,
     };
 
     this.openStream = this.openStream.bind(this);
@@ -59,14 +59,15 @@ export default class ASR extends React.Component {
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
     this.handleRecording = this.handleRecording.bind(this);
-
-    console.log(window.Recorder);
   }
 
   startRecording() {
     const _this = this;
     _this.setState({ isRecording: !_this.state.isRecording });
-    _this.setState({ asrAPIResult: "Recording Audio...." });
+    _this.setState({
+      asrAPIResult: "Recording Audio....",
+      asrAPISource: "Recording Audio...",
+    });
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -76,7 +77,6 @@ export default class ASR extends React.Component {
         _this.gumStream = stream;
         var AudioContext = window.AudioContext || window.webkitAudioContext;
         var audioContext = new AudioContext();
-        console.log(audioContext);
         var input = audioContext.createMediaStreamSource(stream);
         _this.recorder = new Recorder(input, { numChannels: 1 });
         _this.recorder.record();
@@ -90,7 +90,8 @@ export default class ASR extends React.Component {
     reader.readAsDataURL(blob);
     reader.onloadend = () => {
       var base64Data = reader.result.split(",")[1];
-      _this.setState({ audioData: "data:audio/wav;base64," + base64Data });
+      var audio = new Audio("data:audio/wav;base64," + base64Data);
+      audio.play();
       _this.getASROutput(base64Data);
     };
   }
@@ -101,44 +102,31 @@ export default class ASR extends React.Component {
     _this.setState({ isRecording: !_this.state.isRecording });
     _this.recorder.stop();
     _this.gumStream.getAudioTracks()[0].stop();
-    _this.recorder.exportWAV(
-      _this.handleRecording,
-      "audio/wav",
-      _this.state.languageChoice === "ta"
-        ? 16000
-        : _this.state.samplingRateChoice
-    );
+    _this.recorder.exportWAV(_this.handleRecording, "audio/wav", 16000);
   }
 
   getASROutput(asrInput) {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", "6aedc50e-6549-40e1-8d32-81c61d6f04de");
 
     this.setState({ isFetching: true });
 
     var payload = JSON.stringify({
-      config: {
-        language: {
-          sourceLanguage: this.state.languageChoice,
-        },
-        transcriptionFormat: {
-          value: "transcript",
-        },
-        audioFormat: "wav",
-        samplingRate:
-          this.state.languageChoice === "ta"
-            ? 16000
-            : this.state.samplingRateChoice,
-        postProcessors:
-          this.state.processorChoice.length === 0
-            ? null
-            : this.state.processorChoice,
-      },
+      serviceId: "lol",
       audio: [
         {
           audioContent: asrInput,
         },
       ],
+      config: {
+        language: {
+          sourceLanguage: this.state.sourceLanguage,
+          targetLanguage: this.state.targetLanguage,
+        },
+        audioFormat: "wav",
+        gender: this.state.voiceGender,
+      },
     });
 
     var requestOptions = {
@@ -148,18 +136,22 @@ export default class ASR extends React.Component {
       redirect: "follow",
     };
 
-    console.log(payload);
-    const ASR_REST_URL = `${
-      ASR_REST_URLS[this.state.languageChoice]
-    }/asr/v1/recognize/${this.state.languageChoice}`;
+    const ASR_REST_URL =
+      "https://api.dhruva.ai4bharat.org/services/inference/s2s";
+
+    const startTime = Date.now();
     fetch(ASR_REST_URL, requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        console.log(result);
+        const duration = Date.now() - startTime;
         var apiResponse = JSON.parse(result);
         this.setState({
-          asrAPIResult: apiResponse["output"][0]["source"],
+          latency: duration / 1000,
+          asrAPISource: apiResponse["output"][0]["source"],
+          asrAPIResult: apiResponse["output"][0]["target"],
           isFetching: false,
+          audioData:
+            "data:audio/wav;base64," + apiResponse["audio"][0]["audioContent"],
         });
       })
       .catch((error) => console.log("error", error));
@@ -219,6 +211,10 @@ export default class ASR extends React.Component {
             margin: 5,
           }}
         />
+      );
+    } else if (this.state.latency !== null) {
+      return (
+        <Box className="asr-button"> Latency: {this.state.latency} seconds</Box>
       );
     }
   }
@@ -340,7 +336,13 @@ export default class ASR extends React.Component {
               </Button>
             </div>
             <textarea
-              placeholder="Upload Audio File or Record for ASR Inference...."
+              placeholder="Upload Audio File or Record for Speech2Speech Inference...."
+              value={this.state.asrAPISource}
+              readOnly
+              className="a4b-text"
+            />
+            <textarea
+              placeholder="Upload Audio File or Record for Speech2Speech Inference...."
               value={this.state.asrAPIResult}
               readOnly
               className="a4b-text"
@@ -368,6 +370,10 @@ export default class ASR extends React.Component {
                     selectedAudioReader.readAsDataURL(selectedAudioFile);
                     selectedAudioReader.onloadend = () => {
                       const asrInput = selectedAudioReader.result.split(",")[1];
+                      var audio = new Audio(
+                        "data:audio/wav;base64," + asrInput
+                      );
+                      audio.play();
                       this.getASROutput(asrInput);
                     };
                   }}
@@ -378,7 +384,6 @@ export default class ASR extends React.Component {
               </span>
             </div>
           </div>
-          <Documentation documentation={asrAPIDocumentation} />
         </div>
       );
     }
@@ -441,45 +446,26 @@ export default class ASR extends React.Component {
               src={require("../../media/ai4bharat.jpg")}
             ></img>
             <span className="orange-color">AI4Bharat </span>
-            Speech-to-Text using {this.state.inferenceMode}
+            Speech2Speech
           </h1>
           <p className="subtitle">
-            Run speech models in real-time for Indian Languages!
+            Convert Speech from one language to Speech in another in real-time
+            across Indian Languages!
           </p>
         </section>
         <hr className="hr-split" />
         <div className="common-options">
           <label className="a4b-option">
-            Interface Type :
+            Source Language :
             <Select
               disabled={this.state.isStreaming || this.state.isRecording}
               MenuProps={{
                 disableScrollLock: true,
               }}
-              value={this.state.inferenceMode}
-              sx={{ borderRadius: 15 }}
-              className="a4b-option-select"
-              onChange={(e) => {
-                this.setInferenceMode(e.target.value);
-                this.handleModeChange();
-              }}
-            >
-              <MenuItem value="WebSocket">Streaming (WebSocket)</MenuItem>
-              <MenuItem value="REST">REST (API)</MenuItem>
-            </Select>
-          </label>
-          <label className="a4b-option">
-            Language :
-            <Select
-              disabled={this.state.isStreaming || this.state.isRecording}
-              MenuProps={{
-                disableScrollLock: true,
-              }}
-              value={this.state.languageChoice}
+              value={this.state.sourceLanguage}
               sx={{ borderRadius: 15 }}
               onChange={(e) => {
-                this.setState({ languageChoice: e.target.value, asrText: "" });
-                localStorage.setItem("asrLanguageChoice", e.target.value);
+                this.setState({ sourceLanguage: e.target.value, asrText: "" });
               }}
               className="a4b-option-select"
             >
@@ -487,55 +473,42 @@ export default class ASR extends React.Component {
             </Select>
           </label>
           <label className="a4b-option">
-            Post Processor :
+            Target Language :
             <Select
               disabled={this.state.isStreaming || this.state.isRecording}
-              multiple
               MenuProps={{
                 disableScrollLock: true,
               }}
-              value={this.state.processorChoice}
+              value={this.state.targetLanguage}
               sx={{ borderRadius: 15 }}
-              onChange={(event) => {
-                const {
-                  target: { value },
-                } = event;
-                let choices =
-                  typeof value === "string" ? value.split(",") : value;
-                localStorage.setItem(
-                  "processorChoice",
-                  JSON.stringify({ processors: choices })
-                );
-                this.setState({ processorChoice: choices, asrText: "" });
-                console.log(choices);
+              onChange={(e) => {
+                this.setState({ targetLanguage: e.target.value, asrText: "" });
               }}
               className="a4b-option-select"
             >
-              {this.renderProcessorChoice()}
+              {this.renderLanguageChoice()}
             </Select>
           </label>
           <label className="a4b-option">
-            Sample Rate :
+            Voice:
             <Select
-              disabled={this.state.isStreaming || this.state.isRecording}
               MenuProps={{
                 disableScrollLock: true,
               }}
-              sx={{ borderRadius: 15 }}
-              value={this.state.samplingRateChoice}
+              value={this.state.voiceGender}
               onChange={(e) => {
-                localStorage.setItem("samplingRateChoice", e.target.value);
-                this.setState({
-                  samplingRateChoice: e.target.value,
-                });
+                this.setState({ voiceGender: e.target.value });
+                localStorage.setItem("ttsVoiceGender", e.target.value);
               }}
+              sx={{ borderRadius: 15 }}
               className="a4b-option-select"
             >
-              {this.samplingRates.map((value, index) => {
-                return (
-                  <MenuItem key={value} value={value}>{`${value} Hz`}</MenuItem>
-                );
-              })}
+              <MenuItem sx={{ margin: 1 }} value={"male"}>
+                Male
+              </MenuItem>
+              <MenuItem sx={{ margin: 1 }} value={"female"}>
+                Female
+              </MenuItem>
             </Select>
           </label>
         </div>
