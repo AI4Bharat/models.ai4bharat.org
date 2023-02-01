@@ -48,6 +48,7 @@ export default class ASR extends React.Component {
       isRecording: false,
       audioChunks: [],
       audioStream: null,
+      audioData: null,
     };
 
     this.openStream = this.openStream.bind(this);
@@ -89,8 +90,7 @@ export default class ASR extends React.Component {
     reader.readAsDataURL(blob);
     reader.onloadend = () => {
       var base64Data = reader.result.split(",")[1];
-      var audio = new Audio("data:audio/wav;base64," + base64Data);
-      audio.play();
+      _this.setState({ audioData: "data:audio/wav;base64," + base64Data });
       _this.getASROutput(base64Data);
     };
   }
@@ -101,7 +101,13 @@ export default class ASR extends React.Component {
     _this.setState({ isRecording: !_this.state.isRecording });
     _this.recorder.stop();
     _this.gumStream.getAudioTracks()[0].stop();
-    _this.recorder.exportWAV(_this.handleRecording, "audio/wav", 16000);
+    _this.recorder.exportWAV(
+      _this.handleRecording,
+      "audio/wav",
+      _this.state.languageChoice === "ta"
+        ? 16000
+        : _this.state.samplingRateChoice
+    );
   }
 
   getASROutput(asrInput) {
@@ -119,7 +125,10 @@ export default class ASR extends React.Component {
           value: "transcript",
         },
         audioFormat: "wav",
-        samplingRate: 16000,
+        samplingRate:
+          this.state.languageChoice === "ta"
+            ? 16000
+            : this.state.samplingRateChoice,
         postProcessors:
           this.state.processorChoice.length === 0
             ? null
@@ -338,6 +347,11 @@ export default class ASR extends React.Component {
             />
           </div>
           <div>
+            <audio
+              src={this.state.audioData}
+              style={{ width: "50%", marginTop: 10 }}
+              controls
+            />
             <div className="a4b-file-upload">
               <label className="asr-button">
                 Choose File
