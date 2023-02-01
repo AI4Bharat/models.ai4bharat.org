@@ -5,10 +5,7 @@ import {
   ASR_LANGUAGE_CONFIGS,
   LANGUAGE_KEY_TEXT,
 } from "../../config/config.js";
-import {
-  asrAPIDocumentation,
-  asrStreamingDocumentation,
-} from "./stsDocumentation.js";
+import { asrStreamingDocumentation } from "./stsDocumentation.js";
 
 import {
   SocketStatus,
@@ -30,6 +27,20 @@ export default class STS extends React.Component {
     super(props);
     this.ASR_LANGUAGE_CONFIGS = ASR_LANGUAGE_CONFIGS;
     this.samplingRates = [48000, 16000, 8000];
+
+    this.languages = {
+      bn: "Bangla - বাংলা",
+      gu: "Gujarati - ગુજરાતી",
+      hi: "Hindi - हिंदी",
+      kn: "Kannada - ಕನ್ನಡ",
+      ml: "Malayalam - മലയാളം",
+      mr: "Marathi - मराठी",
+      or: "Oriya - ଓଡ଼ିଆ",
+      ta: "Tamil - தமிழ்",
+      te: "Telugu - తెలుగు",
+      pa: "Punjabi - ਪੰਜਾਬੀ",
+      en: "English - English",
+    };
 
     this.state = {
       inferenceMode: "REST",
@@ -402,13 +413,12 @@ export default class STS extends React.Component {
       });
     }
     if (this.state.inferenceMode === "REST") {
-      this.ASR_LANGUAGE_CONFIGS.rest.map((language) => {
+      Object.entries(this.languages).map(([language, label]) => {
         choices.push(
           <MenuItem key={language} value={language}>
-            {LANGUAGE_KEY_TEXT[language]}
+            {label}
           </MenuItem>
         );
-        return true;
       });
     }
     return choices;
