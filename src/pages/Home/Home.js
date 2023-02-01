@@ -14,6 +14,7 @@ import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material";
 import { BiWorld } from "react-icons/bi";
 import { BsSoundwave, BsFileTextFill, BsTagFill } from "react-icons/bs";
+import { SiAudiomack } from "react-icons/si";
 
 const theme = createTheme({
   palette: {
@@ -28,9 +29,10 @@ const modelIcons = {
   asr: <BsFillMicFill size={35} className="a4b-home-card-logo" />,
   nmt: <BiWorld size={35} className="a4b-home-card-logo" />,
   nlg: <BsFileTextFill size={35} className="a4b-home-card-logo" />,
-  tts: <BsSoundwave size={35} className="a4b-home-card-logo" />,
+  tts: <SiAudiomack size={35} className="a4b-home-card-logo" />,
   bert: <FaLanguage size={35} className="a4b-home-card-logo" />,
   ner: <BsTagFill size={35} className="a4b-home-card-logo" />,
+  sts: <BsSoundwave size={35} className="a4b-home-card-logo" />,
 };
 
 export default class Home extends React.Component {

@@ -10,7 +10,7 @@ import { FaHome, FaRegFileAudio, FaRegKeyboard } from "react-icons/fa";
 import { BsFileTextFill } from "react-icons/bs";
 import { BiWorld } from "react-icons/bi";
 import { SiAudiomack } from "react-icons/si";
-import { BsTagFill } from "react-icons/bs";
+import { BsTagFill, BsSoundwave } from "react-icons/bs";
 
 export default class A4BMenu extends React.Component {
   constructor(props) {
@@ -27,6 +27,7 @@ export default class A4BMenu extends React.Component {
       nmt: ["Indic Natural Language Translation (NMT)", <BiWorld />],
       tts: ["Indic Text-to-Speech (TTS)", <SiAudiomack />],
       ner: ["Indic Named Entity Recognition (NER)", <BsTagFill />],
+      sts: ["Indic Speech2Speech (STS)", <BsSoundwave />],
     };
   }
 
