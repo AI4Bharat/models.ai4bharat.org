@@ -163,6 +163,7 @@ export default class TTS extends React.Component {
           <div className="a4b-output">
             <div className="a4b-transliterate-container">
               <IndicTransliterate
+                enabled={this.state.languageChoice !== "en"}
                 renderComponent={(props) => (
                   <textarea className="a4b-transliterate-text" {...props} />
                 )}
@@ -260,7 +261,7 @@ export default class TTS extends React.Component {
                 justifyContent: "center",
                 alignItems: "center",
                 textAlign: "center",
-                flexDirection: "row"
+                flexDirection: "row",
               }}
               size="small"
             >
