@@ -66,7 +66,7 @@ export default class STS extends React.Component {
     this.closeStream = this.closeStream.bind(this);
     this.handleModeChange = this.handleModeChange.bind(this);
     this.setInferenceMode = this.setInferenceMode.bind(this);
-    this.getASROutput = this.getASROutput.bind(this);
+    this.getSTSOutput = this.getSTSOutput.bind(this);
     this.startRecording = this.startRecording.bind(this);
     this.stopRecording = this.stopRecording.bind(this);
     this.handleRecording = this.handleRecording.bind(this);
@@ -103,7 +103,7 @@ export default class STS extends React.Component {
       var base64Data = reader.result.split(",")[1];
       var audio = new Audio("data:audio/wav;base64," + base64Data);
       audio.play();
-      _this.getASROutput(base64Data);
+      _this.getSTSOutput(base64Data);
     };
   }
 
@@ -116,15 +116,13 @@ export default class STS extends React.Component {
     _this.recorder.exportWAV(_this.handleRecording, "audio/wav", 16000);
   }
 
-  getASROutput(asrInput) {
+  getSTSOutput(asrInput) {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", process.env.REACT_APP_API_KEY);
-
+    myHeaders.append("Authorization", "0aaef7ff-86f3-4bb0-a30b-9f50f3de1a52");
     this.setState({ isFetching: true });
 
     var payload = JSON.stringify({
-      serviceId: "lol",
       audio: [
         {
           audioContent: asrInput,
@@ -385,7 +383,7 @@ export default class STS extends React.Component {
                         "data:audio/wav;base64," + asrInput
                       );
                       audio.play();
-                      this.getASROutput(asrInput);
+                      this.getSTSOutput(asrInput);
                     };
                   }}
                 />
