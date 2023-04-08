@@ -17,6 +17,7 @@ export default class NMT extends React.Component {
       transliteratedText: "",
       translatedText: "",
       isFetching: false,
+      version: false,
     };
 
     this.languages = {
@@ -111,121 +112,151 @@ export default class NMT extends React.Component {
           <p className="subtitle">
             Translate in real-time across various Indian Languages!
           </p>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => {
+              this.setState({ version: !this.state.version });
+            }}
+          >
+            {this.state.version ? "Try Version 1.0" : "Try Version 2.0"}
+          </Button>
         </section>
         <hr className="hr-split" />
-        <div className="common-options">
-          <label className="a4b-option">
-            From:
-            <Select
-              MenuProps={{
-                disableScrollLock: true,
-              }}
-              sx={{ borderRadius: 15 }}
-              className="a4b-option-select"
-              value={this.state.from}
-              onChange={(e) => {
-                this.setState({ from: e.target.value });
-                localStorage.setItem("nmtLanguageFrom", e.target.value);
-              }}
-            >
-              {Object.entries(this.sortedLanguages).map(
-                ([language, optionText]) => {
-                  return (
-                    <MenuItem key={language} sx={{ margin: 1 }} value={language}>
-                      {optionText[0]}
-                    </MenuItem>
-                  );
-                }
-              )}
-            </Select>
-          </label>
-          <label className="a4b-option">
-            To:
-            <Select
-              className="a4b-option-select"
-              value={this.state.to}
-              sx={{ borderRadius: 15 }}
-              MenuProps={{
-                disableScrollLock: true,
-              }}
-              onChange={(e) => {
-                this.setState({ to: e.target.value });
-                localStorage.setItem("nmtLanguageTo", e.target.value);
-              }}
-            >
-              {Object.entries(this.sortedLanguages).map(
-                ([language, optionText]) => {
-                  return (
-                    <MenuItem key={language} sx={{ margin: 1 }} value={language}>
-                      {optionText[0]}
-                    </MenuItem>
-                  );
-                }
-              )}
-            </Select>
-          </label>
-        </div>
-        <div className="a4b-interface">
-          {this.showProgress()}
-          <div className="a4b-output-grid">
-            <div className="a4b-output">
-              <div className="a4b-transliterate-container">
-                <IndicTransliterate
-                  className="a4b-transliterate-text"
-                  enabled={this.state.from !== "en"}
-                  renderComponent={(props) => <textarea {...props} />}
-                  value={this.state.transliteratedText}
-                  placeholder="Type your text here to transliterate...."
-                  onChangeText={(text) => {
-                    this.setTransliteratedText(text);
+        {this.state.version ? (
+          <iframe
+            width={"100%"}
+            height={650}
+            title="IndicTrans V2 NMT System"
+            src="https://nmt.ai4bharat.org/"
+          />
+        ) : (
+          <>
+            <div className="common-options">
+              <label className="a4b-option">
+                From:
+                <Select
+                  MenuProps={{
+                    disableScrollLock: true,
                   }}
-                  lang={this.state.from}
+                  sx={{ borderRadius: 15 }}
+                  className="a4b-option-select"
+                  value={this.state.from}
+                  onChange={(e) => {
+                    this.setState({ from: e.target.value });
+                    localStorage.setItem("nmtLanguageFrom", e.target.value);
+                  }}
+                >
+                  {Object.entries(this.sortedLanguages).map(
+                    ([language, optionText]) => {
+                      return (
+                        <MenuItem
+                          key={language}
+                          sx={{ margin: 1 }}
+                          value={language}
+                        >
+                          {optionText[0]}
+                        </MenuItem>
+                      );
+                    }
+                  )}
+                </Select>
+              </label>
+              <label className="a4b-option">
+                To:
+                <Select
+                  className="a4b-option-select"
+                  value={this.state.to}
+                  sx={{ borderRadius: 15 }}
+                  MenuProps={{
+                    disableScrollLock: true,
+                  }}
+                  onChange={(e) => {
+                    this.setState({ to: e.target.value });
+                    localStorage.setItem("nmtLanguageTo", e.target.value);
+                  }}
+                >
+                  {Object.entries(this.sortedLanguages).map(
+                    ([language, optionText]) => {
+                      return (
+                        <MenuItem
+                          key={language}
+                          sx={{ margin: 1 }}
+                          value={language}
+                        >
+                          {optionText[0]}
+                        </MenuItem>
+                      );
+                    }
+                  )}
+                </Select>
+              </label>
+            </div>
+            <div className="a4b-interface">
+              {this.showProgress()}
+              <div className="a4b-output-grid">
+                <div className="a4b-output">
+                  <div className="a4b-transliterate-container">
+                    <IndicTransliterate
+                      className="a4b-transliterate-text"
+                      enabled={this.state.from !== "en"}
+                      renderComponent={(props) => <textarea {...props} />}
+                      value={this.state.transliteratedText}
+                      placeholder="Type your text here to transliterate...."
+                      onChangeText={(text) => {
+                        this.setTransliteratedText(text);
+                      }}
+                      lang={this.state.from}
+                    />
+                  </div>
+                </div>
+                <div className="a4b-nmt-buttons">
+                  <Button
+                    onClick={() => {
+                      this.getTranslation();
+                    }}
+                    sx={{
+                      backgroundColor: "#f06b42",
+                      borderRadius: 15,
+                      padding: "15px 32px",
+                      ":hover": { backgroundColor: "#f06b42" },
+                      margin: 2.5,
+                    }}
+                    variant="contained"
+                  >
+                    Translate
+                  </Button>
+                  <Button
+                    sx={{
+                      width: 10,
+                      height: 50,
+                      color: "#4a4a4a",
+                      borderColor: "#4a4a4a",
+                    }}
+                    size="large"
+                    variant="outlined"
+                    onClick={() => {
+                      if (this.state.translatedText) {
+                        navigator.clipboard.writeText(
+                          this.state.translatedText
+                        );
+                      }
+                    }}
+                  >
+                    <FaRegCopy size={"20px"} />
+                  </Button>
+                </div>
+                <textarea
+                  value={this.state.translatedText}
+                  placeholder="View Translated Input here....."
+                  className="a4b-transliterate-text"
+                  readOnly
                 />
               </div>
+              <Documentation documentation={nmtDocumentation} />
             </div>
-            <div className="a4b-nmt-buttons">
-              <Button
-                onClick={() => {
-                  this.getTranslation();
-                }}
-                sx={{
-                  backgroundColor: "#f06b42",
-                  borderRadius: 15,
-                  padding: "15px 32px",
-                  ":hover": { backgroundColor: "#f06b42" },
-                  margin: 2.5,
-                }}
-                variant="contained"
-              >
-                Translate
-              </Button>
-              <Button
-                sx={{
-                  width: 10,
-                  height: 50,
-                  color: "#4a4a4a",
-                  borderColor: "#4a4a4a",
-                }}
-                size="large"
-                variant="outlined"
-                onClick={() => {
-                  if (this.state.translatedText) {
-                    navigator.clipboard.writeText(this.state.translatedText);
-                  }
-                }}
-              >
-                <FaRegCopy size={"20px"} />
-              </Button>
-            </div>
-            <textarea
-              value={this.state.translatedText}
-              placeholder="View Translated Input here....."
-              className="a4b-transliterate-text"
-              readOnly
-            />
-          </div>
-          <Documentation documentation={nmtDocumentation} />
-        </div>
+          </>
+        )}
       </div>
     );
   }
