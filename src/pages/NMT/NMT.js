@@ -7,6 +7,7 @@ import Documentation from "../../components/A4BDocumentation/Documentation";
 import { nmtDocumentation } from "./nmtDocumentation";
 import { FaRegCopy } from "react-icons/fa";
 import LinearProgress from "@mui/material/LinearProgress";
+import { FeedbackModal } from "../../components/Feedback/Feedback";
 
 export default class NMT extends React.Component {
   constructor(props) {
@@ -16,6 +17,8 @@ export default class NMT extends React.Component {
       to: localStorage.getItem("nmtLanguageTo"),
       transliteratedText: "",
       translatedText: "",
+      pipelineInput : null,
+      pipelineOutput : null,
       isFetching: false,
     };
 
@@ -55,8 +58,29 @@ export default class NMT extends React.Component {
   getTranslation() {
     const _this = this;
     _this.setState({ isFetching: true });
-    let apiURL = "https://nmt-api.ai4bharat.org/translate_sentence/";
-
+    _this.setState({
+      pipelineInput:{
+      pipelineTasks: [
+        {
+          config: {
+            language:{
+              sourceLanguage : _this.state.from,
+              targetLanguage : _this.state.to
+            },
+          },
+          taskType: "translation",
+        },
+      ],
+      inputData: [
+        {
+          input: [{ source:  _this.state.transliteratedText }],
+        },
+      ],
+      controlConfig: {
+        dataTracking: true,
+      },
+      }});
+      let apiURL = "https://nmt-api.ai4bharat.org/translate_sentence/";
     fetch(apiURL, {
       method: "POST",
       body: JSON.stringify({
@@ -67,6 +91,20 @@ export default class NMT extends React.Component {
       headers: { "Content-Type": "application/json" },
     })
       .then(function (response) {
+        _this.setState(
+          {
+          pipelineOutput:{
+
+          controlConfig: {
+            dataTracking: true, 
+          },
+          pipelineResponse: [
+            {
+              taskType: "translation",
+              output: response.json["output"],
+            },
+          ],
+        }});
         return response.json();
       })
       .then(function (json_response) {
@@ -234,6 +272,12 @@ export default class NMT extends React.Component {
               />
             </div>
             <Documentation documentation={nmtDocumentation} />
+            {this.state.pipelineOutput && (
+                  <FeedbackModal
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                  />
+                )}
           </div>
         </>
       </div>
