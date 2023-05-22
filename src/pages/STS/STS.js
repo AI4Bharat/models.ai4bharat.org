@@ -17,6 +17,7 @@ import Select from "@mui/material/Select";
 import { FaMicrophone, FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation.js";
 import LinearProgress from "@mui/material/LinearProgress";
+import { FeedbackModal } from "../../components/Feedback/Feedback.jsx";
 
 import { Button, Box } from "@mui/material";
 
@@ -60,6 +61,8 @@ export default class STS extends React.Component {
       audioData: null,
       voiceGender: "male",
       latency: null,
+      pipelineInput : null,
+      pipelineOutput : null,
     };
 
     this.openStream = this.openStream.bind(this);
@@ -122,6 +125,52 @@ export default class STS extends React.Component {
     myHeaders.append("Authorization", "0aaef7ff-86f3-4bb0-a30b-9f50f3de1a52");
     this.setState({ isFetching: true });
 
+
+    this.setState(
+      {
+      pipelineInput :
+      {
+      pipelineTasks: [
+        {
+          taskType: "asr",
+          config: {
+            language: {
+              sourceLanguage: this.state.sourceLanguage,
+            },
+          },
+        },
+        {
+          taskType: "translation",
+          config: {
+            language: {
+              sourceLanguage: this.state.sourceLanguage,
+              targetLanguage: this.state.targetLanguage,
+            },
+          },
+        },
+        {
+          taskType: "tts",
+          config: {
+            language: {
+              sourceLanguage: this.state.targetLanguage,
+            },
+            gender: this.state.voiceGender,
+          },
+        },
+      ],
+      inputData: {
+        input: [],
+        audio: [
+          {
+            audioContent: asrInput,
+          },
+        ],
+      },
+      controlConfig: {
+        dataTracking: true,
+      },
+  }});
+
     var payload = JSON.stringify({
       audio: [
         {
@@ -150,7 +199,16 @@ export default class STS extends React.Component {
 
     const startTime = Date.now();
     fetch(ASR_REST_URL, requestOptions)
-      .then((response) => response.text())
+      .then((response) => {response.text();
+      this.setState({
+        pipelineOutput : 
+        {       
+        pipelineResponse: response.data["pipelineResponse"],
+        controlConfig: {
+          dataTracking: true,
+        },
+      }
+      })})
       .then((result) => {
         const duration = Date.now() - startTime;
         var apiResponse = JSON.parse(result);
@@ -519,6 +577,12 @@ export default class STS extends React.Component {
               </MenuItem>
             </Select>
           </label>
+          {this.state.pipelineOutput && (
+                  <FeedbackModal
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                  />
+                )}
         </div>
         {this.setInferenceInterface()}
       </div>

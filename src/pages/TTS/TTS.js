@@ -8,7 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import LinearProgress from "@mui/material/LinearProgress";
 import Skeleton from "@mui/material/Skeleton";
-
+import { FeedbackModal } from "../../components/Feedback/Feedback.jsx";
 import { ttsDocumentation } from "./ttsDocumentation";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 
@@ -34,6 +34,8 @@ export default class TTS extends React.Component {
       streamingAudio: null,
       audioHidden: true,
       isFetching: false,
+      pipelineInput : null,
+      pipelineOutput : null,
       inferenceMode: "REST",
     };
 
@@ -63,6 +65,35 @@ export default class TTS extends React.Component {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
+    this.setState({
+      pipelineInput : {
+        pipelineTasks: [
+          {
+            config: {
+              language: {
+                gender: this.state.voiceGender,
+              },
+              gender: this.state.voiceGender,
+              samplingRate: this.state.samplingRate,
+              audioFormat: this.state.audioFormat,
+            },
+            taskType: "tts",
+          },
+        ],
+        inputData: [
+          {
+            input: [
+              {
+                source: this.state.transliteratedText,
+              },
+            ],
+          },
+        ],
+        controlConfig: {
+          dataTracking: true,
+        },
+      }
+    })
     const payload = JSON.stringify({
       input: [
         {
@@ -342,6 +373,12 @@ export default class TTS extends React.Component {
               </MenuItem>
             </Select>
           </label>
+          {this.state.pipelineOutput && (
+                  <FeedbackModal
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                  />
+                )}
         </div>
         {this.setInferenceInterface()}
       </div>

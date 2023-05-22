@@ -26,7 +26,10 @@ import { Button } from "@mui/material";
 
 import Recorder from "./Recorder";
 
+import { FeedbackModal } from "../../components/Feedback/Feedback.jsx";
+
 export default class ASR extends React.Component {
+
   constructor(props) {
     super(props);
     this.ASR_LANGUAGE_CONFIGS = ASR_LANGUAGE_CONFIGS;
@@ -49,6 +52,8 @@ export default class ASR extends React.Component {
       audioChunks: [],
       audioStream: null,
       audioData: null,
+      pipelineInput : null,
+      pipelineOutput : null,
     };
 
     this.openStream = this.openStream.bind(this);
@@ -141,6 +146,39 @@ export default class ASR extends React.Component {
       ],
     });
 
+    this.setState({pipelineInput : 
+    {
+        pipelineTasks: [
+          {
+            config: {
+              language: {
+                sourceLanguage: this.state.languageChoice,
+              },
+              transcriptionFormat: {
+                value: "transcript",
+              },
+              audioFormat: "wav",
+              encoding: "base64",
+              samplingRate: this.state.languageChoice === "ta"? 16000: this.state.samplingRateChoice,
+              postProcessors: this.state.processorChoice.length === 0? null: this.state.processorChoice,
+            },
+            taskType: "asr",
+          },
+        ],
+        controlConfig: {
+          dataTracking: true,
+        },
+        inputData: [
+          {
+            audio: [
+              {
+                audioContent: asrInput,
+              },
+            ],
+          },
+        ],
+    }})
+
     var requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -153,7 +191,20 @@ export default class ASR extends React.Component {
       ASR_REST_URLS[this.state.languageChoice]
     }/asr/v1/recognize/${this.state.languageChoice}`;
     fetch(ASR_REST_URL, requestOptions)
-      .then((response) => response.text())
+      .then((response) => {response.text();         
+        this.setState(
+          {
+          pipelineOutput :{
+        controlConfig: {
+          dataTracking: true,
+        },
+        pipelineResponse: [
+          {
+            taskType: "asr",
+            output: response.data.output,
+          },
+        ],
+      }});})
       .then((result) => {
         console.log(result);
         var apiResponse = JSON.parse(result);
@@ -540,7 +591,14 @@ export default class ASR extends React.Component {
           </label>
         </div>
         {this.setInferenceInterface()}
+        {this.state.pipelineOutput && (
+                  <FeedbackModal
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                  />
+                )}
       </div>
+      
     );
   }
 }
