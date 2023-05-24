@@ -2,7 +2,6 @@ import React from "react";
 
 import {
   ASR_STREAMING_URLS,
-  ASR_REST_URLS,
   ASR_LANGUAGE_CONFIGS,
   LANGUAGE_KEY_TEXT,
 } from "../../config/config.js";
@@ -24,19 +23,18 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 import { Button } from "@mui/material";
 
-import Recorder from "./Recorder";
+import Recorder from "./Recorder.js";
 
 import { FeedbackModal } from "../../components/Feedback/Feedback.jsx";
 
-export default class ASR extends React.Component {
-
+export default class ASRWhipserer extends React.Component {
   constructor(props) {
     super(props);
     this.ASR_LANGUAGE_CONFIGS = ASR_LANGUAGE_CONFIGS;
     this.samplingRates = [48000, 16000, 8000];
 
     this.state = {
-      inferenceMode: "WebSocket",
+      inferenceMode: "REST",
       languageChoice: localStorage.getItem("asrLanguageChoice"),
       samplingRateChoice: localStorage.getItem("samplingRateChoice"),
       processorChoice: JSON.parse(localStorage.getItem("processorChoice"))[
@@ -52,8 +50,8 @@ export default class ASR extends React.Component {
       audioChunks: [],
       audioStream: null,
       audioData: null,
-      pipelineInput : null,
-      pipelineOutput : null,
+      pipelineInput: null,
+      pipelineOutput: null,
     };
 
     this.openStream = this.openStream.bind(this);
@@ -144,10 +142,13 @@ export default class ASR extends React.Component {
           audioContent: asrInput,
         },
       ],
+      controlConfig: {
+        dataTracking: true,
+      },
     });
 
-    this.setState({pipelineInput : 
-    {
+    this.setState({
+      pipelineInput: {
         pipelineTasks: [
           {
             config: {
@@ -159,25 +160,27 @@ export default class ASR extends React.Component {
               },
               audioFormat: "wav",
               encoding: "base64",
-              samplingRate: this.state.languageChoice === "ta"? 16000: this.state.samplingRateChoice,
-              postProcessors: this.state.processorChoice.length === 0? null: this.state.processorChoice,
+              samplingRate:
+                this.state.languageChoice === "ta"
+                  ? 16000
+                  : this.state.samplingRateChoice,
+              postProcessors:
+                this.state.processorChoice.length === 0
+                  ? null
+                  : this.state.processorChoice,
             },
             taskType: "asr",
           },
         ],
-        controlConfig: {
-          dataTracking: true,
+        inputData: {
+          audio: [
+            {
+              audioContent: asrInput,
+            },
+          ],
         },
-        inputData: [
-          {
-            audio: [
-              {
-                audioContent: asrInput,
-              },
-            ],
-          },
-        ],
-    }})
+      },
+    });
 
     var requestOptions = {
       method: "POST",
@@ -186,31 +189,21 @@ export default class ASR extends React.Component {
       redirect: "follow",
     };
 
-    console.log(payload);
-    const ASR_REST_URL = `${
-      ASR_REST_URLS[this.state.languageChoice]
-    }/asr/v1/recognize/${this.state.languageChoice}`;
-    fetch(ASR_REST_URL, requestOptions)
-      .then((response) => {response.text();         
-        this.setState(
-          {
-          pipelineOutput :{
-        controlConfig: {
-          dataTracking: true,
-        },
-        pipelineResponse: [
-          {
-            taskType: "asr",
-            output: response.data.output,
-          },
-        ],
-      }});})
+    fetch("http://localhost:8000/inference/asr/conformer", requestOptions)
+      .then((response) => response.text())
       .then((result) => {
-        console.log(result);
         var apiResponse = JSON.parse(result);
         this.setState({
           asrAPIResult: apiResponse["output"][0]["source"],
           isFetching: false,
+          pipelineOutput: {
+            pipelineResponse: [
+              {
+                taskType: "asr",
+                output: apiResponse["output"],
+              },
+            ],
+          },
         });
       })
       .catch((error) => console.log("error", error));
@@ -515,7 +508,6 @@ export default class ASR extends React.Component {
                 this.handleModeChange();
               }}
             >
-              <MenuItem value="WebSocket">Streaming (WebSocket)</MenuItem>
               <MenuItem value="REST">REST (API)</MenuItem>
             </Select>
           </label>
@@ -590,15 +582,15 @@ export default class ASR extends React.Component {
             </Select>
           </label>
         </div>
-        {this.setInferenceInterface()}
         {this.state.pipelineOutput && (
-                  <FeedbackModal
-                    pipelineInput={this.state.pipelineInput}
-                    pipelineOutput={this.state.pipelineOutput}
-                  />
-                )}
+          <FeedbackModal
+            pipelineInput={this.state.pipelineInput}
+            pipelineOutput={this.state.pipelineOutput}
+            taskType={"asr"}
+          />
+        )}
+        {this.setInferenceInterface()}
       </div>
-      
     );
   }
 }

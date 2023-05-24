@@ -27,7 +27,10 @@ const theme = createTheme({
 const modelIcons = {
   xlit: <FaKeyboard size={35} className="a4b-home-card-logo" />,
   asr: <BsFillMicFill size={35} className="a4b-home-card-logo" />,
+  asrconf: <BsFillMicFill size={35} className="a4b-home-card-logo" />,
+  asrwhisp: <BsFillMicFill size={35} className="a4b-home-card-logo" />,
   nmt: <BiWorld size={35} className="a4b-home-card-logo" />,
+  nmtv2: <BiWorld size={35} className="a4b-home-card-logo" />,
   nlg: <BsFileTextFill size={35} className="a4b-home-card-logo" />,
   tts: <SiAudiomack size={35} className="a4b-home-card-logo" />,
   bert: <FaLanguage size={35} className="a4b-home-card-logo" />,

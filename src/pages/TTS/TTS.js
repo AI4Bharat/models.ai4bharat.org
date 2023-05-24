@@ -18,7 +18,7 @@ export default class TTS extends React.Component {
   constructor(props) {
     super(props);
 
-    this.ttsURL = "https://tts-api.ai4bharat.org/";
+    this.ttsURL = "http://localhost:8000/inference/tts";
 
     this.modes = {
       REST: "REST (API)",
@@ -34,8 +34,8 @@ export default class TTS extends React.Component {
       streamingAudio: null,
       audioHidden: true,
       isFetching: false,
-      pipelineInput : null,
-      pipelineOutput : null,
+      pipelineInput: null,
+      pipelineOutput: null,
       inferenceMode: "REST",
     };
 
@@ -65,36 +65,10 @@ export default class TTS extends React.Component {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    this.setState({
-      pipelineInput : {
-        pipelineTasks: [
-          {
-            config: {
-              language: {
-                gender: this.state.voiceGender,
-              },
-              gender: this.state.voiceGender,
-              samplingRate: this.state.samplingRate,
-              audioFormat: this.state.audioFormat,
-            },
-            taskType: "tts",
-          },
-        ],
-        inputData: [
-          {
-            input: [
-              {
-                source: this.state.transliteratedText,
-              },
-            ],
-          },
-        ],
-        controlConfig: {
-          dataTracking: true,
-        },
-      }
-    })
     const payload = JSON.stringify({
+      controlConfig: {
+        dataTracking: true,
+      },
       input: [
         {
           source: this.state.transliteratedText,
@@ -127,6 +101,36 @@ export default class TTS extends React.Component {
           isFetching: false,
           audioComponent: audio,
           audioHidden: false,
+          pipelineInput: {
+            pipelineTasks: [
+              {
+                config: {
+                  gender: this.state.voiceGender,
+                  language: {
+                    sourceLanguage: this.state.languageChoice,
+                  },
+                  samplingRate: this.state.samplingRate,
+                  audioFormat: this.state.audioFormat,
+                },
+                taskType: "tts",
+              },
+            ],
+            inputData: {
+              input: [
+                {
+                  source: this.state.transliteratedText,
+                },
+              ],
+            },
+          },
+          pipelineOutput: {
+            pipelineResponse: [
+              {
+                taskType: "tts",
+                audio: result["audio"],
+              },
+            ],
+          },
         });
       });
   }
@@ -373,13 +377,14 @@ export default class TTS extends React.Component {
               </MenuItem>
             </Select>
           </label>
-          {this.state.pipelineOutput && (
-                  <FeedbackModal
-                    pipelineInput={this.state.pipelineInput}
-                    pipelineOutput={this.state.pipelineOutput}
-                  />
-                )}
         </div>
+        {this.state.pipelineOutput && (
+          <FeedbackModal
+            pipelineInput={this.state.pipelineInput}
+            pipelineOutput={this.state.pipelineOutput}
+            taskType={"tts"}
+          />
+        )}
         {this.setInferenceInterface()}
       </div>
     );

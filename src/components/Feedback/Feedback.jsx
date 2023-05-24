@@ -1,83 +1,32 @@
-// import {
-//   FormControl,
-//   FormLabel,
-//   Textarea,
-//   Text,
-//   Box,
-//   Button,
-//   Input,
-//   Switch,
-//   Checkbox,
-//   HStack,
-//   Modal,
-//   ModalHeader,
-//   useDisclosure,
-//   ModalBody,
-//   ModalOverlay,
-//   ModalContent,
-//   VStack,
-//   Divider,
-//   Spacer,
-//   CheckboxGroup,
-//   ModalCloseButton,
-//   useToast,
-// } from "@chakra-ui/react";
-import {AiFillStar} from "react-icons/ai" 
-import { Box, Button, FormControl, FormLabel, Input, Switch, TextField , Stack, Checkbox, Snackbar, Alert, Modal} from "@mui/material";
-import React, { useState } from "react";
+import { AiFillStar } from "react-icons/ai";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Switch,
+  TextField,
+  Stack,
+  Checkbox,
+  Snackbar,
+  Alert,
+  FormControlLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { fetchFeedbackQuestions } from "../../api/feedbackAPI";
 // import { fetchFeedbackQuestions, submitFeedback } from "../../api/serviceAPI";
-
 
 const Feedback = ({
   feedbackLanguage,
   pipelineInput,
   pipelineOutput,
+  taskType,
 }) => {
-  const [feedback, setFeedback] = useState({
-    feedbackLanguage: feedbackLanguage,
-    pipelineFeedback: {
-      commonFeedback: [
-        {
-          feedbackType: "rating",
-          question: "How would you rate the overall quality of the output?",
-          rating: 0,
-        },
-      ],
-    },
-    taskFeedback: [
-      {
-        taskType: "asr",
-        commonFeedback: [
-          {
-            feedbackType: "rating",
-            question: "How would you rate the overall quality of the output?",
-            rating: 0,
-          },
-        ],
-        granularFeedback: [
-          {
-            feedbackType: "ratingList",
-            question: "How would you rate the overall quality of the output?",
-            ratingList: [
-              {
-                parameterName: "parameter1",
-                checkbox: false,
-              },
-              {
-                parameterName: "parameter2",
-                checkbox: false,
-              },
-            ],
-          },
-          {
-            feedbackType: "thumbs",
-            question: "How would you rate the overall quality of the output?",
-            rating: 0,
-          },
-        ],
-      },
-    ],
-  });
+  const [feedback, setFeedback] = useState();
   const [errorOpen, setErrorOpen] = useState(false);
 
   const handleSnackbarClose = () => {
@@ -85,7 +34,8 @@ const Feedback = ({
   };
 
   const [suggest, setSuggest] = useState(false);
-  const [suggestedPipelineOutput, setSuggestedPipelineOutput] = useState(pipelineOutput);
+  const [suggestedPipelineOutput, setSuggestedPipelineOutput] =
+    useState(pipelineOutput);
   // const fetchQuestions = () => {
   //   const response = fetchFeedbackQuestions({
   //     feedbackLanguage: feedbackLanguage,
@@ -94,6 +44,102 @@ const Feedback = ({
   //   //TODO: Write parsing function for state management
   //   setFeedback(response);
   // };
+
+  const getFeedbackTypeString = (feedbackType) => {
+    if (feedbackType.includes("-") === false) {
+      return feedbackType;
+    }
+
+    return (
+      feedbackType.split("-")[0] +
+      feedbackType.split("-")[1][0].toUpperCase() +
+      feedbackType.split("-")[1].slice(1)
+    );
+  };
+
+  const fetchQuestions = async () => {
+    let response = await fetchFeedbackQuestions({
+      feedbackLanguage: feedbackLanguage,
+      supportedTasks: [taskType],
+    });
+    response.pipelineFeedback.commonFeedback = getFeedbackType(
+      response.pipelineFeedback.commonFeedback
+    );
+    let temp = response.taskFeedback.map((data) => {
+      return {
+        ...data,
+        commonFeedback: getFeedbackType(data.commonFeedback),
+        granularFeedback: getFeedbackType(data.granularFeedback),
+      };
+    });
+    response.taskFeedback = temp;
+    setFeedback(response);
+  };
+
+  useEffect(() => {
+    fetchQuestions();
+    //eslint-disable-next-line
+  }, []);
+
+  const getFeedbackType = (feedbackList) => {
+    let temp = feedbackList.map((data) => {
+      if (data.supportedFeedbackTypes.includes("rating")) {
+        return {
+          ...data,
+          feedbackType: "rating",
+          rating: 0,
+        };
+      } else if (data.supportedFeedbackTypes.includes("thumbs")) {
+        return {
+          ...data,
+          feedbackType: "thumbs",
+          thumbs: false,
+        };
+      } else if (data.supportedFeedbackTypes.includes("comment")) {
+        return {
+          ...data,
+          feedbackType: "comment",
+          comment: "",
+        };
+      } else if (data.supportedFeedbackTypes.includes("checkbox-list")) {
+        return {
+          ...data,
+          feedbackType: "checkbox-list",
+          checkboxList: data.parameters.map((d) => {
+            return {
+              parameterName: d,
+              isSelected: false,
+            };
+          }),
+        };
+      } else if (data.supportedFeedbackTypes.includes("thumbs-list")) {
+        return {
+          ...data,
+          feedbackType: "thumbs-list",
+          thumbsList: data.parameters.map((d) => {
+            return {
+              parameterName: d,
+              thumbs: false,
+            };
+          }),
+        };
+      } else if (data.supportedFeedbackTypes.includes("rating-list")) {
+        return {
+          ...data,
+          feedbackType: "rating-list",
+          ratingList: data.parameters.map((d) => {
+            return {
+              parameterName: d,
+              rating: 0,
+            };
+          }),
+        };
+      } else {
+        return data;
+      }
+    });
+    return temp;
+  };
 
   const changeFeedbackState = (
     index,
@@ -110,7 +156,10 @@ const Feedback = ({
             commonFeedback: feedback.pipelineFeedback.commonFeedback.map(
               (data, i) => {
                 if (i === index) {
-                  return { ...data, [feedbackType]: value };
+                  return {
+                    ...data,
+                    [getFeedbackTypeString(feedbackType)]: value,
+                  };
                 } else {
                   return data;
                 }
@@ -128,7 +177,10 @@ const Feedback = ({
                 ...data,
                 granularFeedback: data.granularFeedback.map((data, j) => {
                   if (j === index) {
-                    return { ...data, [feedbackType]: value };
+                    return {
+                      ...data,
+                      [getFeedbackTypeString(feedbackType)]: value,
+                    };
                   } else {
                     return data;
                   }
@@ -148,7 +200,10 @@ const Feedback = ({
                 ...data,
                 commonFeedback: data.commonFeedback.map((data, j) => {
                   if (j === index) {
-                    return { ...data, [feedbackType]: value };
+                    return {
+                      ...data,
+                      [getFeedbackTypeString(feedbackType)]: value,
+                    };
                   } else {
                     return data;
                   }
@@ -174,37 +229,48 @@ const Feedback = ({
       case "rating":
         let value = data.rating;
         return (
-          <Box mt="1%">
-            <text>How would you rate the overall quality of the output?</text>
-            {Array(5)
-              .fill("")
-              .map((_, i) => (
-                <AiFillStar
-                  key={i}
-                  mt="1%"
-                  color={i < value ? "orange.500" : "gray.300"}
-                  boxSize={6}
-                  onClick={() =>
-                    changeFeedbackState(
-                      index,
-                      i + 1,
-                      feedbackLocation,
-                      parentIndex,
-                      feedbackType
-                    )
-                  }
-                />
-              ))}
+          <Box
+            mt="1%"
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
+            <Box>
+              {Array(5)
+                .fill("")
+                .map((_, i) => (
+                  <AiFillStar
+                    key={i}
+                    mt="1%"
+                    style={{ color: i < value ? "orange" : "gray" }}
+                    boxSize={6}
+                    onClick={() =>
+                      changeFeedbackState(
+                        index,
+                        i + 1,
+                        feedbackLocation,
+                        parentIndex,
+                        feedbackType
+                      )
+                    }
+                  />
+                ))}
+            </Box>
           </Box>
         );
       case "comment":
         let comment = data.comment;
         return (
           <Box mt="1%">
-            <text>How would you rate the overall quality of the output?</text>
+            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
+            <br />
             <TextField
               placeholder="Enter your comment here"
               value={comment}
+              sx={{ width: "100%", marginBottom: "1%", marginTop: "1%" }}
               onChange={(e) =>
                 changeFeedbackState(
                   index,
@@ -219,14 +285,12 @@ const Feedback = ({
         );
       case "thumbs":
         let thumbs = data.thumbs;
-
-        console.log(thumbs);
         return (
           <Box mt="1%">
-            <text>How would you rate the overall quality of the output?</text>
+            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
             <Stack direction="row">
               <Button
-                variant={thumbs === false ? "ghost" : "solid"}
+                variant={thumbs === false ? "text" : "contained"}
                 onClick={() => {
                   changeFeedbackState(
                     index,
@@ -240,7 +304,7 @@ const Feedback = ({
                 👍
               </Button>
               <Button
-                variant={thumbs === true ? "ghost" : "solid"}
+                variant={thumbs === true ? "text" : "contained"}
                 onClick={() => {
                   changeFeedbackState(
                     index,
@@ -256,55 +320,58 @@ const Feedback = ({
             </Stack>
           </Box>
         );
-      case "checkboxList":
+      case "checkbox-list":
         let checkboxList = data.checkboxList;
         return (
           <Box mt="1%">
-            <text>Which parameters should be improved?</text>
-            <Stack direction="row" >
-                {checkboxList.map((data, i) => {
-                  return (
-                    <Checkbox
-                      key={i}
-                      isChecked={data.isSelected}
-                      onChange={(e) =>
-                        changeFeedbackState(
-                          index,
-                          [...checkboxList].map((checkboxData, j) => {
-                            if (j === i) {
-                              return {
-                                ...checkboxData,
+            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
+            <Stack direction="row">
+              {checkboxList.map((data, i) => {
+                return (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        key={i}
+                        isChecked={data.isSelected}
+                        onChange={(e) =>
+                          changeFeedbackState(
+                            index,
+                            [...checkboxList].map((checkboxData, j) => {
+                              if (j === i) {
+                                return {
+                                  ...checkboxData,
 
-                                isSelected: e.target.checked,
-                              };
-                            } else {
-                              return checkboxData;
-                            }
-                          }),
-                          feedbackLocation,
-                          parentIndex,
-                          feedbackType
-                        )
-                      }
-                    >
-                      {data.parameterName}
-                    </Checkbox>
-                  );
-                })}
-              </Stack>
+                                  isSelected: e.target.checked,
+                                };
+                              } else {
+                                return checkboxData;
+                              }
+                            }),
+                            feedbackLocation,
+                            parentIndex,
+                            feedbackType
+                          )
+                        }
+                      />
+                    }
+                    label={data.parameterName}
+                  />
+                );
+              })}
+            </Stack>
           </Box>
         );
-      case "thumbsList":
+      case "thumbs-list":
         let thumbsList = data.thumbsList;
         return (
           <Box mt="1%">
-            <text>Which parameters should be improved?</text>
-            <Stack direction="row" >
+            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
+            <Stack direction="row">
               {thumbsList.map((data, i) => {
                 return (
                   <Button
                     key={i}
-                    variant={data.thumbs === true ? "solid" : "ghost"}
+                    variant={data.thumbs === true ? "contained" : "text"}
                     onClick={() =>
                       changeFeedbackState(
                         index,
@@ -331,24 +398,33 @@ const Feedback = ({
             </Stack>
           </Box>
         );
-      case "ratingList":
+      case "rating-list":
         let ratingList = data.ratingList;
         return (
           <Box mt="1%">
-            <text>Which parameters should be improved?</text>
+            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
             <Stack alignItems={"flex-start"}>
               {ratingList.map((data, i) => {
                 return (
-                  <Stack direction={"row"} key={i}>
-                    <text>{data.parameterName}</text>
+                  <Stack
+                    justifyContent={"space-between"}
+                    sx={{ width: "100%" }}
+                    direction={"row"}
+                    key={i}
+                  >
+                    <text>
+                      {i + 1}.{data.parameterName}
+                    </text>
                     <Box>
                       {Array(5)
-                        .fill("") 
+                        .fill("")
                         .map((_, k) => (
                           <AiFillStar
                             key={k}
                             mt="1%"
-                            color={k < data.rating ? "orange.500" : "gray.300"}
+                            style={{
+                              color: k < data.rating ? "orange" : "gray",
+                            }}
                             boxSize={6}
                             onClick={() =>
                               changeFeedbackState(
@@ -392,78 +468,93 @@ const Feedback = ({
       feedbackLanguage: "en",
     };
     try {
-      // await submitFeedback(feedbackRequest, serviceId);
+      await fetch("http://localhost:8000/inference/feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(feedbackRequest),
+      });
     } catch {
       setErrorOpen(true);
     }
   };
 
+  useEffect(() => {
+    console.log(suggestedPipelineOutput);
+  }, [suggestedPipelineOutput]);
+
   return (
     <>
-      <FormControl>
-        {feedback.pipelineFeedback.commonFeedback?.map((data, index) => {
-          return (
-            <Box key={index}>
-              {renderFeedbackType(
-                data.feedbackType,
-                index,
-                "pipeline",
-                -1,
-                data
-              )}
-            </Box>
-          );
-        })}
-      </FormControl>
-      <FormControl>
-        {feedback.taskFeedback.map((data, parentIndex) => {
-          return (
-            <Box key={parentIndex}>
-              <text fontSize="md" fontWeight="bold">
-                {data.taskType}
-              </text>
-              <Box>
-                {data.commonFeedback?.map((data, index) => {
-                  return (
-                    <Box key={index}>
-                      {renderFeedbackType(
-                        data.feedbackType,
-                        index,
-                        "common",
-                        parentIndex,
-                        data
-                      )}
-                    </Box>
-                  );
-                })}
-              </Box>
-              <Box>
-                {data.granularFeedback?.map((data, index) => {
-                  return (
-                    <Box key={index}>
-                      {renderFeedbackType(
-                        data.feedbackType,
-                        index,
-                        "granular",
-                        parentIndex,
-                        data
-                      )}
-                    </Box>
-                  );
-                })}
-              </Box>
-            </Box>
-          );
-        })}
-      </FormControl>
-      {suggestedPipelineOutput.pipelineResponse.filter((data, index) => {
+      {feedback && (
+        <>
+          <FormControl sx={{ width: "100%" }}>
+            {feedback.pipelineFeedback.commonFeedback?.map((data, index) => {
+              return (
+                <Box key={index} sx={{ width: "100%" }}>
+                  {renderFeedbackType(
+                    data.feedbackType,
+                    index,
+                    "pipeline",
+                    -1,
+                    data
+                  )}
+                </Box>
+              );
+            })}
+          </FormControl>
+          <br />
+
+          <FormControl sx={{ width: "100%" }}>
+            {feedback.taskFeedback.map((data, parentIndex) => {
+              return (
+                <Box key={data.taskType}>
+                  <Box>
+                    {data.commonFeedback?.map((data, index) => {
+                      return (
+                        <Box key={index}>
+                          {renderFeedbackType(
+                            data.feedbackType,
+                            index,
+                            "common",
+                            parentIndex,
+                            data
+                          )}
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                  <Box>
+                    {data.granularFeedback?.map((data, index) => {
+                      return (
+                        <Box key={index}>
+                          {renderFeedbackType(
+                            data.feedbackType,
+                            index,
+                            "granular",
+                            parentIndex,
+                            data
+                          )}
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                </Box>
+              );
+            })}
+          </FormControl>
+        </>
+      )}
+
+      {suggestedPipelineOutput.pipelineResponse.filter((data) => {
         if (
-          data.taskType === "translation"||
+          data.taskType === "translation" ||
           data.taskType === "transliteration" ||
           data.taskType === "asr"
         ) {
           return data;
         }
+        return null;
       }).length !== 0 && (
         <>
           <Box my="2%" />
@@ -525,13 +616,30 @@ const Feedback = ({
                         </Box>
                       );
                     }
+                    else
+                    {
+                      return null;
+                    }
                   }
                 )}
             </Box>
           </FormControl>
         </>
       )}
-      <Button mt={"2rem"} type="submit" onClick={onSubmitFeedback}>
+      <Button
+        style={{
+          marginTop: "2rem",
+          width: "100%",
+          backgroundColor: "#f06b42",
+          borderRadius: 15,
+          padding: "15px 32px",
+          ":hover": { backgroundColor: "#f06b42" },
+          margin: 2.5,
+        }}
+        variant="contained"
+        type="submit"
+        onClick={onSubmitFeedback}
+      >
         Submit
       </Button>
       <Snackbar
@@ -560,21 +668,21 @@ export const FeedbackModal = (props) => {
         onClick={handleOpen}
         fullWidth
         style={{
-          background : '#f06b42',
-          borderColor: '#f06b42',
-          '&:hover': {
-            backgroundColor: '#f06b42',
+          background: "#f06b42",
+          borderColor: "#f06b42",
+          "&:hover": {
+            backgroundColor: "#f06b42",
           },
         }}
       >
         Give us feedback!
       </Button>
-      <Modal  
-       open={open}
-       onClose={handleClose}>
-            <Feedback {...props} />
-      </Modal>
+      <Dialog open={open} onClose={handleClose} maxWidth="xl">
+        <DialogTitle>Feedback</DialogTitle>
+        <DialogContent>
+          <Feedback {...props} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
-

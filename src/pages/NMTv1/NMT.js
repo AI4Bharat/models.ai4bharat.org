@@ -17,8 +17,8 @@ export default class NMT extends React.Component {
       to: localStorage.getItem("nmtLanguageTo"),
       transliteratedText: "",
       translatedText: "",
-      pipelineInput : null,
-      pipelineOutput : null,
+      pipelineInput: null,
+      pipelineOutput: null,
       isFetching: false,
     };
 
@@ -59,59 +59,60 @@ export default class NMT extends React.Component {
     const _this = this;
     _this.setState({ isFetching: true });
     _this.setState({
-      pipelineInput:{
-      pipelineTasks: [
-        {
-          config: {
-            language:{
-              sourceLanguage : _this.state.from,
-              targetLanguage : _this.state.to
+      pipelineInput: {
+        pipelineTasks: [
+          {
+            config: {
+              language: {
+                sourceLanguage: _this.state.from,
+                targetLanguage: _this.state.to,
+              },
             },
+            taskType: "translation",
           },
-          taskType: "translation",
+        ],
+        inputData: {
+          input: [{ source: _this.state.transliteratedText }],
         },
-      ],
-      inputData: [
-        {
-          input: [{ source:  _this.state.transliteratedText }],
-        },
-      ],
-      controlConfig: {
-        dataTracking: true,
       },
-      }});
-      let apiURL = "https://nmt-api.ai4bharat.org/translate_sentence/";
+    });
+    let apiURL = "http://localhost:8000/inference/translation/v1";
     fetch(apiURL, {
       method: "POST",
       body: JSON.stringify({
-        text: _this.state.transliteratedText,
-        source_language: _this.state.from,
-        target_language: _this.state.to,
+        controlConfig: {
+          dataTracking: true,
+        },
+        input: [{ source: _this.state.transliteratedText }],
+
+        config: {
+          serviceId: "",
+          language: {
+            sourceLanguage: _this.state.from,
+            targetLanguage: _this.state.to,
+          },
+        },
       }),
       headers: { "Content-Type": "application/json" },
     })
       .then(function (response) {
-        _this.setState(
-          {
-          pipelineOutput:{
-
-          controlConfig: {
-            dataTracking: true, 
-          },
-          pipelineResponse: [
-            {
-              taskType: "translation",
-              output: response.json["output"],
-            },
-          ],
-        }});
-        return response.json();
+        return response.text();
       })
-      .then(function (json_response) {
+      .then(function (response) {
+        let res = JSON.parse(response);
         _this.setState({
-          translatedText: json_response.text,
+          pipelineOutput: {
+            pipelineResponse: [
+              {
+                taskType: "translation",
+                output: res["output"],
+              },
+            ],
+          },
+          translatedText: res["output"][0]["target"],
           isFetching: false,
         });
+        return res;
       });
   }
 
@@ -273,11 +274,12 @@ export default class NMT extends React.Component {
             </div>
             <Documentation documentation={nmtDocumentation} />
             {this.state.pipelineOutput && (
-                  <FeedbackModal
-                    pipelineInput={this.state.pipelineInput}
-                    pipelineOutput={this.state.pipelineOutput}
-                  />
-                )}
+              <FeedbackModal
+                pipelineInput={this.state.pipelineInput}
+                pipelineOutput={this.state.pipelineOutput}
+                taskType="translation"
+              />
+            )}
           </div>
         </>
       </div>

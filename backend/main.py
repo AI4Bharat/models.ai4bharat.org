@@ -5,6 +5,7 @@ from schema.services.request import (
     ULCAAsrInferenceRequest,
     ULCAFeedbackRequest,
 )
+from fastapi.middleware.cors import CORSMiddleware
 import requests
 import os
 import json
@@ -14,10 +15,21 @@ from slowapi.errors import RateLimitExceeded
 from starlette.requests import Request
 
 
-BASE_DHRUVA_URL = os.environ.get("BASE_DHRUVA_URL", "http://localhost:8080")
+BASE_DHRUVA_URL = os.environ.get("BASE_DHRUVA_URL", "http://localhost:8000")
 API_KEY = os.environ.get("API_KEY", "")
 limiter = Limiter(key_func=get_remote_address)
 app = FastAPI()
+origins = [
+    "*",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
@@ -61,9 +73,10 @@ async def fetch_languages(request: Request):
 
 @app.post("/inference/translation/v1")
 @limiter.limit("6/minute")
-async def translation(request: ULCATranslationInferenceRequest):
-    request = request.dict()
+async def translation(body: ULCATranslationInferenceRequest, request: Request):
+    request = body.dict()
     request["config"]["serviceId"] = "ai4bharat/indictrans-fairseq-all-gpu--t4"
+    print(request)
     response = requests.post(
         f"{BASE_DHRUVA_URL}/services/inference/translation?serviceId={request['config']['serviceId']}",
         data=json.dumps(request),
@@ -78,8 +91,8 @@ async def translation(request: ULCATranslationInferenceRequest):
 
 @app.post("/inference/translation/v2")
 @limiter.limit("6/minute")
-async def translation_v2(request: ULCATranslationInferenceRequest):
-    request = request.dict()
+async def translation_v2(body: ULCATranslationInferenceRequest, request: Request):
+    request = body.dict()
     request["config"]["serviceId"] = "ai4bharat/indictrans-v2-all-gpu--t4"
     response = requests.post(
         f"{BASE_DHRUVA_URL}/services/inference/translation?serviceId={request['config']['serviceId']}",
@@ -95,14 +108,15 @@ async def translation_v2(request: ULCATranslationInferenceRequest):
 
 @app.post("/inference/tts")
 @limiter.limit("6/minute")
-async def tts_misc(request: ULCATtsInferenceRequest):
-    request = request.dict()
-    if request["config"]["language"] in ["en", "brx", "mni"]:
+async def tts_misc(body: ULCATtsInferenceRequest, request: Request):
+    request = body.dict()
+    if request["config"]["language"]["sourceLanguage"] in ["en", "brx", "mni"]:
         request["config"]["serviceId"] = "ai4bharat/indic-tts-coqui-misc-gpu--t4"
-    elif request["config"]["language"] in ["gu", "mr", "or", "pa", "bn", "hi", "as", "raj"]:
+    elif request["config"]["language"]["sourceLanguage"] in ["gu", "mr", "or", "pa", "bn", "hi", "as", "raj"]:
         request["config"]["serviceId"] = "ai4bharat/indic-tts-coqui-indo_aryan-gpu--t4"
-    elif request["config"]["language"] in ["ta", "te", "kn", "ml"]:
+    elif request["config"]["language"]["sourceLanguage"] in ["ta", "te", "kn", "ml"]:
         request["config"]["serviceId"] = "ai4bharat/indic-tts-coqui-dravidian-gpu--t4"
+    print(request)
     response = requests.post(
         f"{BASE_DHRUVA_URL}/services/inference/tts?serviceId={request['config']['serviceId']}",
         data=json.dumps(request),
@@ -117,8 +131,8 @@ async def tts_misc(request: ULCATtsInferenceRequest):
 
 @app.post("/inference/asr/conformer")
 @limiter.limit("6/minute")
-async def asr_en(request: ULCAAsrInferenceRequest):
-    request = ULCAAsrInferenceRequest(**request)
+async def asr_en(body: ULCAAsrInferenceRequest, request: Request):
+    request = body.dict()
     if request["config"]["language"] in ["en"]:
         request["config"]["serviceId"] = "ai4bharat/conformer-en-gpu--t4"
     elif request["config"]["language"] in ["hi"]:
@@ -131,8 +145,8 @@ async def asr_en(request: ULCAAsrInferenceRequest):
 
 @app.post("/inference/asr/whisper")
 @limiter.limit("6/minute")
-async def asr_en(request: ULCAAsrInferenceRequest):
-    request = request.dict()
+async def asr_en(body: ULCAAsrInferenceRequest, request: Request):
+    request = body.dict()
     if request["config"]["language"] in ["en"]:
         request["config"]["serviceId"] = "ai4bharat/whisper-medium-en--gpu--t4"
     elif request["config"]["language"] in ["hi"]:
