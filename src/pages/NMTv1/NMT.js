@@ -76,7 +76,7 @@ export default class NMT extends React.Component {
         },
       },
     });
-    let apiURL = "http://localhost:8000/inference/translation/v1";
+    let apiURL = `${process.env.BACKEND_URL}/inference/translation/v1`;
     fetch(apiURL, {
       method: "POST",
       body: JSON.stringify({

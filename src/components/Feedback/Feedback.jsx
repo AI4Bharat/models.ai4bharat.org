@@ -468,7 +468,7 @@ const Feedback = ({
       feedbackLanguage: "en",
     };
     try {
-      await fetch("http://localhost:8000/inference/feedback", {
+      await fetch(`${process.env.BACKEND_URL}/inference/feedback`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
