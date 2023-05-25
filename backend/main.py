@@ -4,7 +4,7 @@ from schema.services.request import (
     ULCATtsInferenceRequest,
     ULCAAsrInferenceRequest,
     ULCAFeedbackRequest,
-    ULCAFeedbackQuestionRequest
+    ULCAFeedbackQuestionRequest,
 )
 from fastapi.middleware.cors import CORSMiddleware
 import requests
@@ -57,18 +57,14 @@ async def feedback(request: ULCAFeedbackRequest):
 
 @app.get("/languages")
 async def fetch_languages(request: Request):
+    with open("languages.json", "r") as f:
+        languages = json.load(f)
+
     return {
-        "indicTransV1": [""],
-        "indicTransV2": [""],
-        "indicConformer-en": ["en"],
-        "indicConformer-hi": ["hi"],
-        "indicConformer-indo_aryan": ["gu", "mr", "or", "pa", "bn", "as", "ur", "sa"],
-        "indicConformer-dravidian": ["ta", "te", "kn", "ml"],
-        "indicWhisper-en": ["en"],
-        "indicWhisper-hi": ["hi"],
-        "indicTTS-misc": ["en", "brx", "mni"],
-        "indicTTS-indo_aryan": ["gu", "mr", "or", "pa", "bn", "hi", "as", "raj"],
-        "indicTTS-dravidian": ["ta", "te", "kn", "ml"],
+        "indicTransV2": languages,
+        "indicConformer": ["en", "ta", "te", "kn", "ml", "hi", "gu", "mr", "or", "pa", "bn", "as", "ur", "sa"],
+        "indicWhisper": ["en", "hi"],
+        "indicTTS": ["en", "brx", "mni", "gu", "mr", "or", "pa", "bn", "hi", "as", "raj", "ta", "te", "kn", "ml"],
     }
 
 

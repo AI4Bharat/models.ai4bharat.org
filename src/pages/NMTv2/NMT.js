@@ -8,40 +8,68 @@ import { nmtDocumentation } from "./nmtDocumentation";
 import { FaRegCopy } from "react-icons/fa";
 import LinearProgress from "@mui/material/LinearProgress";
 import { FeedbackModal } from "../../components/Feedback/Feedback";
+import { fetchLanguages } from "../../api/feedbackAPI";
 
 export default class NMTV2 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      from: localStorage.getItem("nmtLanguageFrom"),
-      to: localStorage.getItem("nmtLanguageTo"),
+      conversion: "en-hi",
       transliteratedText: "",
       translatedText: "",
       pipelineInput: null,
       pipelineOutput: null,
       isFetching: false,
+      nmtLanguages: [],
     };
 
     this.languages = {
-      hi: ["Hindi - हिंदी", "Hindi"],
-      mr: ["Marathi - मराठी", "Marathi"],
-      as: ["Assamese - অসমীয়া", "Assamese"],
-      gu: ["Gujarati - ગુજરાતી", "Gujarati"],
-      kn: ["Kannada - ಕನ್ನಡ", "Kannada"],
-      ml: ["Malayalam - മലയാളം", "Malayalam"],
-      or: ["Oriya - ଓଡ଼ିଆ", "Odia"],
-      pa: ["Punjabi - ਪੰਜਾਬੀ", "Punjabi"],
-      ta: ["Tamil - தமிழ்", "Tamil"],
-      te: ["Telugu - తెలుగు", "Telugu"],
-      bn: ["Bangla - বাংলা", "Bengali"],
-      en: ["English - English", "English"],
+      as: "Assamese",
+      awa: "Awadhi",
+      bho: "Bhojpuri",
+      bn: "Bangla",
+      brx: "Boro",
+      doi: "Dogri",
+      en: "English",
+      gom: "Goan-Konkani",
+      gu: "Gujarati",
+      hi: "Hindi",
+      hne: "Hindi-Eastern (Chhattisgarhi)",
+      kn: "Kannada",
+      ks: "Kashmiri",
+      ks_Deva: "Kashmiri (Devanagari)",
+      kha: "Khasi",
+      lus: "Lushai (Mizo)",
+      mag: "Magahi",
+      mai: "Maithili",
+      ml: "Malayalam",
+      mni: "Manipuri",
+      mni_Beng: "Manipuri (Bengali)",
+      mr: "Marathi",
+      ne: "Nepali",
+      or: "Oriya",
+      pa: "Panjabi",
+      raj: "Rajasthani",
+      sa: "Sanskrit",
+      sat: "Santali",
+      sd: "Sindhi",
+      sd_Deva: "Sindhi (Devanagari)",
+      si: "Sinhala",
+      ta: "Tamil",
+      te: "Telugu",
+      ur: "Urdu",
     };
 
     this.sortedLanguages = {};
 
     this.getTranslation = this.getTranslation.bind(this);
   }
-
+  fetchNMTLanguages() {
+    const _this = this;
+    fetchLanguages().then((response) => {
+      _this.setState({ nmtLanguages: response["indicTransV2"] });
+    });
+  }
   componentWillMount() {
     const _this = this;
     const languages = Object.keys(_this.languages);
@@ -49,6 +77,7 @@ export default class NMTV2 extends React.Component {
     languages.forEach((key) => {
       _this.sortedLanguages[key] = _this.languages[key];
     });
+    _this.fetchNMTLanguages();
   }
 
   setTransliteratedText(text) {
@@ -64,20 +93,19 @@ export default class NMTV2 extends React.Component {
           {
             config: {
               language: {
-                sourceLanguage: _this.state.from,
-                targetLanguage: _this.state.to,
+                sourceLanguage: _this.state.conversion.split("-")[0],
+                targetLanguage: _this.state.conversion.split("-")[1],
               },
             },
             taskType: "translation",
           },
         ],
-        inputData:
-          {
-            input: [{ source: _this.state.transliteratedText }],
-          },
+        inputData: {
+          input: [{ source: _this.state.transliteratedText }],
+        },
       },
     });
-    let apiURL = `${process.env.REACT_APP_BACKEND_URL}/inference/translation/v1`;
+    let apiURL = `${process.env.REACT_APP_BACKEND_URL}/inference/translation/v2`;
     fetch(apiURL, {
       method: "POST",
       body: JSON.stringify({
@@ -89,8 +117,8 @@ export default class NMTV2 extends React.Component {
         config: {
           serviceId: "",
           language: {
-            sourceLanguage: _this.state.from,
-            targetLanguage: _this.state.to,
+            sourceLanguage: _this.state.conversion.split("-")[0],
+            targetLanguage: _this.state.conversion.split("-")[1],
           },
         },
       }),
@@ -156,61 +184,31 @@ export default class NMTV2 extends React.Component {
         <>
           <div className="common-options">
             <label className="a4b-option">
-              From:
+              Select Language:
               <Select
                 MenuProps={{
                   disableScrollLock: true,
                 }}
                 sx={{ borderRadius: 15 }}
                 className="a4b-option-select"
-                value={this.state.from}
+                value={this.state.conversion}
                 onChange={(e) => {
-                  this.setState({ from: e.target.value });
-                  localStorage.setItem("nmtLanguageFrom", e.target.value);
+                  this.setState({ conversion: e.target.value });
                 }}
               >
-                {Object.entries(this.sortedLanguages).map(
-                  ([language, optionText]) => {
-                    return (
-                      <MenuItem
-                        key={language}
-                        sx={{ margin: 1 }}
-                        value={language}
-                      >
-                        {optionText[0]}
-                      </MenuItem>
-                    );
-                  }
-                )}
-              </Select>
-            </label>
-            <label className="a4b-option">
-              To:
-              <Select
-                className="a4b-option-select"
-                value={this.state.to}
-                sx={{ borderRadius: 15 }}
-                MenuProps={{
-                  disableScrollLock: true,
-                }}
-                onChange={(e) => {
-                  this.setState({ to: e.target.value });
-                  localStorage.setItem("nmtLanguageTo", e.target.value);
-                }}
-              >
-                {Object.entries(this.sortedLanguages).map(
-                  ([language, optionText]) => {
-                    return (
-                      <MenuItem
-                        key={language}
-                        sx={{ margin: 1 }}
-                        value={language}
-                      >
-                        {optionText[0]}
-                      </MenuItem>
-                    );
-                  }
-                )}
+                {this.state.nmtLanguages.map((data, index) => {
+                  return (
+                    <MenuItem
+                      key={data.sourceLanguage + "-" + data.targetLanguage}
+                      sx={{ margin: 1 }}
+                      value={data.sourceLanguage + "-" + data.targetLanguage}
+                    >
+                      {this.languages[data.sourceLanguage] +
+                        " -> " +
+                        this.languages[data.targetLanguage]}
+                    </MenuItem>
+                  );
+                })}
               </Select>
             </label>
           </div>
@@ -221,7 +219,7 @@ export default class NMTV2 extends React.Component {
                 <div className="a4b-transliterate-container">
                   <IndicTransliterate
                     className="a4b-transliterate-text"
-                    enabled={this.state.from !== "en"}
+                    enabled={this.state.conversion.split("-")[0] !== "en"}
                     renderComponent={(props) => <textarea {...props} />}
                     value={this.state.transliteratedText}
                     placeholder="Type your text here to transliterate...."
