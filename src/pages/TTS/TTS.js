@@ -18,7 +18,7 @@ export default class TTS extends React.Component {
   constructor(props) {
     super(props);
 
-    this.ttsURL = `${process.env.BACKEND_URL}/inference/tts`;
+    this.ttsURL = `${process.env.REACT_APP_BACKEND_URL}/inference/tts`;
 
     this.modes = {
       REST: "REST (API)",

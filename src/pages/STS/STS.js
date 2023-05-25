@@ -577,8 +577,7 @@ export default class STS extends React.Component {
             <FeedbackModal
               pipelineInput={this.state.pipelineInput}
               pipelineOutput={this.state.pipelineOutput}
-              //TODO: Change this to whatever pipeline is made of.
-              taskType={"sts"}
+              taskType={["asr", "translation", "tts"]}
             />
           )}
         </div>

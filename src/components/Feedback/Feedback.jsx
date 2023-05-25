@@ -36,14 +36,6 @@ const Feedback = ({
   const [suggest, setSuggest] = useState(false);
   const [suggestedPipelineOutput, setSuggestedPipelineOutput] =
     useState(pipelineOutput);
-  // const fetchQuestions = () => {
-  //   const response = fetchFeedbackQuestions({
-  //     feedbackLanguage: feedbackLanguage,
-  //     supportedTasks: ["asr"],
-  //   });
-  //   //TODO: Write parsing function for state management
-  //   setFeedback(response);
-  // };
 
   const getFeedbackTypeString = (feedbackType) => {
     if (feedbackType.includes("-") === false) {
@@ -59,9 +51,10 @@ const Feedback = ({
 
   const fetchQuestions = async () => {
     let response = await fetchFeedbackQuestions({
-      feedbackLanguage: feedbackLanguage,
+      feedbackLanguage: "en",
       supportedTasks: [taskType],
     });
+    console.log(response)
     response.pipelineFeedback.commonFeedback = getFeedbackType(
       response.pipelineFeedback.commonFeedback
     );
@@ -468,7 +461,7 @@ const Feedback = ({
       feedbackLanguage: "en",
     };
     try {
-      await fetch(`${process.env.BACKEND_URL}/inference/feedback`, {
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/inference/feedback`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

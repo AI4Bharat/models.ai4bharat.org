@@ -77,7 +77,7 @@ export default class NMTV2 extends React.Component {
           },
       },
     });
-    let apiURL = `${process.env.BACKEND_URL}/inference/translation/v1`;
+    let apiURL = `${process.env.REACT_APP_BACKEND_URL}/inference/translation/v1`;
     fetch(apiURL, {
       method: "POST",
       body: JSON.stringify({

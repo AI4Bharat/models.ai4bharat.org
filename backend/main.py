@@ -4,6 +4,7 @@ from schema.services.request import (
     ULCATtsInferenceRequest,
     ULCAAsrInferenceRequest,
     ULCAFeedbackRequest,
+    ULCAFeedbackQuestionRequest
 )
 from fastapi.middleware.cors import CORSMiddleware
 import requests
@@ -162,3 +163,17 @@ async def asr_en(body: ULCAAsrInferenceRequest, request: Request):
     except:
         result = response.text
     return result
+
+
+@app.post("/feedback/questions")
+async def fetch_feedback_questions(request: ULCAFeedbackQuestionRequest):
+    req = request.dict()
+
+    try:
+        res = requests.post(
+            "https://dev-auth.ulcacontrib.org/ulca/mdms/v0/pipelineQuestions",
+            json=req,
+        )
+    except Exception as e:
+        return e
+    return res.json()

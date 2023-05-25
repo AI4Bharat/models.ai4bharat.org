@@ -189,7 +189,7 @@ export default class ASRWhipserer extends React.Component {
       redirect: "follow",
     };
 
-    fetch(`${process.env.BACKEND_URL}/inference/asr/conformer`, requestOptions)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/inference/asr/conformer`, requestOptions)
       .then((response) => response.text())
       .then((result) => {
         var apiResponse = JSON.parse(result);
