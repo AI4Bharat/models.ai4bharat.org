@@ -2,7 +2,7 @@ version: "3"
 
 services:
   server:
-    container_name: server
+    container_name: server_models_ai4b
     build: 
       context: ./backend
     working_dir: /server
