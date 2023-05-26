@@ -33,7 +33,7 @@ root.render(
         <Route path="xlit" element={<XLit />} />
         <Route path="nlg" element={<NLG />} />
         <Route path="nmt" element={<NMT />} />
-        <Route path="nmtv2" element={<NMTV2 />} />
+        <Route path="nmt/v2" element={<NMTV2 />} />
         <Route path="ner" element={<NER />} />
         <Route path="tts">
           <Route path="" element={<TTS />} />

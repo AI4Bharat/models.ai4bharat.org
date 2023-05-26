@@ -30,7 +30,7 @@ const models = {
     link: "https://ai4bharat.org/indic-trans",
   },
   nmtv2: {
-    path: "nmtv2",
+    path: "nmt/v2",
     title: "Indic Translation v2",
     about: `Translation model trained using Transformers v2`,
     link: "https://ai4bharat.org/indic-trans",

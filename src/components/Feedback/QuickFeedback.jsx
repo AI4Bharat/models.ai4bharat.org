@@ -72,11 +72,11 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
         </FormLabel>
         <div>
           <Button
-            // variant={
-            //   feedback.pipelineFeedback.commonFeedback[0].thumbs === true
-            //     ? "contained"
-            //     : "text"
-            // }
+            variant={
+              feedback.pipelineFeedback.commonFeedback[0].thumbs === true
+                ? "contained"
+                : "text"
+            }
             onClick={() => {
               setFeedback({
                 ...feedback,
@@ -93,6 +93,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
               setButtonClicked(true);
               setOpen(true);
             }}
+            disabled={buttonClicked}
             sx={{
               mr: 2,
               background:
@@ -133,12 +134,15 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
               setButtonClicked(true);
               setOpen(true);
             }}
+            disabled={buttonClicked}
             sx={{
               mr: 2,
               background:
                 feedback.pipelineFeedback.commonFeedback[0].thumbs === false &&
                 "#f06b42",
-              borderColor: "#f06b42",
+              borderColor:
+                feedback.pipelineFeedback.commonFeedback[0].thumbs === false &&
+                "#f06b42",
               "&:hover": {
                 backgroundColor:
                   feedback.pipelineFeedback.commonFeedback[0].thumbs ===
