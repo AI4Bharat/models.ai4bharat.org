@@ -54,7 +54,7 @@ const Feedback = ({
       feedbackLanguage: "en",
       supportedTasks: [taskType],
     });
-    console.log(response)
+    console.log(response);
     response.pipelineFeedback.commonFeedback = getFeedbackType(
       response.pipelineFeedback.commonFeedback
     );
@@ -608,9 +608,7 @@ const Feedback = ({
                           })}
                         </Box>
                       );
-                    }
-                    else
-                    {
+                    } else {
                       return null;
                     }
                   }
@@ -655,21 +653,29 @@ export const FeedbackModal = (props) => {
   return (
     <>
       <br></br>
-      <Button
-        width="50rem"
-        variant="contained"
-        onClick={handleOpen}
-        fullWidth
-        style={{
-          background: "#f06b42",
-          borderColor: "#f06b42",
-          "&:hover": {
-            backgroundColor: "#f06b42",
-          },
-        }}
-      >
-        Give us feedback!
-      </Button>
+      {props.link ? (
+        <Button onClick={handleOpen} fullWidth variant={"text"} style={{
+          color:'#f06b42',
+        }}>
+          Have more to say? Give us a detailed feedback!
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          onClick={handleOpen}
+          fullWidth
+          style={{
+            background: "#f06b42",
+            borderColor: "#f06b42",
+            "&:hover": {
+              backgroundColor: "#f06b42",
+            },
+          }}
+        >
+          Have more to say? Give us a detailed feedback!
+        </Button>
+      )}
+
       <Dialog open={open} onClose={handleClose} maxWidth="xl">
         <DialogTitle>Feedback</DialogTitle>
         <DialogContent>

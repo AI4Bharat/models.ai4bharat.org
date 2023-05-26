@@ -2,13 +2,14 @@ import React from "react";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
-import { Button } from "@mui/material";
+import { Alert, Button, Grid, Snackbar } from "@mui/material";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 import { nmtDocumentation } from "./nmtDocumentation";
 import { FaRegCopy } from "react-icons/fa";
 import LinearProgress from "@mui/material/LinearProgress";
 import { FeedbackModal } from "../../components/Feedback/Feedback";
 import { fetchLanguages } from "../../api/feedbackAPI";
+import QuickFeedback from "../../components/Feedback/QuickFeedback";
 
 export default class NMTV2 extends React.Component {
   constructor(props) {
@@ -21,6 +22,7 @@ export default class NMTV2 extends React.Component {
       pipelineOutput: null,
       isFetching: false,
       nmtLanguages: [],
+      open: false,
     };
 
     this.languages = {
@@ -161,6 +163,13 @@ export default class NMTV2 extends React.Component {
     }
   }
 
+  handleClose(event, reason) {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ open: false });
+  }
+
   render() {
     return (
       <div>
@@ -214,23 +223,19 @@ export default class NMTV2 extends React.Component {
           </div>
           <div className="a4b-interface">
             {this.showProgress()}
-            <div className="a4b-output-grid">
-              <div className="a4b-output">
-                <div className="a4b-transliterate-container">
-                  <IndicTransliterate
-                    className="a4b-transliterate-text"
-                    enabled={this.state.conversion.split("-")[0] !== "en"}
-                    renderComponent={(props) => <textarea {...props} />}
-                    value={this.state.transliteratedText}
-                    placeholder="Type your text here to transliterate...."
-                    onChangeText={(text) => {
-                      this.setTransliteratedText(text);
-                    }}
-                    lang={this.state.from}
-                  />
-                </div>
-              </div>
-              <div className="a4b-nmt-buttons">
+            <Grid container spacing={2}>
+              <Grid item md={6} xs={12}>
+                <IndicTransliterate
+                  className="a4b-transliterate-text"
+                  enabled={this.state.conversion.split("-")[0] !== "en"}
+                  renderComponent={(props) => <textarea {...props} />}
+                  value={this.state.transliteratedText}
+                  placeholder="Type your text here to transliterate...."
+                  onChangeText={(text) => {
+                    this.setTransliteratedText(text);
+                  }}
+                  lang={this.state.from}
+                />
                 <Button
                   onClick={() => {
                     this.getTranslation();
@@ -246,6 +251,15 @@ export default class NMTV2 extends React.Component {
                 >
                   Translate
                 </Button>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <textarea
+                  value={this.state.translatedText}
+                  placeholder="View Translated Input here....."
+                  className="a4b-transliterate-text"
+                  readOnly
+                />
+
                 <Button
                   sx={{
                     width: 10,
@@ -258,27 +272,42 @@ export default class NMTV2 extends React.Component {
                   onClick={() => {
                     if (this.state.translatedText) {
                       navigator.clipboard.writeText(this.state.translatedText);
+                      this.setState({ open: true });
                     }
                   }}
                 >
                   <FaRegCopy size={"20px"} />
                 </Button>
-              </div>
-              <textarea
-                value={this.state.translatedText}
-                placeholder="View Translated Input here....."
-                className="a4b-transliterate-text"
-                readOnly
-              />
-            </div>
-            <Documentation documentation={nmtDocumentation} />
-            {this.state.pipelineOutput && (
-              <FeedbackModal
-                pipelineInput={this.state.pipelineInput}
-                pipelineOutput={this.state.pipelineOutput}
-                taskType="translation"
-              />
-            )}
+                <Snackbar
+                  open={this.state.open}
+                  autoHideDuration={6000}
+                  onClose={() => this.handleClose()}
+                >
+                  <Alert
+                    onClose={() => this.handleClose()}
+                    severity="info"
+                    sx={{ width: "100%" }}
+                  >
+                    Translation Copied to Clipboard!
+                  </Alert>
+                </Snackbar>
+                {this.state.pipelineOutput && (
+                  <QuickFeedback
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                    taskType="translation"
+                  />
+                )}
+                {this.state.pipelineOutput && (
+                  <FeedbackModal
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                    taskType="translation"
+                    link
+                  />
+                )}
+              </Grid>
+            </Grid>
           </div>
         </>
       </div>
