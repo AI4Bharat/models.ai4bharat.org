@@ -3,26 +3,27 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
 import { Alert, Button, Grid, Snackbar } from "@mui/material";
-import Documentation from "../../components/A4BDocumentation/Documentation";
-import { nmtDocumentation } from "./nmtDocumentation";
 import { FaRegCopy } from "react-icons/fa";
 import LinearProgress from "@mui/material/LinearProgress";
 import { FeedbackModal } from "../../components/Feedback/Feedback";
-import { fetchLanguages } from "../../api/feedbackAPI";
 import QuickFeedback from "../../components/Feedback/QuickFeedback";
+import languages from "./languages_dict.json";
 
 export default class NMTV2 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      conversion: "en-hi",
+      // conversion: "en-hi",
       transliteratedText: "",
       translatedText: "",
       pipelineInput: null,
       pipelineOutput: null,
       isFetching: false,
-      nmtLanguages: [],
+      // nmtLanguages: [],
       open: false,
+      languages_dict: [],
+      targetLanguage: "en",
+      sourceLanguage: "as",
     };
 
     this.languages = {
@@ -68,9 +69,11 @@ export default class NMTV2 extends React.Component {
   }
   fetchNMTLanguages() {
     const _this = this;
-    fetchLanguages().then((response) => {
-      _this.setState({ nmtLanguages: response["indicTransV2"] });
-    });
+    _this.setState({ languages_dict: languages });
+    // fetchLanguages().then((response) => {
+    //   _this.setState({ nmtLanguages: response["indicTransV2"]});
+    //   _this.setState({languges_dict : response["indicTransV2"]});
+    // });
   }
   componentWillMount() {
     const _this = this;
@@ -86,6 +89,22 @@ export default class NMTV2 extends React.Component {
     this.setState({ transliteratedText: text });
   }
 
+  languageScriptParser(input) {
+    let lang = input;
+    if (lang.includes("_")) {
+      lang = lang.split("_")[0];
+    }
+    return lang;
+  }
+
+  isLanguageScriptCodePresent(input) {
+    let lang = input;
+    if (lang.includes("_")) {
+      return true;
+    }
+    return false;
+  }
+
   getTranslation() {
     const _this = this;
     _this.setState({ isFetching: true });
@@ -95,8 +114,22 @@ export default class NMTV2 extends React.Component {
           {
             config: {
               language: {
-                sourceLanguage: _this.state.conversion.split("-")[0],
-                targetLanguage: _this.state.conversion.split("-")[1],
+                sourceLanguage: this.languageScriptParser(
+                  _this.state.sourceLanguage
+                ),
+                targetLanguage: this.languageScriptParser(
+                  _this.state.targetLanguage
+                ),
+                targetScriptCode: this.isLanguageScriptCodePresent(
+                  _this.state.targetLanguage
+                )
+                  ? _this.state.targetLanguage.split("_")[1]
+                  : null,
+                sourceScriptCode: this.isLanguageScriptCodePresent(
+                  _this.state.sourceLanguage
+                )
+                  ? _this.state.sourceLanguage.split("_")[1]
+                  : null,
               },
             },
             taskType: "translation",
@@ -119,8 +152,22 @@ export default class NMTV2 extends React.Component {
         config: {
           serviceId: "",
           language: {
-            sourceLanguage: _this.state.conversion.split("-")[0],
-            targetLanguage: _this.state.conversion.split("-")[1],
+            sourceLanguage: this.languageScriptParser(
+              _this.state.sourceLanguage
+            ),
+            targetLanguage: this.languageScriptParser(
+              _this.state.targetLanguage
+            ),
+            targetScriptCode: this.isLanguageScriptCodePresent(
+              _this.state.targetLanguage
+            )
+              ? _this.state.targetLanguage.split("_")[1]
+              : null,
+            sourceScriptCode: this.isLanguageScriptCodePresent(
+              _this.state.sourceLanguage
+            )
+              ? _this.state.sourceLanguage.split("_")[1]
+              : null,
           },
         },
       }),
@@ -193,31 +240,56 @@ export default class NMTV2 extends React.Component {
         <>
           <div className="common-options">
             <label className="a4b-option">
-              Select Language:
+              Select Source Language:
               <Select
                 MenuProps={{
                   disableScrollLock: true,
                 }}
                 sx={{ borderRadius: 15 }}
                 className="a4b-option-select"
-                value={this.state.conversion}
+                value={this.state.sourceLanguage}
                 onChange={(e) => {
-                  this.setState({ conversion: e.target.value });
+                  this.setState({ sourceLanguage: e.target.value });
                 }}
               >
-                {this.state.nmtLanguages.map((data, index) => {
+                {this.state.languages_dict.map((data, index) => {
                   return (
                     <MenuItem
-                      key={data.sourceLanguage + "-" + data.targetLanguage}
+                      key={data.sourceLanguage}
                       sx={{ margin: 1 }}
-                      value={data.sourceLanguage + "-" + data.targetLanguage}
+                      value={data.sourceLanguage}
                     >
-                      {this.languages[data.sourceLanguage] +
-                        " -> " +
-                        this.languages[data.targetLanguage]}
+                      {this.languages[data.sourceLanguage]}
                     </MenuItem>
                   );
                 })}
+              </Select>
+            </label>
+
+            <label className="a4b-option">
+              Select Target Language:
+              <Select
+                MenuProps={{
+                  disableScrollLock: true,
+                }}
+                sx={{ borderRadius: 15 }}
+                className="a4b-option-select"
+                value={this.state.targetLanguage}
+                onChange={(e) => {
+                  this.setState({ targetLanguage: e.target.value });
+                }}
+              >
+                {this.state.languages_dict
+                  .find((n, index) => {
+                    return n.sourceLanguage === this.state.sourceLanguage;
+                  })
+                  ["targetLanguages"].map((data, index) => {
+                    return (
+                      <MenuItem key={data} sx={{ margin: 1 }} value={data}>
+                        {this.languages[data]}
+                      </MenuItem>
+                    );
+                  })}
               </Select>
             </label>
           </div>
@@ -227,14 +299,14 @@ export default class NMTV2 extends React.Component {
               <Grid item md={6} xs={12}>
                 <IndicTransliterate
                   className="a4b-transliterate-text"
-                  enabled={this.state.conversion.split("-")[0] !== "en"}
+                  enabled={this.state.sourceLanguage !== "en"}
                   renderComponent={(props) => <textarea {...props} />}
                   value={this.state.transliteratedText}
                   placeholder="Type your text here to transliterate...."
                   onChangeText={(text) => {
                     this.setTransliteratedText(text);
                   }}
-                  lang={this.state.from}
+                  lang={this.state.sourceLanguage}
                 />
                 <Button
                   onClick={() => {
@@ -253,31 +325,36 @@ export default class NMTV2 extends React.Component {
                 </Button>
               </Grid>
               <Grid item md={6} xs={12}>
-                <textarea
-                  value={this.state.translatedText}
-                  placeholder="View Translated Input here....."
-                  className="a4b-transliterate-text"
-                  readOnly
-                />
+                <div style={{ position: "relative" }}>
+                  <textarea
+                    value={this.state.translatedText}
+                    placeholder="View Translated Input here....."
+                    className="a4b-transliterate-text"
+                    readOnly
+                  />
+                  <Button
+                    sx={{
+                      color: "black",
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                    }}
+                    size="large"
+                    variant="text"
+                    disabled={!this.state.translatedText}
+                    onClick={() => {
+                      if (this.state.translatedText) {
+                        navigator.clipboard.writeText(
+                          this.state.translatedText
+                        );
+                        this.setState({ open: true });
+                      }
+                    }}
+                  >
+                    <FaRegCopy size={"20px"} />
+                  </Button>
+                </div>
 
-                <Button
-                  sx={{
-                    width: 10,
-                    height: 50,
-                    color: "#4a4a4a",
-                    borderColor: "#4a4a4a",
-                  }}
-                  size="large"
-                  variant="outlined"
-                  onClick={() => {
-                    if (this.state.translatedText) {
-                      navigator.clipboard.writeText(this.state.translatedText);
-                      this.setState({ open: true });
-                    }
-                  }}
-                >
-                  <FaRegCopy size={"20px"} />
-                </Button>
                 <Snackbar
                   open={this.state.open}
                   autoHideDuration={6000}
@@ -298,6 +375,7 @@ export default class NMTV2 extends React.Component {
                     taskType="translation"
                   />
                 )}
+
                 {this.state.pipelineOutput && (
                   <FeedbackModal
                     pipelineInput={this.state.pipelineInput}

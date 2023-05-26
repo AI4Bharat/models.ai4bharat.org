@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, FormControl, FormLabel } from "@mui/material";
+import { Alert, Button, FormControl, FormLabel, Snackbar } from "@mui/material";
 const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
   const initialFeedback = {
     pipelineFeedback: {
@@ -14,6 +14,13 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
   };
   const [feedback, setFeedback] = useState(initialFeedback);
   const [buttonClicked, setButtonClicked] = useState(false);
+  const [open, setOpen] = useState(false);
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
   const onSubmitFeedback = async () => {
     let feedbackRequest = {
       ...feedback,
@@ -41,6 +48,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
     ) {
       onSubmitFeedback();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedback, buttonClicked]);
 
   return (
@@ -77,6 +85,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
                 },
               });
               setButtonClicked(true);
+              setOpen(true);
             }}
             sx={{
               mr: 2,
@@ -91,6 +100,8 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
                   feedback.pipelineFeedback.commonFeedback[0].thumbs === true &&
                   "#f06b42",
               },
+              fontSize:'1.3rem'
+
             }}
           >
             👍
@@ -115,6 +126,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
                 },
               });
               setButtonClicked(true);
+              setOpen(true);
             }}
             sx={{
               mr: 2,
@@ -127,10 +139,21 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
                   feedback.pipelineFeedback.commonFeedback[0].thumbs ===
                     false && "#f06b42",
               },
+              fontSize:'1.3rem'
             }}
           >
             👎
           </Button>
+
+          <Snackbar open={open} onClose={handleClose}>
+            <Alert
+              severity="success"
+              sx={{ width: "100%" }}
+              onClose={handleClose}
+            >
+              Feedback Submitted!
+            </Alert>
+          </Snackbar>
         </div>
       </FormControl>
     </div>

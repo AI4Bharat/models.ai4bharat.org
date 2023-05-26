@@ -22,13 +22,20 @@ import { fetchFeedbackQuestions } from "../../api/feedbackAPI";
 
 const Feedback = ({
   feedbackLanguage,
+  handleModalClose,
   pipelineInput,
   pipelineOutput,
   taskType,
 }) => {
   const [feedback, setFeedback] = useState();
   const [errorOpen, setErrorOpen] = useState(false);
-
+  const [open, setOpen] = useState(false);
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
   const handleSnackbarClose = () => {
     setErrorOpen(false);
   };
@@ -468,6 +475,8 @@ const Feedback = ({
         },
         body: JSON.stringify(feedbackRequest),
       });
+      setOpen(true);
+      handleModalClose();
     } catch {
       setErrorOpen(true);
     }
@@ -633,6 +642,11 @@ const Feedback = ({
       >
         Submit
       </Button>
+      <Snackbar autoHideDuration={5000} open={open} onClose={handleClose}>
+        <Alert severity="success" sx={{ width: "100%" }} onClose={handleClose}>
+          Feedback Submitted!
+        </Alert>
+      </Snackbar>
       <Snackbar
         open={errorOpen}
         autoHideDuration={3000}
@@ -654,16 +668,20 @@ export const FeedbackModal = (props) => {
     <>
       <br></br>
       {props.link ? (
-        <Button onClick={handleOpen} fullWidth variant={"text"} style={{
-          color:'#f06b42',
-        }}>
+        <Button
+          onClick={handleOpen}
+          variant={"text"}
+          style={{
+            float:'right',
+            color: "#f06b42",
+          }}
+        >
           Have more to say? Give us a detailed feedback!
         </Button>
       ) : (
         <Button
           variant="contained"
           onClick={handleOpen}
-          fullWidth
           style={{
             background: "#f06b42",
             borderColor: "#f06b42",
@@ -679,7 +697,7 @@ export const FeedbackModal = (props) => {
       <Dialog open={open} onClose={handleClose} maxWidth="xl">
         <DialogTitle>Feedback</DialogTitle>
         <DialogContent>
-          <Feedback {...props} />
+          <Feedback {...props} handleModalClose={handleClose}/>
         </DialogContent>
       </Dialog>
     </>

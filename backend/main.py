@@ -57,11 +57,14 @@ async def feedback(request: ULCAFeedbackRequest):
 
 @app.get("/languages")
 async def fetch_languages(request: Request):
-    with open("languages.json", "r") as f:
-        languages = json.load(f)
+    
+    # with open("languages.json", "r") as f:
+    #     languages = json.load(f)
+    # with open("languages_dict.json", "r") as f:
+    #     languages_dict = json.load(f)
 
     return {
-        "indicTransV2": languages,
+        # "indicTransV2": [languages,languages_dict],
         "indicConformer": ["en", "ta", "te", "kn", "ml", "hi", "gu", "mr", "or", "pa", "bn", "as", "ur", "sa"],
         "indicWhisper": ["en", "hi"],
         "indicTTS": ["en", "brx", "mni", "gu", "mr", "or", "pa", "bn", "hi", "as", "raj", "ta", "te", "kn", "ml"],
