@@ -51,6 +51,12 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedback, buttonClicked]);
 
+  useEffect(() => {
+    setFeedback(initialFeedback);
+    setButtonClicked(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pipelineInput, pipelineOutput]);
+
   return (
     <div>
       <FormControl
@@ -100,8 +106,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
                   feedback.pipelineFeedback.commonFeedback[0].thumbs === true &&
                   "#f06b42",
               },
-              fontSize:'1.3rem'
-
+              fontSize: "1.3rem",
             }}
           >
             👍
@@ -139,7 +144,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
                   feedback.pipelineFeedback.commonFeedback[0].thumbs ===
                     false && "#f06b42",
               },
-              fontSize:'1.3rem'
+              fontSize: "1.3rem",
             }}
           >
             👎
