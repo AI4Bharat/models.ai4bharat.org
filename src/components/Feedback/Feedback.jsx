@@ -233,11 +233,11 @@ const Feedback = ({
             mt="1%"
             sx={{
               display: "flex",
+              flexDirection: "column",
               width: "100%",
-              justifyContent: "space-between",
             }}
           >
-            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
+            <text style={{ fontSize: "1rem",marginBottom:'0.5%' }}> {data.question}</text>
             <Box>
               {Array(5)
                 .fill("")
@@ -245,8 +245,11 @@ const Feedback = ({
                   <AiFillStar
                     key={i}
                     mt="1%"
-                    style={{ color: i < value ? "orange" : "gray" }}
-                    boxSize={6}
+                    style={{
+                      color: i < value ? "orange" : "gray",
+                      fontSize: "1.5rem",
+                    }}
+                    boxSize={12}
                     onClick={() =>
                       changeFeedbackState(
                         index,
@@ -265,7 +268,7 @@ const Feedback = ({
         let comment = data.comment;
         return (
           <Box mt="1%">
-            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
+            <text style={{ fontSize: "1rem" }}> {data.question}</text>
             <br />
             <TextField
               placeholder="Enter your comment here"
@@ -287,7 +290,7 @@ const Feedback = ({
         let thumbs = data.thumbs;
         return (
           <Box mt="1%">
-            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
+            <text style={{ fontSize: "1rem" }}> {data.question}</text>
             <Stack direction="row">
               <Button
                 variant={thumbs === false ? "text" : "contained"}
@@ -324,10 +327,11 @@ const Feedback = ({
         let checkboxList = data.checkboxList;
         return (
           <Box mt="1%">
-            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
+            <text style={{ fontSize: "1rem" }}> {data.question}</text>
             <Stack direction="row">
               {checkboxList.map((data, i) => {
                 return (
+                  // {/* TODO: Add tags */}
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -365,7 +369,7 @@ const Feedback = ({
         let thumbsList = data.thumbsList;
         return (
           <Box mt="1%">
-            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
+            <text style={{ fontSize: "1rem" }}> {data.question}</text>
             <Stack direction="row">
               {thumbsList.map((data, i) => {
                 return (
@@ -402,7 +406,7 @@ const Feedback = ({
         let ratingList = data.ratingList;
         return (
           <Box mt="1%">
-            <text style={{ fontSize: "1.2rem" }}>{data.question}</text>
+            <text style={{ fontSize: "1rem" }}> {data.question}</text>
             <Stack alignItems={"flex-start"}>
               {ratingList.map((data, i) => {
                 return (
@@ -493,7 +497,7 @@ const Feedback = ({
           <FormControl sx={{ width: "100%" }}>
             {feedback.pipelineFeedback.commonFeedback?.map((data, index) => {
               return (
-                <Box key={index} sx={{ width: "100%" }}>
+                <Box key={index} sx={{ width: "100%" }} mb='0.5%'>
                   {renderFeedbackType(
                     data.feedbackType,
                     index,
@@ -510,7 +514,7 @@ const Feedback = ({
           <FormControl sx={{ width: "100%" }}>
             {feedback.taskFeedback.map((data, parentIndex) => {
               return (
-                <Box key={data.taskType}>
+                <Box key={data.taskType} mb='0.5%'>
                   <Box>
                     {data.commonFeedback?.map((data, index) => {
                       return (
@@ -526,10 +530,10 @@ const Feedback = ({
                       );
                     })}
                   </Box>
-                  <Box>
+                  <Box >
                     {data.granularFeedback?.map((data, index) => {
                       return (
-                        <Box key={index}>
+                        <Box key={index} mb='0.5%'>
                           {renderFeedbackType(
                             data.feedbackType,
                             index,
@@ -672,7 +676,7 @@ export const FeedbackModal = (props) => {
           onClick={handleOpen}
           variant={"text"}
           style={{
-            float:'right',
+            float: "right",
             color: "#f06b42",
           }}
         >
@@ -695,9 +699,9 @@ export const FeedbackModal = (props) => {
       )}
 
       <Dialog open={open} onClose={handleClose} maxWidth="xl">
-        <DialogTitle>Feedback</DialogTitle>
+        <DialogTitle sx={{ fontSize: "1.8rem" }}>Feedback</DialogTitle>
         <DialogContent>
-          <Feedback {...props} handleModalClose={handleClose}/>
+          <Feedback {...props} handleModalClose={handleClose} />
         </DialogContent>
       </Dialog>
     </>

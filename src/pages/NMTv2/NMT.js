@@ -2,7 +2,15 @@ import React from "react";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
-import { Alert, Button, Grid, Snackbar } from "@mui/material";
+import {
+  Alert,
+  Button,
+  FormControl,
+  FormLabel,
+  Grid,
+  Snackbar,
+  Switch,
+} from "@mui/material";
 import { FaRegCopy } from "react-icons/fa";
 import LinearProgress from "@mui/material/LinearProgress";
 import { FeedbackModal } from "../../components/Feedback/Feedback";
@@ -19,6 +27,7 @@ export default class NMTV2 extends React.Component {
       pipelineInput: null,
       pipelineOutput: null,
       isFetching: false,
+      dataTracking: true,
       // nmtLanguages: [],
       open: false,
       languages_dict: [],
@@ -145,7 +154,7 @@ export default class NMTV2 extends React.Component {
       method: "POST",
       body: JSON.stringify({
         controlConfig: {
-          dataTracking: true,
+          dataTracking: _this.state.dataTracking,
         },
         input: [{ source: _this.state.transliteratedText }],
 
@@ -296,7 +305,7 @@ export default class NMTV2 extends React.Component {
           <div className="a4b-interface">
             {this.showProgress()}
             <Grid container spacing={2}>
-              <Grid item md={6} xs={12}>
+              <Grid item md={6} xs={12} sx={{display:'flex',flexDirection:'column'}}>
                 <IndicTransliterate
                   className="a4b-transliterate-text"
                   enabled={this.state.sourceLanguage !== "en"}
@@ -323,6 +332,10 @@ export default class NMTV2 extends React.Component {
                 >
                   Translate
                 </Button>
+                <FormControl sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                  <FormLabel>Allow the AI to be improved by usage analysis.</FormLabel>
+                  <Switch checked={this.state.dataTracking} onChange={(e) => this.setState({dataTracking:e.target.checked})} />
+                </FormControl>
               </Grid>
               <Grid item md={6} xs={12}>
                 <div style={{ position: "relative" }}>

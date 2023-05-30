@@ -383,6 +383,7 @@ export default class TTS extends React.Component {
             pipelineInput={this.state.pipelineInput}
             pipelineOutput={this.state.pipelineOutput}
             taskType={"tts"}
+            link
           />
         )}
         {this.setInferenceInterface()}
