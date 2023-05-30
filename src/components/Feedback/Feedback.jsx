@@ -237,7 +237,10 @@ const Feedback = ({
               width: "100%",
             }}
           >
-            <text style={{ fontSize: "1rem",marginBottom:'0.5%' }}> {data.question}</text>
+            <text style={{ fontSize: "1rem", marginBottom: "0.5%" }}>
+              {" "}
+              {data.question}
+            </text>
             <Box>
               {Array(5)
                 .fill("")
@@ -495,26 +498,27 @@ const Feedback = ({
       {feedback && (
         <>
           <FormControl sx={{ width: "100%" }}>
-            {feedback.pipelineFeedback.commonFeedback?.map((data, index) => {
-              return (
-                <Box key={index} sx={{ width: "100%" }} mb='0.5%'>
-                  {renderFeedbackType(
-                    data.feedbackType,
-                    index,
-                    "pipeline",
-                    -1,
-                    data
-                  )}
-                </Box>
-              );
-            })}
+            {Array.isArray(taskType) &&
+              feedback.pipelineFeedback.commonFeedback?.map((data, index) => {
+                return (
+                  <Box key={index} sx={{ width: "100%" }} mb="0.5%">
+                    {renderFeedbackType(
+                      data.feedbackType,
+                      index,
+                      "pipeline",
+                      -1,
+                      data
+                    )}
+                  </Box>
+                );
+              })}
           </FormControl>
           <br />
 
           <FormControl sx={{ width: "100%" }}>
             {feedback.taskFeedback.map((data, parentIndex) => {
               return (
-                <Box key={data.taskType} mb='0.5%'>
+                <Box key={data.taskType} mb="0.5%">
                   <Box>
                     {data.commonFeedback?.map((data, index) => {
                       return (
@@ -530,20 +534,22 @@ const Feedback = ({
                       );
                     })}
                   </Box>
-                  <Box >
-                    {data.granularFeedback?.map((data, index) => {
-                      return (
-                        <Box key={index} mb='0.5%'>
-                          {renderFeedbackType(
-                            data.feedbackType,
-                            index,
-                            "granular",
-                            parentIndex,
-                            data
-                          )}
-                        </Box>
-                      );
-                    })}
+                  <Box>
+                    {data.granularFeedback
+                      ?.slice(0, data.granularFeedback.length - 1)
+                      .map((data, index) => {
+                        return (
+                          <Box key={index} mb="0.5%">
+                            {renderFeedbackType(
+                              data.feedbackType,
+                              index,
+                              "granular",
+                              parentIndex,
+                              data
+                            )}
+                          </Box>
+                        );
+                      })}
                   </Box>
                 </Box>
               );
