@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Button, FormControl, FormLabel, Snackbar } from "@mui/material";
+import { Stack } from "@mui/system";
 const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
   const initialFeedback = {
     pipelineFeedback: {
@@ -63,12 +64,12 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
         sx={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: "center",
           alignItems: "center",
         }}
       >
         <FormLabel sx={{ fontSize: "1.3rem", color: "black" }}>
-          Are you satisified with the results?
+          Are you satisified with the results? &nbsp;
         </FormLabel>
         <div>
           <Button

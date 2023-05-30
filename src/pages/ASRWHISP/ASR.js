@@ -20,12 +20,12 @@ import Select from "@mui/material/Select";
 import { FaMicrophone, FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation.js";
 import LinearProgress from "@mui/material/LinearProgress";
-
-import { Button } from "@mui/material";
+import { Button, FormControl, FormLabel, Switch } from "@mui/material";
 
 import Recorder from "./Recorder.js";
 
 import { FeedbackModal } from "../../components/Feedback/Feedback.jsx";
+import QuickFeedback from "../../components/Feedback/QuickFeedback.jsx";
 
 export default class ASRWhipserer extends React.Component {
   constructor(props) {
@@ -46,6 +46,7 @@ export default class ASRWhipserer extends React.Component {
       isStreaming: false,
       audioFileName: "No File Uploaded",
       isFetching: false,
+      dataTracking: true,
       isRecording: false,
       audioChunks: [],
       audioStream: null,
@@ -143,7 +144,7 @@ export default class ASRWhipserer extends React.Component {
         },
       ],
       controlConfig: {
-        dataTracking: true,
+        dataTracking: this.state.dataTracking,
       },
     });
 
@@ -354,7 +355,7 @@ export default class ASRWhipserer extends React.Component {
               className="a4b-text"
             ></textarea>
           </div>
-          <Documentation documentation={asrStreamingDocumentation} />
+          {/* <Documentation documentation={asrStreamingDocumentation} /> */}
         </div>
       );
     } else if (this.state.inferenceMode === "REST") {
@@ -420,9 +421,13 @@ export default class ASRWhipserer extends React.Component {
               <span className="a4b-file-upload-name">
                 {this.state.audioFileName}
               </span>
+              <FormControl sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                  <FormLabel>Allow the AI to be improved by usage analysis.</FormLabel>
+                  <Switch checked={this.state.dataTracking} onChange={(e) => this.setState({dataTracking:e.target.checked})} />
+              </FormControl>
             </div>
           </div>
-          <Documentation documentation={asrAPIDocumentation} />
+          {/* <Documentation documentation={asrAPIDocumentation} /> */}
         </div>
       );
     }
@@ -582,14 +587,31 @@ export default class ASRWhipserer extends React.Component {
             </Select>
           </label>
         </div>
-        {this.state.pipelineOutput && (
+        {/* {this.state.pipelineOutput && (
           <FeedbackModal
             pipelineInput={this.state.pipelineInput}
             pipelineOutput={this.state.pipelineOutput}
             taskType={"asr"}
           />
-        )}
+        )} */}
         {this.setInferenceInterface()}
+                
+        {this.state.pipelineOutput && (
+          <QuickFeedback
+            pipelineInput={this.state.pipelineInput}
+            pipelineOutput={this.state.pipelineOutput}
+            taskType="translation"
+          />
+        )}
+
+        {this.state.pipelineOutput && (
+          <FeedbackModal
+            pipelineInput={this.state.pipelineInput}
+            pipelineOutput={this.state.pipelineOutput}
+            taskType="translation"
+            link
+          />
+        )}
       </div>
     );
   }

@@ -13,6 +13,8 @@ import { ttsDocumentation } from "./ttsDocumentation";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 
 import { io } from "socket.io-client";
+import QuickFeedback from "../../components/Feedback/QuickFeedback.jsx";
+import { FormControl, FormLabel, Switch } from "@mui/material";
 
 export default class TTS extends React.Component {
   constructor(props) {
@@ -30,6 +32,7 @@ export default class TTS extends React.Component {
       voiceGender: localStorage.getItem("ttsVoiceGender"),
       transliteratedText: "",
       streamingText: "",
+      dataTracking : true,
       audioComponent: null,
       streamingAudio: null,
       audioHidden: true,
@@ -67,7 +70,7 @@ export default class TTS extends React.Component {
 
     const payload = JSON.stringify({
       controlConfig: {
-        dataTracking: true,
+        dataTracking: this.state.dataTracking,
       },
       input: [
         {
@@ -224,8 +227,13 @@ export default class TTS extends React.Component {
                 controls
               />
             )}
+
           </div>
-          <Documentation documentation={ttsDocumentation} />
+          <FormControl sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                <FormLabel>Allow the AI to be improved by usage analysis.</FormLabel>
+                <Switch checked={this.state.dataTracking} onChange={(e) => this.setState({dataTracking:e.target.checked})} />
+            </FormControl>
+          {/* <Documentation documentation={ttsDocumentation} /> */}
         </div>
       );
     } else if (_this.state.inferenceMode === "WebSocket") {
@@ -378,15 +386,24 @@ export default class TTS extends React.Component {
             </Select>
           </label>
         </div>
+
+        {this.setInferenceInterface()}
+        {this.state.pipelineOutput && (
+          <QuickFeedback
+            pipelineInput={this.state.pipelineInput}
+            pipelineOutput={this.state.pipelineOutput}
+            taskType="translation"
+          />
+        )}
+
         {this.state.pipelineOutput && (
           <FeedbackModal
             pipelineInput={this.state.pipelineInput}
             pipelineOutput={this.state.pipelineOutput}
-            taskType={"tts"}
+            taskType="translation"
             link
           />
         )}
-        {this.setInferenceInterface()}
       </div>
     );
   }

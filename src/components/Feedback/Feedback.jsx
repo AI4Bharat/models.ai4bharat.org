@@ -15,6 +15,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  ButtonGroup,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { fetchFeedbackQuestions } from "../../api/feedbackAPI";
@@ -332,23 +333,30 @@ const Feedback = ({
           <Box mt="1%">
             <text style={{ fontSize: "1rem" }}> {data.question}</text>
             <Stack direction="row">
+
               {checkboxList.map((data, i) => {
                 return (
                   // {/* TODO: Add tags */}
                   <FormControlLabel
                     control={
-                      <Checkbox
-                        key={i}
-                        isChecked={data.isSelected}
-                        onChange={(e) =>
+                      <ButtonGroup>
+                      <Button
+                        style={{
+                          marginTop:"1rem",
+                          marginBottom:"1rem",
+                          backgroundColor: data.isSelected ? "#f06b42" : "transparent",
+                          color: data.isSelected ? "#ffffff" : "#000000",
+                          borderColor: data.isSelected ? "#ffffff" : "#000000",
+                        }}
+                        variant={data.isSelected ? "contained" : "outlined"}
+                        onClick={(e) =>
                           changeFeedbackState(
                             index,
                             [...checkboxList].map((checkboxData, j) => {
                               if (j === i) {
                                 return {
                                   ...checkboxData,
-
-                                  isSelected: e.target.checked,
+                                  isSelected: !checkboxData.isSelected,
                                 };
                               } else {
                                 return checkboxData;
@@ -359,9 +367,11 @@ const Feedback = ({
                             feedbackType
                           )
                         }
-                      />
+                      >
+                        {data.parameterName}
+                      </Button>
+                    </ButtonGroup>
                     }
-                    label={data.parameterName}
                   />
                 );
               })}
@@ -682,7 +692,7 @@ export const FeedbackModal = (props) => {
           onClick={handleOpen}
           variant={"text"}
           style={{
-            float: "right",
+            // float: "right",
             color: "#f06b42",
           }}
         >
