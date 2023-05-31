@@ -27,8 +27,8 @@ root.render(
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
         <Route path="asr" element={<ASRWV />} />
-        <Route path="asrconf" element={<ASRConformer />} />
-        <Route path="asrwhisp" element={<ASRWhipserer />} />
+        <Route path="asr/conformer" element={<ASRConformer />} />
+        <Route path="asr/whisper" element={<ASRWhipserer />} />
         <Route path="sts" element={<STS />} />
         <Route path="xlit" element={<XLit />} />
         <Route path="nlg" element={<NLG />} />

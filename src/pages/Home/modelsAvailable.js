@@ -6,13 +6,13 @@ const models = {
     link: "",
   },
   asrconf: {
-    path: "asrconf",
+    path: "asr/conformer",
     title: "Indic Speech-to-Text Conformer",
     about: `ASR model trained using Conformer architecture`,
     link: "",
   },
   asrwhisp: {
-    path: "asrwhisp",
+    path: "asr/whisper",
     title: "Indic Speech-to-Text Whisperer",
     about: `ASR model trained using Whisperer architecture`,
     link: "",
