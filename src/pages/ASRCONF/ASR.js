@@ -21,7 +21,7 @@ import { FaMicrophone, FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation.js";
 import LinearProgress from "@mui/material/LinearProgress";
 
-import { Button, FormControl, FormLabel, Switch } from "@mui/material";
+import { Button, FormControl, FormLabel, Grid, Switch } from "@mui/material";
 
 import Recorder from "./Recorder.js";
 
@@ -394,40 +394,64 @@ export default class ASRConformer extends React.Component {
             />
           </div>
           <div>
-            <audio
-              src={this.state.audioData}
-              style={{ width: "50%", marginTop: 10 }}
-              controls
-            />
-            <div className="a4b-file-upload">
-              <label className="asr-button">
-                Choose File
-                <input
-                  className="audio-file-upload"
-                  type="file"
-                  onClick={(event) => {
-                    event.target.value = null;
-                  }}
-                  onChangeCapture={(event) => {
-                    const selectedAudioFile = event.target["files"][0];
-                    this.setState({ audioFileName: selectedAudioFile.name });
-                    const selectedAudioReader = new FileReader();
-                    selectedAudioReader.readAsDataURL(selectedAudioFile);
-                    selectedAudioReader.onloadend = () => {
-                      const asrInput = selectedAudioReader.result.split(",")[1];
-                      this.getASROutput(asrInput);
-                    };
-                  }}
+            <Grid container spacing={this.state.pipelineOutput ? 30 : 0} alignItems="center" justifyContent="center">
+              <Grid item>
+                  <audio
+                  src={this.state.audioData}
+                  style={{ width: "100%", marginTop: 10 }}
+                  controls
                 />
-              </label>
-              <span className="a4b-file-upload-name">
-                {this.state.audioFileName}
-              </span>
-              <FormControl sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-                  <FormLabel>Allow the AI to be improved by usage analysis.</FormLabel>
-                  <Switch checked={this.state.dataTracking} onChange={(e) => this.setState({dataTracking:e.target.checked})} />
-              </FormControl>
-            </div>
+                <div className="a4b-file-upload">
+                  <label className="asr-button">
+                    Choose File
+                    <input
+                      className="audio-file-upload"
+                      type="file"
+                      onClick={(event) => {
+                        event.target.value = null;
+                      }}
+                      onChangeCapture={(event) => {
+                        const selectedAudioFile = event.target["files"][0];
+                        this.setState({ audioFileName: selectedAudioFile.name });
+                        const selectedAudioReader = new FileReader();
+                        selectedAudioReader.readAsDataURL(selectedAudioFile);
+                        selectedAudioReader.onloadend = () => {
+                          const asrInput = selectedAudioReader.result.split(",")[1];
+                          this.getASROutput(asrInput);
+                        };
+                      }}
+                    />
+                  </label>
+                  <span className="a4b-file-upload-name">
+                    {this.state.audioFileName}
+                  </span>
+                  <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <FormLabel>Allow the AI to be improved by usage analysis.</FormLabel>
+                    <Switch checked={this.state.dataTracking} onChange={(e) => this.setState({ dataTracking: e.target.checked })} />
+                  </FormControl>
+                </div>
+              </Grid>
+              <Grid item>
+                {this.state.pipelineOutput && (
+                  <QuickFeedback
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                    taskType="asr"
+                  />
+                )}
+
+                {this.state.pipelineOutput && (
+                  <FeedbackModal
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                    taskType="asr"
+                    link
+                  />
+                )}
+              </Grid>
+            </Grid>
+
+
           </div>
           {/* <Documentation documentation={asrAPIDocumentation} /> */}
         </div>
@@ -597,23 +621,6 @@ export default class ASRConformer extends React.Component {
           />
         )} */}
         {this.setInferenceInterface()}
-        
-        {this.state.pipelineOutput && (
-          <QuickFeedback
-            pipelineInput={this.state.pipelineInput}
-            pipelineOutput={this.state.pipelineOutput}
-            taskType="translation"
-          />
-        )}
-
-        {this.state.pipelineOutput && (
-          <FeedbackModal
-            pipelineInput={this.state.pipelineInput}
-            pipelineOutput={this.state.pipelineOutput}
-            taskType="translation"
-            link
-          />
-        )}
       </div>
     );
   }

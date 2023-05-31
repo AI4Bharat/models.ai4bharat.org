@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogContent,
   ButtonGroup,
+  CircularProgress,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { fetchFeedbackQuestions } from "../../api/feedbackAPI";
@@ -231,7 +232,8 @@ const Feedback = ({
         let value = data.rating;
         return (
           <Box
-            mt="1%"
+            mt="-1%"
+            mb="2.5%"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -330,7 +332,7 @@ const Feedback = ({
       case "checkbox-list":
         let checkboxList = data.checkboxList;
         return (
-          <Box mt="1%">
+          <Box mb="2%" mt="-1%">
             <text style={{ fontSize: "1rem" }}> {data.question}</text>
             <Stack direction="row">
 
@@ -504,8 +506,10 @@ const Feedback = ({
   }, [suggestedPipelineOutput]);
 
   return (
+    feedback&&
     <>
-      {feedback && (
+      <h1 style={{ marginTop: '0rem' }}>Feedback</h1>
+      {(
         <>
           <FormControl sx={{ width: "100%" }}>
             {Array.isArray(taskType) &&
@@ -579,7 +583,7 @@ const Feedback = ({
         return null;
       }).length !== 0 && (
         <>
-          <Box my="2%" />
+          <Box  />
           <FormControl>
             <FormLabel>
               <Stack direction="row">
@@ -646,13 +650,14 @@ const Feedback = ({
           </FormControl>
         </>
       )}
+      <br/> <br/> 
       <Button
         style={{
           marginTop: "2rem",
           width: "100%",
           backgroundColor: "#f06b42",
           borderRadius: 15,
-          padding: "15px 32px",
+          padding: "15px 15px",
           ":hover": { backgroundColor: "#f06b42" },
           margin: 2.5,
         }}
@@ -682,23 +687,48 @@ const Feedback = ({
 
 export const FeedbackModal = (props) => {
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => 
+  {
+    setIsLoading(true);
+    setOpen(true);
+        // Simulate loading delay
+        const timer = setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
+  }
+  const [isLoading, setIsLoading] = useState(true);
   const handleClose = () => setOpen(false);
+  useEffect(() => {
+  }, []);
+
   return (
     <>
       <br></br>
-      {props.link ? (
-        <Button
+      {props.link ?
+        props.taskType != "translation" ? (
+          <Button
+            onClick={handleOpen}
+            variant={"text"}
+            style={{
+              float: "left",
+              padding:"0px",
+              color: "#f06b42",
+            }}
+          >
+            Have more to say? Give us a detailed feedback!
+          </Button>
+        ) :
+          <Button
           onClick={handleOpen}
           variant={"text"}
           style={{
-            // float: "right",
+            padding:"0px",
             color: "#f06b42",
           }}
         >
           Have more to say? Give us a detailed feedback!
         </Button>
-      ) : (
+    : (
         <Button
           variant="contained"
           onClick={handleOpen}
@@ -714,10 +744,12 @@ export const FeedbackModal = (props) => {
         </Button>
       )}
 
-      <Dialog open={open} onClose={handleClose} maxWidth="xl">
-        <DialogTitle sx={{ fontSize: "1.8rem" }}>Feedback</DialogTitle>
+        <Dialog open={open} sx={{ display: isLoading ? "none" : "block" }} onClose={handleClose} maxWidth="xl">
         <DialogContent>
-          <Feedback {...props} handleModalClose={handleClose} />
+          {/* <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+            <CircularProgress />
+          </div> */}
+          <Feedback {...props}  setIsLoading={setIsLoading}  handleModalClose={handleClose} />
         </DialogContent>
       </Dialog>
     </>

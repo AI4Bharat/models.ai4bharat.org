@@ -311,7 +311,7 @@ export default class NMTV2 extends React.Component {
                   enabled={this.state.sourceLanguage !== "en"}
                   renderComponent={(props) => <textarea {...props} />}
                   value={this.state.transliteratedText}
-                  placeholder="Type your text here to transliterate...."
+                  placeholder="Type your text here to Translate...."
                   onChangeText={(text) => {
                     this.setTransliteratedText(text);
                   }}
@@ -341,7 +341,7 @@ export default class NMTV2 extends React.Component {
                 <div style={{ position: "relative" }}>
                   <textarea
                     value={this.state.translatedText}
-                    placeholder="View Translated Input here....."
+                    placeholder="View Translated Output here....."
                     className="a4b-transliterate-text"
                     readOnly
                   />

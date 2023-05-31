@@ -14,7 +14,7 @@ import Documentation from "../../components/A4BDocumentation/Documentation";
 
 import { io } from "socket.io-client";
 import QuickFeedback from "../../components/Feedback/QuickFeedback.jsx";
-import { FormControl, FormLabel, Switch } from "@mui/material";
+import { FormControl, FormLabel, Grid, Switch } from "@mui/material";
 
 export default class TTS extends React.Component {
   constructor(props) {
@@ -214,6 +214,8 @@ export default class TTS extends React.Component {
               />
             </div>
           </div>
+          <Grid container spacing={this.state.pipelineOutput?30:0} alignItems={"center"} justifyContent={"center"}>
+            <Grid item>
           <div className="a4b-tts-convert">
             <button onClick={this.getAudioOutput} className="asr-button">
               Convert
@@ -227,13 +229,32 @@ export default class TTS extends React.Component {
                 controls
               />
             )}
-
           </div>
           <FormControl sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
                 <FormLabel>Allow the AI to be improved by usage analysis.</FormLabel>
                 <Switch checked={this.state.dataTracking} onChange={(e) => this.setState({dataTracking:e.target.checked})} />
             </FormControl>
           {/* <Documentation documentation={ttsDocumentation} /> */}
+          </Grid>
+          <Grid item>        
+          {this.state.pipelineOutput && (
+          <QuickFeedback
+            pipelineInput={this.state.pipelineInput}
+            pipelineOutput={this.state.pipelineOutput}
+            taskType="tts"
+          />
+          )}
+
+          {this.state.pipelineOutput && (
+            <FeedbackModal
+              pipelineInput={this.state.pipelineInput}
+              pipelineOutput={this.state.pipelineOutput}
+              taskType="tts"
+              link
+            />
+          )}
+          </Grid>
+          </Grid>
         </div>
       );
     } else if (_this.state.inferenceMode === "WebSocket") {
@@ -386,24 +407,7 @@ export default class TTS extends React.Component {
             </Select>
           </label>
         </div>
-
-        {this.setInferenceInterface()}
-        {this.state.pipelineOutput && (
-          <QuickFeedback
-            pipelineInput={this.state.pipelineInput}
-            pipelineOutput={this.state.pipelineOutput}
-            taskType="translation"
-          />
-        )}
-
-        {this.state.pipelineOutput && (
-          <FeedbackModal
-            pipelineInput={this.state.pipelineInput}
-            pipelineOutput={this.state.pipelineOutput}
-            taskType="translation"
-            link
-          />
-        )}
+         {this.setInferenceInterface()}
       </div>
     );
   }
