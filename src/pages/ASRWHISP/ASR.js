@@ -459,26 +459,33 @@ export default class ASRWhipserer extends React.Component {
 
   renderLanguageChoice() {
     let choices = [];
+  
     if (this.state.inferenceMode === "WebSocket") {
-      this.ASR_LANGUAGE_CONFIGS.streaming.map((language) => {
-        choices.push(
-          <MenuItem key={language} value={language}>
-            {LANGUAGE_KEY_TEXT[language]}
-          </MenuItem>
-        );
-        return true;
-      });
+      choices.push(
+        <MenuItem key="en" value="en">
+          {LANGUAGE_KEY_TEXT.en}
+        </MenuItem>
+      );
+      choices.push(
+        <MenuItem key="hi" value="hi">
+          {LANGUAGE_KEY_TEXT.hi}
+        </MenuItem>
+      );
     }
+  
     if (this.state.inferenceMode === "REST") {
-      this.ASR_LANGUAGE_CONFIGS.rest.map((language) => {
-        choices.push(
-          <MenuItem key={language} value={language}>
-            {LANGUAGE_KEY_TEXT[language]}
-          </MenuItem>
-        );
-        return true;
-      });
+      choices.push(
+        <MenuItem key="en" value="en">
+          {LANGUAGE_KEY_TEXT.en}
+        </MenuItem>
+      );
+      choices.push(
+        <MenuItem key="hi" value="hi">
+          {LANGUAGE_KEY_TEXT.hi}
+        </MenuItem>
+      );
     }
+  
     return choices;
   }
 
