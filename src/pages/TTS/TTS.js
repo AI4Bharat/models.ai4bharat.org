@@ -38,7 +38,7 @@ export default class TTS extends React.Component {
     };
 
     this.languages = {
-      en: "English - English",
+      en: "Indian-English",
       as: "Assamese - অসমীয়া",
       bn: "Bangla - বাংলা",
       brx: "Boro - बड़ो",
