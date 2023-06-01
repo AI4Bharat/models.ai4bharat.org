@@ -38,6 +38,7 @@ export default class TTS extends React.Component {
     };
 
     this.languages = {
+      en: "English - English",
       as: "Assamese - অসমীয়া",
       bn: "Bangla - বাংলা",
       brx: "Boro - बड़ो",
@@ -48,11 +49,10 @@ export default class TTS extends React.Component {
       mni: "Manipuri - মিতৈলোন",
       mr: "Marathi - मराठी",
       or: "Oriya - ଓଡ଼ିଆ",
+      pa: "Panjabi - ਪੰਜਾਬੀ",
       raj: "Rajasthani - राजस्थानी",
       ta: "Tamil - தமிழ்",
       te: "Telugu - తెలుగు",
-      pa: "Punjabi - ਪੰਜਾਬੀ",
-      en: "English - English",
     };
 
     this.getAudioOutput = this.getAudioOutput.bind(this);
