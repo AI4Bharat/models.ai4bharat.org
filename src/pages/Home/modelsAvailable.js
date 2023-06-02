@@ -1,8 +1,20 @@
 const models = {
   asr: {
     path: "asr",
-    title: "Indic Speech-to-Text",
+    title: "Indic Wave2Vec",
     about: `IndicTinyASR is a conformer based ASR model containing only 30M parameters, to support real-time ASR systems for Indian languages. The model is trained on KathBath, Shrutilipi and MUCS datasets. The model can be deployed on an android device and can be accessed via websockets. It supports both streaming and non-streaming mode.`,
+    link: "",
+  },
+  asrconf: {
+    path: "asr/conformer",
+    title: "Indic Speech-to-Text Conformer",
+    about: `ASR model trained using Conformer architecture`,
+    link: "",
+  },
+  asrwhisp: {
+    path: "asr/whisper",
+    title: "Indic Speech-to-Text Whisperer",
+    about: `ASR model trained using Whisperer architecture`,
     link: "",
   },
   xlit: {
@@ -13,8 +25,14 @@ const models = {
   },
   nmt: {
     path: "nmt",
-    title: "Indic Translation",
-    about: `A multilingual single-script transformer based model for translating between English and Indian languages. This model is trained using the Samanantar corpus and at the time of its release was the state of the art open source model as evaluated on Facebook's FLORES benchmark.`,
+    title: "Indic Translation v1",
+    about: `Translation model trained using Transformers v1`,
+    link: "https://ai4bharat.org/indic-trans",
+  },
+  nmtv2: {
+    path: "nmt/v2",
+    title: "Indic Translation v2",
+    about: `Translation model trained using Transformers v2`,
     link: "https://ai4bharat.org/indic-trans",
   },
   nlg: {

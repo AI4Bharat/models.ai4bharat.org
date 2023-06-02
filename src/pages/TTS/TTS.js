@@ -8,21 +8,23 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import LinearProgress from "@mui/material/LinearProgress";
 import Skeleton from "@mui/material/Skeleton";
-
+import { FeedbackModal } from "../../components/Feedback/Feedback.jsx";
 import { ttsDocumentation } from "./ttsDocumentation";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 
 import { io } from "socket.io-client";
+import QuickFeedback from "../../components/Feedback/QuickFeedback.jsx";
+import { FormControl, FormLabel, Grid, Switch } from "@mui/material";
 
 export default class TTS extends React.Component {
   constructor(props) {
     super(props);
 
-    this.ttsURL = "https://tts-api.ai4bharat.org/";
+    this.ttsURL = `${process.env.REACT_APP_BACKEND_URL}/inference/tts`;
 
     this.modes = {
       REST: "REST (API)",
-      WebSocket: "Streaming (WebSocket)",
+      // WebSocket: "Streaming (WebSocket)",
     };
 
     this.state = {
@@ -30,10 +32,13 @@ export default class TTS extends React.Component {
       voiceGender: localStorage.getItem("ttsVoiceGender"),
       transliteratedText: "",
       streamingText: "",
+      dataTracking : true,
       audioComponent: null,
       streamingAudio: null,
       audioHidden: true,
       isFetching: false,
+      pipelineInput: null,
+      pipelineOutput: null,
       inferenceMode: "REST",
     };
 
@@ -64,6 +69,9 @@ export default class TTS extends React.Component {
     myHeaders.append("Content-Type", "application/json");
 
     const payload = JSON.stringify({
+      controlConfig: {
+        dataTracking: this.state.dataTracking,
+      },
       input: [
         {
           source: this.state.transliteratedText,
@@ -96,6 +104,36 @@ export default class TTS extends React.Component {
           isFetching: false,
           audioComponent: audio,
           audioHidden: false,
+          pipelineInput: {
+            pipelineTasks: [
+              {
+                config: {
+                  gender: this.state.voiceGender,
+                  language: {
+                    sourceLanguage: this.state.languageChoice,
+                  },
+                  samplingRate: this.state.samplingRate,
+                  audioFormat: this.state.audioFormat,
+                },
+                taskType: "tts",
+              },
+            ],
+            inputData: {
+              input: [
+                {
+                  source: this.state.transliteratedText,
+                },
+              ],
+            },
+          },
+          pipelineOutput: {
+            pipelineResponse: [
+              {
+                taskType: "tts",
+                audio: result["audio"],
+              },
+            ],
+          },
         });
       });
   }
@@ -176,6 +214,8 @@ export default class TTS extends React.Component {
               />
             </div>
           </div>
+          <Grid container spacing={this.state.pipelineOutput?30:0} alignItems={"center"} justifyContent={"center"}>
+            <Grid item>
           <div className="a4b-tts-convert">
             <button onClick={this.getAudioOutput} className="asr-button">
               Convert
@@ -190,7 +230,31 @@ export default class TTS extends React.Component {
               />
             )}
           </div>
-          <Documentation documentation={ttsDocumentation} />
+          <FormControl sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                <FormLabel>Allow the AI to be improved by usage analysis.</FormLabel>
+                <Switch checked={this.state.dataTracking} onChange={(e) => this.setState({dataTracking:e.target.checked})} />
+            </FormControl>
+          {/* <Documentation documentation={ttsDocumentation} /> */}
+          </Grid>
+          <Grid item>        
+          {this.state.pipelineOutput && (
+          <QuickFeedback
+            pipelineInput={this.state.pipelineInput}
+            pipelineOutput={this.state.pipelineOutput}
+            taskType="tts"
+          />
+          )}
+
+          {this.state.pipelineOutput && (
+            <FeedbackModal
+              pipelineInput={this.state.pipelineInput}
+              pipelineOutput={this.state.pipelineOutput}
+              taskType="tts"
+              link
+            />
+          )}
+          </Grid>
+          </Grid>
         </div>
       );
     } else if (_this.state.inferenceMode === "WebSocket") {
@@ -343,7 +407,7 @@ export default class TTS extends React.Component {
             </Select>
           </label>
         </div>
-        {this.setInferenceInterface()}
+         {this.setInferenceInterface()}
       </div>
     );
   }

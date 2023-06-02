@@ -2,7 +2,6 @@ import React from "react";
 
 import {
   ASR_STREAMING_URLS,
-  ASR_REST_URLS,
   ASR_LANGUAGE_CONFIGS,
   LANGUAGE_KEY_TEXT,
 } from "../../config/config.js";
@@ -21,19 +20,21 @@ import Select from "@mui/material/Select";
 import { FaMicrophone, FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation.js";
 import LinearProgress from "@mui/material/LinearProgress";
+import { Button, FormControl, FormLabel, Grid, Switch } from "@mui/material";
 
-import { Button } from "@mui/material";
+import Recorder from "./Recorder.js";
 
-import Recorder from "./Recorder";
+import { FeedbackModal } from "../../components/Feedback/Feedback.jsx";
+import QuickFeedback from "../../components/Feedback/QuickFeedback.jsx";
 
-export default class ASR extends React.Component {
+export default class ASRWhipserer extends React.Component {
   constructor(props) {
     super(props);
     this.ASR_LANGUAGE_CONFIGS = ASR_LANGUAGE_CONFIGS;
     this.samplingRates = [48000, 16000, 8000];
 
     this.state = {
-      inferenceMode: "WebSocket",
+      inferenceMode: "REST",
       languageChoice: localStorage.getItem("asrLanguageChoice"),
       samplingRateChoice: localStorage.getItem("samplingRateChoice"),
       processorChoice: JSON.parse(localStorage.getItem("processorChoice"))[
@@ -45,10 +46,13 @@ export default class ASR extends React.Component {
       isStreaming: false,
       audioFileName: "No File Uploaded",
       isFetching: false,
+      dataTracking: true,
       isRecording: false,
       audioChunks: [],
       audioStream: null,
       audioData: null,
+      pipelineInput: null,
+      pipelineOutput: null,
     };
 
     this.openStream = this.openStream.bind(this);
@@ -139,6 +143,44 @@ export default class ASR extends React.Component {
           audioContent: asrInput,
         },
       ],
+      controlConfig: {
+        dataTracking: this.state.dataTracking,
+      },
+    });
+
+    this.setState({
+      pipelineInput: {
+        pipelineTasks: [
+          {
+            config: {
+              language: {
+                sourceLanguage: this.state.languageChoice,
+              },
+              transcriptionFormat: {
+                value: "transcript",
+              },
+              audioFormat: "wav",
+              encoding: "base64",
+              samplingRate:
+                this.state.languageChoice === "ta"
+                  ? 16000
+                  : this.state.samplingRateChoice,
+              postProcessors:
+                this.state.processorChoice.length === 0
+                  ? null
+                  : this.state.processorChoice,
+            },
+            taskType: "asr",
+          },
+        ],
+        inputData: {
+          audio: [
+            {
+              audioContent: asrInput,
+            },
+          ],
+        },
+      },
     });
 
     var requestOptions = {
@@ -148,18 +190,21 @@ export default class ASR extends React.Component {
       redirect: "follow",
     };
 
-    console.log(payload);
-    const ASR_REST_URL = `${
-      ASR_REST_URLS[this.state.languageChoice]
-    }/asr/v1/recognize/${this.state.languageChoice}`;
-    fetch(ASR_REST_URL, requestOptions)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/inference/asr/whisper`, requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        console.log(result);
         var apiResponse = JSON.parse(result);
         this.setState({
           asrAPIResult: apiResponse["output"][0]["source"],
           isFetching: false,
+          pipelineOutput: {
+            pipelineResponse: [
+              {
+                taskType: "asr",
+                output: apiResponse["output"],
+              },
+            ],
+          },
         });
       })
       .catch((error) => console.log("error", error));
@@ -310,7 +355,7 @@ export default class ASR extends React.Component {
               className="a4b-text"
             ></textarea>
           </div>
-          <Documentation documentation={asrStreamingDocumentation} />
+          {/* <Documentation documentation={asrStreamingDocumentation} /> */}
         </div>
       );
     } else if (this.state.inferenceMode === "REST") {
@@ -347,38 +392,66 @@ export default class ASR extends React.Component {
             />
           </div>
           <div>
-            <audio
-              src={this.state.audioData}
-              style={{ width: "50%", marginTop: 10 }}
-              controls
-            />
-            <div className="a4b-file-upload">
-              <label className="asr-button">
-                Choose File
-                <input
-                  className="audio-file-upload"
-                  type="file"
-                  onClick={(event) => {
-                    event.target.value = null;
-                  }}
-                  onChangeCapture={(event) => {
-                    const selectedAudioFile = event.target["files"][0];
-                    this.setState({ audioFileName: selectedAudioFile.name });
-                    const selectedAudioReader = new FileReader();
-                    selectedAudioReader.readAsDataURL(selectedAudioFile);
-                    selectedAudioReader.onloadend = () => {
-                      const asrInput = selectedAudioReader.result.split(",")[1];
-                      this.getASROutput(asrInput);
-                    };
-                  }}
+            <Grid container spacing={this.state.pipelineOutput ? 30 : 0} alignItems="center" justifyContent="center">
+              <Grid item>
+                  <audio
+                  src={this.state.audioData}
+                  style={{ width: "100%", marginTop: 10 }}
+                  controls
                 />
-              </label>
-              <span className="a4b-file-upload-name">
-                {this.state.audioFileName}
-              </span>
-            </div>
+                <div className="a4b-file-upload">
+                  <label className="asr-button">
+                    Choose File
+                    <input
+                      className="audio-file-upload"
+                      type="file"
+                      onClick={(event) => {
+                        event.target.value = null;
+                      }}
+                      onChangeCapture={(event) => {
+                        const selectedAudioFile = event.target["files"][0];
+                        this.setState({ audioFileName: selectedAudioFile.name });
+                        const selectedAudioReader = new FileReader();
+                        selectedAudioReader.readAsDataURL(selectedAudioFile);
+                        selectedAudioReader.onloadend = () => {
+                          const asrInput = selectedAudioReader.result.split(",")[1];
+                          this.getASROutput(asrInput);
+                        };
+                      }}
+                    />
+                  </label>
+                  <span className="a4b-file-upload-name">
+                    {this.state.audioFileName}
+                  </span>
+                  <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <FormLabel>Allow the AI to be improved by usage analysis.</FormLabel>
+                    <Switch checked={this.state.dataTracking} onChange={(e) => this.setState({ dataTracking: e.target.checked })} />
+                  </FormControl>
+                </div>
+              </Grid>
+              <Grid item>
+                {this.state.pipelineOutput && (
+                  <QuickFeedback
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                    taskType="asr"
+                  />
+                )}
+
+                {this.state.pipelineOutput && (
+                  <FeedbackModal
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                    taskType="asr"
+                    link
+                  />
+                )}
+              </Grid>
+            </Grid>
+
+
           </div>
-          <Documentation documentation={asrAPIDocumentation} />
+          {/* <Documentation documentation={asrAPIDocumentation} /> */}
         </div>
       );
     }
@@ -386,26 +459,33 @@ export default class ASR extends React.Component {
 
   renderLanguageChoice() {
     let choices = [];
+  
     if (this.state.inferenceMode === "WebSocket") {
-      this.ASR_LANGUAGE_CONFIGS.streaming.map((language) => {
-        choices.push(
-          <MenuItem key={language} value={language}>
-            {LANGUAGE_KEY_TEXT[language]}
-          </MenuItem>
-        );
-        return true;
-      });
+      choices.push(
+        <MenuItem key="en" value="en">
+          {LANGUAGE_KEY_TEXT.en}
+        </MenuItem>
+      );
+      choices.push(
+        <MenuItem key="hi" value="hi">
+          {LANGUAGE_KEY_TEXT.hi}
+        </MenuItem>
+      );
     }
+  
     if (this.state.inferenceMode === "REST") {
-      this.ASR_LANGUAGE_CONFIGS.rest.map((language) => {
-        choices.push(
-          <MenuItem key={language} value={language}>
-            {LANGUAGE_KEY_TEXT[language]}
-          </MenuItem>
-        );
-        return true;
-      });
+      choices.push(
+        <MenuItem key="en" value="en">
+          {LANGUAGE_KEY_TEXT.en}
+        </MenuItem>
+      );
+      choices.push(
+        <MenuItem key="hi" value="hi">
+          {LANGUAGE_KEY_TEXT.hi}
+        </MenuItem>
+      );
     }
+  
     return choices;
   }
 
@@ -464,7 +544,6 @@ export default class ASR extends React.Component {
                 this.handleModeChange();
               }}
             >
-              <MenuItem value="WebSocket">Streaming (WebSocket)</MenuItem>
               <MenuItem value="REST">REST (API)</MenuItem>
             </Select>
           </label>
@@ -539,7 +618,16 @@ export default class ASR extends React.Component {
             </Select>
           </label>
         </div>
+        {/* {this.state.pipelineOutput && (
+          <FeedbackModal
+            pipelineInput={this.state.pipelineInput}
+            pipelineOutput={this.state.pipelineOutput}
+            taskType={"asr"}
+          />
+        )} */}
         {this.setInferenceInterface()}
+                
+
       </div>
     );
   }

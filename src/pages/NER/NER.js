@@ -59,7 +59,6 @@ export default class NER extends React.Component {
       transliteratedText: "",
       nerOutput: [],
     };
-
     this.languages = {
       as: "Assamese - অসমীয়া",
       bn: "Bangla - বাংলা",
@@ -80,7 +79,6 @@ export default class NER extends React.Component {
   getNER() {
     const _this = this;
     let apiURL = "https://ai4bharat-indicner.hf.space/run/predict";
-
     fetch(apiURL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

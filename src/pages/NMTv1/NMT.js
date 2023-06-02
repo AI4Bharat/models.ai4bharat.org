@@ -2,11 +2,13 @@ import React from "react";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
-import { Button } from "@mui/material";
+import { Alert, Button, FormControl, FormLabel, Grid, Snackbar, Switch } from "@mui/material";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 import { nmtDocumentation } from "./nmtDocumentation";
 import { FaRegCopy } from "react-icons/fa";
 import LinearProgress from "@mui/material/LinearProgress";
+import { FeedbackModal } from "../../components/Feedback/Feedback";
+import QuickFeedback from "../../components/Feedback/QuickFeedback";
 
 export default class NMT extends React.Component {
   constructor(props) {
@@ -16,6 +18,9 @@ export default class NMT extends React.Component {
       to: localStorage.getItem("nmtLanguageTo"),
       transliteratedText: "",
       translatedText: "",
+      pipelineInput: null,
+      dataTracking: true,
+      pipelineOutput: null,
       isFetching: false,
     };
 
@@ -55,25 +60,61 @@ export default class NMT extends React.Component {
   getTranslation() {
     const _this = this;
     _this.setState({ isFetching: true });
-    let apiURL = "https://nmt-api.ai4bharat.org/translate_sentence/";
-
+    _this.setState({
+      pipelineInput: {
+        pipelineTasks: [
+          {
+            config: {
+              language: {
+                sourceLanguage: _this.state.from,
+                targetLanguage: _this.state.to,
+              },
+            },
+            taskType: "translation",
+          },
+        ],
+        inputData: {
+          input: [{ source: _this.state.transliteratedText }],
+        },
+      },
+    });
+    let apiURL = `${process.env.REACT_APP_BACKEND_URL}/inference/translation/v1`;
     fetch(apiURL, {
       method: "POST",
       body: JSON.stringify({
-        text: _this.state.transliteratedText,
-        source_language: _this.state.from,
-        target_language: _this.state.to,
+        controlConfig: {
+          dataTracking: _this.state.dataTracking,
+        },
+        input: [{ source: _this.state.transliteratedText }],
+
+        config: {
+          serviceId: "",
+          language: {
+            sourceLanguage: _this.state.from,
+            targetLanguage: _this.state.to,
+          },
+        },
       }),
       headers: { "Content-Type": "application/json" },
     })
       .then(function (response) {
-        return response.json();
+        return response.text();
       })
-      .then(function (json_response) {
+      .then(function (response) {
+        let res = JSON.parse(response);
         _this.setState({
-          translatedText: json_response.text,
+          pipelineOutput: {
+            pipelineResponse: [
+              {
+                taskType: "translation",
+                output: res["output"],
+              },
+            ],
+          },
+          translatedText: res["output"][0]["target"],
           isFetching: false,
         });
+        return res;
       });
   }
 
@@ -176,8 +217,8 @@ export default class NMT extends React.Component {
           </div>
           <div className="a4b-interface">
             {this.showProgress()}
-            <div className="a4b-output-grid">
-              <div className="a4b-output">
+            <Grid container spacing={2}>
+              <Grid item md={6} xs={12} sx={{display:'flex',flexDirection:'column'}}>
                 <div className="a4b-transliterate-container">
                   <IndicTransliterate
                     className="a4b-transliterate-text"
@@ -191,8 +232,6 @@ export default class NMT extends React.Component {
                     lang={this.state.from}
                   />
                 </div>
-              </div>
-              <div className="a4b-nmt-buttons">
                 <Button
                   onClick={() => {
                     this.getTranslation();
@@ -208,32 +247,73 @@ export default class NMT extends React.Component {
                 >
                   Translate
                 </Button>
-                <Button
-                  sx={{
-                    width: 10,
-                    height: 50,
-                    color: "#4a4a4a",
-                    borderColor: "#4a4a4a",
-                  }}
-                  size="large"
-                  variant="outlined"
-                  onClick={() => {
-                    if (this.state.translatedText) {
-                      navigator.clipboard.writeText(this.state.translatedText);
-                    }
-                  }}
+                <FormControl sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                  <FormLabel>Allow the AI to be improved by usage analysis.</FormLabel>
+                  <Switch checked={this.state.dataTracking} onChange={(e) => this.setState({dataTracking:e.target.checked})} />
+                </FormControl>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <div style={{ position: "relative" }}>
+                  <textarea
+                    value={this.state.translatedText}
+                    placeholder="View Translated Input here....."
+                    className="a4b-transliterate-text"
+                    readOnly
+                  />
+                  <Button
+                    sx={{
+                      color: "black",
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                    }}
+                    size="large"
+                    variant="text"
+                    disabled={!this.state.translatedText}
+                    onClick={() => {
+                      if (this.state.translatedText) {
+                        navigator.clipboard.writeText(
+                          this.state.translatedText
+                        );
+                        this.setState({ open: true });
+                      }
+                    }}
+                  >
+                    <FaRegCopy size={"20px"} />
+                  </Button>
+                </div>
+
+                <Snackbar
+                  open={this.state.open}
+                  autoHideDuration={6000}
+                  onClose={() => this.handleClose()}
                 >
-                  <FaRegCopy size={"20px"} />
-                </Button>
-              </div>
-              <textarea
-                value={this.state.translatedText}
-                placeholder="View Translated Input here....."
-                className="a4b-transliterate-text"
-                readOnly
-              />
-            </div>
-            <Documentation documentation={nmtDocumentation} />
+                  <Alert
+                    onClose={() => this.handleClose()}
+                    severity="info"
+                    sx={{ width: "100%" }}
+                  >
+                    Translation Copied to Clipboard!
+                  </Alert>
+                </Snackbar>
+                {this.state.pipelineOutput && (
+                  <QuickFeedback
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                    taskType="translation"
+                  />
+                )}
+
+                {this.state.pipelineOutput && (
+                  <FeedbackModal
+                    pipelineInput={this.state.pipelineInput}
+                    pipelineOutput={this.state.pipelineOutput}
+                    taskType="translation"
+                    link
+                  />
+                )}
+              </Grid>
+            </Grid>
           </div>
         </>
       </div>
