@@ -462,7 +462,9 @@ export default class ASRConformer extends React.Component {
   renderLanguageChoice() {
     let choices = [];
     if (this.state.inferenceMode === "WebSocket") {
-      this.ASR_LANGUAGE_CONFIGS.streaming.map((language) => {
+      this.ASR_LANGUAGE_CONFIGS.streaming
+      .filter((language) => language !== "ne" && language !== "si")
+      .map((language) => {
         choices.push(
           <MenuItem key={language} value={language}>
             {LANGUAGE_KEY_TEXT[language]}
@@ -470,9 +472,13 @@ export default class ASRConformer extends React.Component {
         );
         return true;
       });
+
     }
+    
     if (this.state.inferenceMode === "REST") {
-      this.ASR_LANGUAGE_CONFIGS.rest.map((language) => {
+      this.ASR_LANGUAGE_CONFIGS.rest
+      .filter((language) => language !== "ne" && language !== "si")
+      .map((language) => {
         choices.push(
           <MenuItem key={language} value={language}>
             {LANGUAGE_KEY_TEXT[language]}
