@@ -22,8 +22,11 @@ export default class A4BMenu extends React.Component {
     this.pages = {
       "": ["Home", <FaHome />],
       asr: ["Indic Speech-to-Text (ASR)", <FaRegFileAudio />],
-      asrwhisp: ["Indic Speech-to-Text Whisper (ASR)", <FaRegFileAudio />],
-      asrconf: ["Indic Speech-to-Text Conformer (ASR)", <FaRegFileAudio />],
+      "asr/whisper": ["Indic Speech-to-Text Whisper (ASR)", <FaRegFileAudio />],
+      "asr/conformer": [
+        "Indic Speech-to-Text Conformer (ASR)",
+        <FaRegFileAudio />,
+      ],
       xlit: ["Indic Transliteration (XLit)", <FaRegKeyboard />],
       nlg: ["Indic Natural Language Generation (NLG)", <BsFileTextFill />],
       nmt: ["Indic Natural Language Translation (NMT) v1", <BiWorld />],
