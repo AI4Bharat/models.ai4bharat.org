@@ -33,7 +33,6 @@ export default class A4BMenu extends React.Component {
       "nmt/v2": ["Indic Natural Language Translation (NMT) v2", <BiWorld />],
       tts: ["Indic Text-to-Speech (TTS)", <SiAudiomack />],
       ner: ["Indic Named Entity Recognition (NER)", <BsTagFill />],
-      sts: ["Indic Speech2Speech (STS)", <BsSoundwave />],
     };
   }
 

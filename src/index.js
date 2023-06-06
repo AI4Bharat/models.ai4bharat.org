@@ -9,10 +9,9 @@ import XLit from "./pages/XLIT/XLIT";
 import Home from "./pages/Home/Home";
 import NLG from "./pages/NLG/NLG";
 import NMT from "./pages/NMTv1/NMT";
-import NMTV2  from "./pages/NMTv2/NMT";
+import NMTV2 from "./pages/NMTv2/NMT";
 import TTS from "./pages/TTS/TTS";
 import NER from "./pages/NER/NER";
-import STS from "./pages/STS/STS";
 import TTSSamples from "./pages/TTS/TTSSamples";
 import ASRWV from "./pages/ASRWV/ASR";
 
@@ -29,7 +28,6 @@ root.render(
         <Route path="asr" element={<ASRWV />} />
         <Route path="asr/conformer" element={<ASRConformer />} />
         <Route path="asr/whisper" element={<ASRWhipserer />} />
-        <Route path="sts" element={<STS />} />
         <Route path="xlit" element={<XLit />} />
         <Route path="nlg" element={<NLG />} />
         <Route path="nmt" element={<NMT />} />

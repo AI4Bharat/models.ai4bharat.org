@@ -38,7 +38,6 @@ const modelIcons = {
   tts: <SiAudiomack size={35} className="a4b-home-card-logo" />,
   bert: <FaLanguage size={35} className="a4b-home-card-logo" />,
   ner: <BsTagFill size={35} className="a4b-home-card-logo" />,
-  sts: <BsSoundwave size={35} className="a4b-home-card-logo" />,
 };
 
 export default class Home extends React.Component {
