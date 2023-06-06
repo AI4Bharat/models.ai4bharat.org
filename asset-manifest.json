@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.4b765c12.css",
-    "main.js": "/static/js/main.7e399fb9.js",
+    "main.js": "/static/js/main.59793f57.js",
     "static/media/train_gujaratifemale_00545_b.wav": "/static/media/train_gujaratifemale_00545_b.722d77154740cb5ada6c.wav",
     "static/media/train_gujaratifemale_00545_c.wav": "/static/media/train_gujaratifemale_00545_c.9e6509da92d050b075ab.wav",
     "static/media/train_gujaratifemale_00545_a.wav": "/static/media/train_gujaratifemale_00545_a.e22f997da597991326df.wav",
@@ -88,6 +88,6 @@
   },
   "entrypoints": [
     "static/css/main.4b765c12.css",
-    "static/js/main.7e399fb9.js"
+    "static/js/main.59793f57.js"
   ]
 }
