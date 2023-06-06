@@ -476,22 +476,10 @@ const Feedback = ({
   const checkRatingMandatory = (taskFeedback) => {
     const requiredRatings = [];
     const commonFeedback = taskFeedback.commonFeedback;
-    const granularFeedback = taskFeedback.granularFeedback;
-    commonFeedback.map((item) => {
-      if (item.feedbackType === "rating") {
-        if (item.rating === 0) {
-          requiredRatings.push(item.question);
-        }
-      }
-    });
-    granularFeedback.map((item) => {
-      if (item.feedbackType === "rating") {
-        if (item.rating === 0) {
-          requiredRatings.push(item.question);
-        }
-      }
-    });
-    requiredRatings.pop();
+    if (commonFeedback[0].rating === 0) {
+      requiredRatings.push(commonFeedback[0].question);
+    }
+
     return requiredRatings;
   };
 
@@ -508,7 +496,7 @@ const Feedback = ({
     const requiredRatings = checkRatingMandatory(feedback.taskFeedback[0]);
     if (requiredRatings.length !== 0) {
       setalertMessage(
-        "Oops! Looks like you forgot to provide some rating values. We value your feedback and would appreciate if you could kindly provide the missing ratings. Thank you for helping us improve your experience!"
+        `Oops! Looks like you forgot to provide rating for the following question: ${requiredRatings[0]}. We value your feedback and would appreciate if you could kindly provide the missing ratings. Thank you for helping us improve your experience!`
       );
       setalertOpen(true);
     } else {
