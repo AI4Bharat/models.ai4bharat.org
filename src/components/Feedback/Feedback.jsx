@@ -28,13 +28,11 @@ const Feedback = ({
 }) => {
   const [feedback, setFeedback] = useState();
   const [alertOpen, setalertOpen] = useState(false);
-  const [alertMessage, setalertMessage] = useState(
-    "Error in Submitting Feedback"
-  );
+  const [alertMessage, setalertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("error");
   const handleSnackbarClose = () => {
     setalertOpen(false);
-    setTimeout(setalertMessage("Error in Submitting Feedback"), 6000);
+    setTimeout(setalertMessage(""), 6000);
     setAlertSeverity("error");
   };
 
@@ -524,6 +522,7 @@ const Feedback = ({
         });
         handleModalClose();
       } catch {
+        setalertMessage("Error in Submitting Feedback");
         setalertOpen(true);
       }
     }
