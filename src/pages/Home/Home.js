@@ -1,20 +1,23 @@
-import React from "react";
+import { Box, ThemeProvider } from "@mui/material";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { models } from "./modelsAvailable";
-import { Link } from "react-router-dom";
-import { Box } from "@mui/material";
-import { FaKeyboard, FaLaptopCode, FaLanguage } from "react-icons/fa";
-import { HiArrowRight } from "react-icons/hi";
-import { BsFillMicFill } from "react-icons/bs";
 import { createTheme } from "@mui/material/styles";
-import { ThemeProvider } from "@mui/material";
+import React from "react";
 import { BiWorld } from "react-icons/bi";
-import { BsSoundwave, BsFileTextFill, BsTagFill } from "react-icons/bs";
+import {
+  BsFileTextFill,
+  BsFillMicFill,
+  BsSoundwave,
+  BsTagFill,
+} from "react-icons/bs";
+import { FaKeyboard, FaLanguage, FaLaptopCode } from "react-icons/fa";
+import { HiArrowRight } from "react-icons/hi";
 import { SiAudiomack } from "react-icons/si";
+import { Link } from "react-router-dom";
+import { models } from "./modelsAvailable";
 
 const theme = createTheme({
   palette: {

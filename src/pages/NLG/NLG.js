@@ -1,12 +1,12 @@
-import React from "react";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
 import { Button } from "@mui/material";
+import LinearProgress from "@mui/material/LinearProgress";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import React from "react";
 import { FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 import { nlgDocumentation } from "./nlgDocumentation";
-import LinearProgress from "@mui/material/LinearProgress";
 
 export default class NLG extends React.Component {
   constructor(props) {
@@ -135,7 +135,11 @@ export default class NLG extends React.Component {
               {Object.entries(this.sortedLanguages).map(
                 ([language, optionText]) => {
                   return (
-                    <MenuItem key={language} sx={{ margin: 1 }} value={language}>
+                    <MenuItem
+                      key={language}
+                      sx={{ margin: 1 }}
+                      value={language}
+                    >
                       {optionText[0]}
                     </MenuItem>
                   );

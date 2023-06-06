@@ -1,25 +1,20 @@
 import React from "react";
 
 import {
-  ASR_STREAMING_URLS,
   ASR_LANGUAGE_CONFIGS,
+  ASR_STREAMING_URLS,
   LANGUAGE_KEY_TEXT,
 } from "../../config/config.js";
-import {
-  asrAPIDocumentation,
-  asrStreamingDocumentation,
-} from "./asrDocumentation.js";
 
 import {
   SocketStatus,
   StreamingClient,
 } from "@project-sunbird/open-speech-streaming-client";
 
+import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { FaMicrophone, FaRegCopy } from "react-icons/fa";
-import Documentation from "../../components/A4BDocumentation/Documentation.js";
-import LinearProgress from "@mui/material/LinearProgress";
 
 import { Button, FormControl, FormLabel, Grid, Switch } from "@mui/material";
 
@@ -192,7 +187,10 @@ export default class ASRConformer extends React.Component {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/inference/asr/conformer`, requestOptions)
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/inference/asr/conformer`,
+      requestOptions
+    )
       .then((response) => response.text())
       .then((result) => {
         var apiResponse = JSON.parse(result);
@@ -394,9 +392,14 @@ export default class ASRConformer extends React.Component {
             />
           </div>
           <div>
-            <Grid container spacing={this.state.pipelineOutput ? 30 : 0} alignItems="center" justifyContent="center">
+            <Grid
+              container
+              spacing={this.state.pipelineOutput ? 30 : 0}
+              alignItems="center"
+              justifyContent="center"
+            >
               <Grid item>
-                  <audio
+                <audio
                   src={this.state.audioData}
                   style={{ width: "100%", marginTop: 10 }}
                   controls
@@ -412,11 +415,14 @@ export default class ASRConformer extends React.Component {
                       }}
                       onChangeCapture={(event) => {
                         const selectedAudioFile = event.target["files"][0];
-                        this.setState({ audioFileName: selectedAudioFile.name });
+                        this.setState({
+                          audioFileName: selectedAudioFile.name,
+                        });
                         const selectedAudioReader = new FileReader();
                         selectedAudioReader.readAsDataURL(selectedAudioFile);
                         selectedAudioReader.onloadend = () => {
-                          const asrInput = selectedAudioReader.result.split(",")[1];
+                          const asrInput =
+                            selectedAudioReader.result.split(",")[1];
                           this.getASROutput(asrInput);
                         };
                       }}
@@ -425,9 +431,23 @@ export default class ASRConformer extends React.Component {
                   <span className="a4b-file-upload-name">
                     {this.state.audioFileName}
                   </span>
-                  <FormControl sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                    <FormLabel>Allow the AI to be improved by usage analysis.</FormLabel>
-                    <Switch checked={this.state.dataTracking} onChange={(e) => this.setState({ dataTracking: e.target.checked })} />
+                  <FormControl
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <FormLabel>
+                      Allow the AI to be improved by usage analysis.
+                    </FormLabel>
+                    <Switch
+                      checked={this.state.dataTracking}
+                      onChange={(e) =>
+                        this.setState({ dataTracking: e.target.checked })
+                      }
+                    />
                   </FormControl>
                 </div>
               </Grid>
@@ -450,8 +470,6 @@ export default class ASRConformer extends React.Component {
                 )}
               </Grid>
             </Grid>
-
-
           </div>
           {/* <Documentation documentation={asrAPIDocumentation} /> */}
         </div>
@@ -463,29 +481,28 @@ export default class ASRConformer extends React.Component {
     let choices = [];
     if (this.state.inferenceMode === "WebSocket") {
       this.ASR_LANGUAGE_CONFIGS.streaming
-      .filter((language) => language !== "ne" && language !== "si")
-      .map((language) => {
-        choices.push(
-          <MenuItem key={language} value={language}>
-            {LANGUAGE_KEY_TEXT[language]}
-          </MenuItem>
-        );
-        return true;
-      });
-
+        .filter((language) => language !== "ne" && language !== "si")
+        .map((language) => {
+          choices.push(
+            <MenuItem key={language} value={language}>
+              {LANGUAGE_KEY_TEXT[language]}
+            </MenuItem>
+          );
+          return true;
+        });
     }
-    
+
     if (this.state.inferenceMode === "REST") {
       this.ASR_LANGUAGE_CONFIGS.rest
-      .filter((language) => language !== "ne" && language !== "si")
-      .map((language) => {
-        choices.push(
-          <MenuItem key={language} value={language}>
-            {LANGUAGE_KEY_TEXT[language]}
-          </MenuItem>
-        );
-        return true;
-      });
+        .filter((language) => language !== "ne" && language !== "si")
+        .map((language) => {
+          choices.push(
+            <MenuItem key={language} value={language}>
+              {LANGUAGE_KEY_TEXT[language]}
+            </MenuItem>
+          );
+          return true;
+        });
     }
     return choices;
   }

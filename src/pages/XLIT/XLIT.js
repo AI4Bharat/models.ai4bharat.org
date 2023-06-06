@@ -1,11 +1,11 @@
-import React from "react";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import { FaRegCopy } from "react-icons/fa";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
-import { xlitDocumentation } from "./xlitDocumentation";
 import { Button } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import React from "react";
+import { FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation";
+import { xlitDocumentation } from "./xlitDocumentation";
 
 export default class XLit extends React.Component {
   constructor(props) {
@@ -91,7 +91,11 @@ export default class XLit extends React.Component {
               {Object.entries(this.sortedLanguages).map(
                 ([language, optionText]) => {
                   return (
-                    <MenuItem key={language} sx={{ margin: 1 }} value={language}>
+                    <MenuItem
+                      key={language}
+                      sx={{ margin: 1 }}
+                      value={language}
+                    >
                       {optionText}
                     </MenuItem>
                   );

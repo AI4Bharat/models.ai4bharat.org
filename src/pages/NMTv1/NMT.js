@@ -1,12 +1,18 @@
-import React from "react";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
-import { Alert, Button, FormControl, FormLabel, Grid, Snackbar, Switch } from "@mui/material";
-import Documentation from "../../components/A4BDocumentation/Documentation";
-import { nmtDocumentation } from "./nmtDocumentation";
-import { FaRegCopy } from "react-icons/fa";
+import {
+  Alert,
+  Button,
+  FormControl,
+  FormLabel,
+  Grid,
+  Snackbar,
+  Switch,
+} from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import React from "react";
+import { FaRegCopy } from "react-icons/fa";
 import { FeedbackModal } from "../../components/Feedback/Feedback";
 import QuickFeedback from "../../components/Feedback/QuickFeedback";
 
@@ -218,7 +224,12 @@ export default class NMT extends React.Component {
           <div className="a4b-interface">
             {this.showProgress()}
             <Grid container spacing={2}>
-              <Grid item md={6} xs={12} sx={{display:'flex',flexDirection:'column'}}>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{ display: "flex", flexDirection: "column" }}
+              >
                 <div className="a4b-transliterate-container">
                   <IndicTransliterate
                     className="a4b-transliterate-text"
@@ -247,9 +258,23 @@ export default class NMT extends React.Component {
                 >
                   Translate
                 </Button>
-                <FormControl sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-                  <FormLabel>Allow the AI to be improved by usage analysis.</FormLabel>
-                  <Switch checked={this.state.dataTracking} onChange={(e) => this.setState({dataTracking:e.target.checked})} />
+                <FormControl
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FormLabel>
+                    Allow the AI to be improved by usage analysis.
+                  </FormLabel>
+                  <Switch
+                    checked={this.state.dataTracking}
+                    onChange={(e) =>
+                      this.setState({ dataTracking: e.target.checked })
+                    }
+                  />
                 </FormControl>
               </Grid>
               <Grid item md={6} xs={12}>

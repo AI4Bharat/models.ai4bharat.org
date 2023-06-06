@@ -1,9 +1,9 @@
 import React from "react";
 
 import {
-  ASR_STREAMING_URLS,
-  ASR_REST_URLS,
   ASR_LANGUAGE_CONFIGS,
+  ASR_REST_URLS,
+  ASR_STREAMING_URLS,
   LANGUAGE_KEY_TEXT,
 } from "../../config/config.js";
 import {
@@ -16,11 +16,11 @@ import {
   StreamingClient,
 } from "@project-sunbird/open-speech-streaming-client";
 
+import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { FaMicrophone, FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation.js";
-import LinearProgress from "@mui/material/LinearProgress";
 
 import { Button } from "@mui/material";
 
