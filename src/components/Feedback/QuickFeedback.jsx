@@ -154,7 +154,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
             👎
           </Button>
 
-          <Snackbar open={open} onClose={handleClose}>
+          <Snackbar open={open} onClose={handleClose} autoHideDuration={3000}>
             <Alert
               severity="success"
               sx={{ width: "100%" }}
