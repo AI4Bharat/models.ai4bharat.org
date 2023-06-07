@@ -11,10 +11,25 @@ import requests
 import os
 import json
 from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from starlette.requests import Request
 
+# from slowapi.util import get_remote_address
+def get_remote_address(request: Request) -> str:
+    """
+    Returns the ip address for the current request (or 127.0.0.1 if none found)
+    """
+    real_ip = request.headers.get('X-Forwarded-For', None) # Proxy server
+    if real_ip:
+        return real_ip
+    real_ip = request.headers.get('cf-connecting-ip', None) # Cloudflare
+    if real_ip:
+        return real_ip
+    
+    if not request.client or not request.client.host:
+        return "127.0.0.1"
+
+    return request.client.host
 
 BASE_DHRUVA_URL = os.environ.get("BASE_DHRUVA_URL", "http://localhost:8000")
 API_KEY = os.environ.get("API_KEY", "")
