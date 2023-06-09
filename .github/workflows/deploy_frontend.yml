@@ -17,7 +17,7 @@ jobs:
                 node-version: 18
             - name: Install and Build 🔧
               run: |
-                  npm ci
+                  npm i
                   npm run build
               env:
                   REACT_APP_BACKEND_URL: ${{ env.REACT_APP_BACKEND_URL }}
