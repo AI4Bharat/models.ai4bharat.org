@@ -598,7 +598,7 @@ const Feedback = ({
               <FormLabel>
                 <Stack direction="row">
                   <text fontSize="lg" fontWeight="bold">
-                    Do you want to suggest the pipeline output?
+                  Do you want to suggest what the actual output should have been?
                   </text>
                   <Switch
                     onChange={() => setSuggest(!suggest)}
