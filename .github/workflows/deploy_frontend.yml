@@ -1,0 +1,29 @@
+name: Build and Deploy Frontend
+on:
+    push:
+        branches:
+            - master
+env:
+  REACT_APP_BACKEND_URL: ${{ vars.REACT_APP_BACKEND_URL }}
+jobs:
+    build-and-deploy:
+        concurrency: ci-${{ github.ref }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout 🛎️
+              uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                node-version: 16
+            - name: Install and Build 🔧
+              run: |
+                  npm install --legacy-peer-deps
+                  npm run build
+              env:
+                  REACT_APP_BACKEND_URL: ${{ env.REACT_APP_BACKEND_URL }}
+
+            - name: Deploy 🚀
+              uses: JamesIves/github-pages-deploy-action@v4.2.5
+              with:
+                  branch: gh-pages
+                  folder: build
