@@ -620,10 +620,14 @@ const Feedback = ({
                             <text fontSize="md" fontWeight="bold">
                               {data.taskType.toUpperCase()}
                             </text>
+                            <br/>                        <br/>
                             {data.output.map((output, i) => {
                               return (
                                 <Box key={i}>
-                                  <Input
+                                  <TextField
+                                    multiline
+                                    style={{ width: "100%" }}
+                                    rows={6}
                                     fontSize="md"
                                     fontWeight="bold"
                                     value={

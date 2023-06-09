@@ -7,7 +7,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
         {
           feedbackType: "thumbs",
           question: "Are you satisfied with the results?",
-          thumbs: null,
+          isLiked: null,
         },
       ],
     },
@@ -44,7 +44,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
   useEffect(() => {
     if (
       buttonClicked &&
-      feedback.pipelineFeedback.commonFeedback[0].thumbs !== null
+      feedback.pipelineFeedback.commonFeedback[0].isLiked !== null
     ) {
       onSubmitFeedback();
     }
@@ -73,7 +73,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
         <div>
           <Button
             variant={
-              feedback.pipelineFeedback.commonFeedback[0].thumbs === true
+              feedback.pipelineFeedback.commonFeedback[0].isLiked === true
                 ? "contained"
                 : "text"
             }
@@ -85,7 +85,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
                   commonFeedback: [
                     {
                       ...feedback.pipelineFeedback.commonFeedback[0],
-                      thumbs: true,
+                      isLiked: true,
                     },
                   ],
                 },
@@ -97,14 +97,14 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
             sx={{
               mr: 2,
               background:
-                feedback.pipelineFeedback.commonFeedback[0].thumbs === true &&
+                feedback.pipelineFeedback.commonFeedback[0].isLiked === true &&
                 "#f06b42",
               borderColor:
-                feedback.pipelineFeedback.commonFeedback[0].thumbs === true &&
+                feedback.pipelineFeedback.commonFeedback[0].isLiked === true &&
                 "#f06b42",
               "&:hover": {
                 backgroundColor:
-                  feedback.pipelineFeedback.commonFeedback[0].thumbs === true &&
+                  feedback.pipelineFeedback.commonFeedback[0].isLiked === true &&
                   "#f06b42",
               },
               fontSize: "1.3rem",
@@ -114,7 +114,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
           </Button>
           <Button
             variant={
-              feedback.pipelineFeedback.commonFeedback[0].thumbs === false
+              feedback.pipelineFeedback.commonFeedback[0].isLiked === false
                 ? "contained"
                 : "text"
             }
@@ -126,7 +126,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
                   commonFeedback: [
                     {
                       ...feedback.pipelineFeedback.commonFeedback[0],
-                      thumbs: false,
+                      isLiked: false,
                     },
                   ],
                 },
@@ -138,14 +138,14 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
             sx={{
               mr: 2,
               background:
-                feedback.pipelineFeedback.commonFeedback[0].thumbs === false &&
+                feedback.pipelineFeedback.commonFeedback[0].isLiked === false &&
                 "#f06b42",
               borderColor:
-                feedback.pipelineFeedback.commonFeedback[0].thumbs === false &&
+                feedback.pipelineFeedback.commonFeedback[0].isLiked === false &&
                 "#f06b42",
               "&:hover": {
                 backgroundColor:
-                  feedback.pipelineFeedback.commonFeedback[0].thumbs ===
+                  feedback.pipelineFeedback.commonFeedback[0].isLiked ===
                     false && "#f06b42",
               },
               fontSize: "1.3rem",
