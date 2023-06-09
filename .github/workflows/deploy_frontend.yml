@@ -14,14 +14,13 @@ jobs:
               uses: actions/checkout@v3
             - uses: actions/setup-node@v3
               with:
-                node-version: 18
+                node-version: 16
             - name: Install and Build 🔧
               run: |
                   npm i
                   npm run build
               env:
                   REACT_APP_BACKEND_URL: ${{ env.REACT_APP_BACKEND_URL }}
-                  CI: false
 
             - name: Deploy 🚀
               uses: JamesIves/github-pages-deploy-action@v4.2.5
