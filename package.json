@@ -10,7 +10,7 @@
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.4",
-    "@project-sunbird/open-speech-streaming-client": "github:AI4Bharat/speech-recognition-open-api-client#ai4bharat",
+    "@project-sunbird/open-speech-streaming-client": "github:AI4Bharat/speech-recognition-open-api-client",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
