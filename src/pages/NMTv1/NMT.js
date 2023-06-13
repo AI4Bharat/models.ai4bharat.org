@@ -1,4 +1,7 @@
-import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
+import {
+  IndicTransliterate,
+  TriggerKeys,
+} from "@ai4bharat/indic-transliterate";
 import {
   Alert,
   Button,
@@ -241,6 +244,7 @@ export default class NMT extends React.Component {
                       this.setTransliteratedText(text);
                     }}
                     lang={this.state.from}
+                    triggerKeys={[TriggerKeys.KEY_TAB]}
                   />
                 </div>
                 <Button

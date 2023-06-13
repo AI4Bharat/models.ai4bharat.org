@@ -1,4 +1,7 @@
-import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
+import {
+  IndicTransliterate,
+  TriggerKeys,
+} from "@ai4bharat/indic-transliterate";
 import { Button } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -134,6 +137,7 @@ export default class XLit extends React.Component {
                   this.setTransliteratedText(text);
                 }}
                 lang={this.state.languageChoice}
+                triggerKeys={[TriggerKeys.KEY_TAB]}
               />
             </div>
           </div>

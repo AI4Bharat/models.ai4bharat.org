@@ -1,4 +1,7 @@
-import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
+import {
+  IndicTransliterate,
+  TriggerKeys,
+} from "@ai4bharat/indic-transliterate";
 import Button from "@mui/material/Button";
 import React from "react";
 import { FaLaptopCode } from "react-icons/fa";
@@ -209,7 +212,7 @@ export default class TTS extends React.Component {
                   this.setState({ transliteratedText: text });
                 }}
                 lang={this.state.languageChoice}
-                showCurrentWordAsLastSuggestion={false}
+                triggerKeys={[TriggerKeys.KEY_TAB]}
               />
             </div>
           </div>

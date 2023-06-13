@@ -154,6 +154,7 @@ export default class NER extends React.Component {
                   this.setState({ transliteratedText: text });
                 }}
                 lang={this.state.languageChoice}
+                triggerKeys={[TriggerKeys.KEY_TAB]}
               />
             </div>
             <div className="a4b-nmt-buttons">
