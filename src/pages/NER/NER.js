@@ -142,15 +142,15 @@ export default class NER extends React.Component {
           <div className="a4b-output-grid">
             <div className="a4b-transliterate-container">
               <IndicTransliterate
-                renderComponent={(props) => (
-                  <textarea className="a4b-transliterate-text" {...props} />
-                )}
+                className="a4b-transliterate-text"
+                renderComponent={(props) => <textarea {...props} />}
                 value={this.state.transliteratedText}
                 placeholder="Type your text here to convert...."
                 onChangeText={(text) => {
                   this.setState({ transliteratedText: text });
                 }}
                 lang={this.state.languageChoice}
+                showCurrentWordAsLastSuggestion={false}
               />
             </div>
             <div className="a4b-nmt-buttons">

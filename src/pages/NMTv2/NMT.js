@@ -321,6 +321,7 @@ export default class NMTV2 extends React.Component {
                     this.setTransliteratedText(text);
                   }}
                   lang={this.state.sourceLanguage}
+                  showCurrentWordAsLastSuggestion={false}
                 />
                 <Button
                   onClick={() => {

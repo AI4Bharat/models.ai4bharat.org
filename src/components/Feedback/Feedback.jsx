@@ -598,7 +598,8 @@ const Feedback = ({
               <FormLabel>
                 <Stack direction="row">
                   <text fontSize="lg" fontWeight="bold">
-                  Do you want to suggest what the actual output should have been?
+                    Do you want to suggest what the actual output should have
+                    been?
                   </text>
                   <Switch
                     onChange={() => setSuggest(!suggest)}
@@ -620,7 +621,7 @@ const Feedback = ({
                             <text fontSize="md" fontWeight="bold">
                               {data.taskType.toUpperCase()}
                             </text>
-                            <br/>                        <br/>
+                            <br /> <br />
                             {data.output.map((output, i) => {
                               return (
                                 <Box key={i}>

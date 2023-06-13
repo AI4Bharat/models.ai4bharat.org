@@ -241,6 +241,7 @@ export default class NMT extends React.Component {
                       this.setTransliteratedText(text);
                     }}
                     lang={this.state.from}
+                    showCurrentWordAsLastSuggestion={false}
                   />
                 </div>
                 <Button
