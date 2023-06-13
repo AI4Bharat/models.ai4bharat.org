@@ -296,7 +296,6 @@ export default class TTS extends React.Component {
                   _this.setState({ streamingText: text });
                 }}
                 lang={_this.state.languageChoice}
-                showCurrentWordAsLastSuggestion={false}
               />
             </div>
           </div>

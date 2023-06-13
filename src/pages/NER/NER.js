@@ -1,5 +1,8 @@
 import React from "react";
-import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
+import {
+  IndicTransliterate,
+  TriggerKeys,
+} from "@ai4bharat/indic-transliterate";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { Button } from "@mui/material";
@@ -23,6 +26,7 @@ class NEROutput extends React.Component {
         {Object.entries(this.props.data).map(([idx, element]) => {
           return (
             <span
+              className="a4b-transliterate-text"
               key={idx}
               style={{
                 padding: 3,
@@ -150,7 +154,6 @@ export default class NER extends React.Component {
                   this.setState({ transliteratedText: text });
                 }}
                 lang={this.state.languageChoice}
-                showCurrentWordAsLastSuggestion={false}
               />
             </div>
             <div className="a4b-nmt-buttons">

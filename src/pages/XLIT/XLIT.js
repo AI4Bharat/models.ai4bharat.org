@@ -134,7 +134,6 @@ export default class XLit extends React.Component {
                   this.setTransliteratedText(text);
                 }}
                 lang={this.state.languageChoice}
-                showCurrentWordAsLastSuggestion={false}
               />
             </div>
           </div>
