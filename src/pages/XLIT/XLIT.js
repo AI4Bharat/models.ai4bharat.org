@@ -2,7 +2,7 @@ import {
   IndicTransliterate,
   TriggerKeys,
 } from "@ai4bharat/indic-transliterate";
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import React from "react";
@@ -128,17 +128,24 @@ export default class XLit extends React.Component {
               <FaRegCopy size={"20px"} />
             </Button>
             <div className="a4b-transliterate-container">
-              <IndicTransliterate
-                className="a4b-transliterate-text"
-                renderComponent={(props) => <textarea {...props} />}
-                value={this.state.transliteratedText}
-                placeholder="Type your text here to transliterate...."
-                onChangeText={(text) => {
-                  this.setTransliteratedText(text);
-                }}
-                lang={this.state.languageChoice}
-                triggerKeys={[TriggerKeys.KEY_TAB]}
-              />
+              <Tooltip
+                placement="top-start"
+                title={
+                  "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Tab or Click on the word suggestion to apply that word."
+                }
+              >
+                <IndicTransliterate
+                  className="a4b-transliterate-text"
+                  renderComponent={(props) => <textarea {...props} />}
+                  value={this.state.transliteratedText}
+                  placeholder="Type your text here to transliterate...."
+                  onChangeText={(text) => {
+                    this.setTransliteratedText(text);
+                  }}
+                  lang={this.state.languageChoice}
+                  triggerKeys={[TriggerKeys.KEY_TAB]}
+                />
+              </Tooltip>
             </div>
           </div>
           <Documentation documentation={xlitDocumentation} />

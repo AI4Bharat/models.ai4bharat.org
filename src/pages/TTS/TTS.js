@@ -13,7 +13,7 @@ import Select from "@mui/material/Select";
 import Skeleton from "@mui/material/Skeleton";
 import { FeedbackModal } from "../../components/Feedback/Feedback.jsx";
 
-import { FormControl, FormLabel, Grid, Switch } from "@mui/material";
+import { FormControl, FormLabel, Grid, Switch, Tooltip } from "@mui/material";
 import { io } from "socket.io-client";
 import QuickFeedback from "../../components/Feedback/QuickFeedback.jsx";
 
@@ -200,22 +200,30 @@ export default class TTS extends React.Component {
         <div className="a4b-interface">
           {this.showProgress()}
           <div className="a4b-output">
-            <div className="a4b-transliterate-container">
-              <IndicTransliterate
-                enabled={this.state.languageChoice !== "en"}
-                renderComponent={(props) => (
-                  <textarea className="a4b-transliterate-text" {...props} />
-                )}
-                value={this.state.transliteratedText}
-                placeholder="Type your text here to convert...."
-                onChangeText={(text) => {
-                  this.setState({ transliteratedText: text });
-                }}
-                lang={this.state.languageChoice}
-                triggerKeys={[TriggerKeys.KEY_TAB]}
-              />
-            </div>
+            <Tooltip
+              placement="top-start"
+              title={
+                "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Tab or Click on the word suggestion to apply that word."
+              }
+            >
+              <div className="a4b-transliterate-container">
+                <IndicTransliterate
+                  enabled={this.state.languageChoice !== "en"}
+                  renderComponent={(props) => (
+                    <textarea className="a4b-transliterate-text" {...props} />
+                  )}
+                  value={this.state.transliteratedText}
+                  placeholder="Type your text here to convert...."
+                  onChangeText={(text) => {
+                    this.setState({ transliteratedText: text });
+                  }}
+                  lang={this.state.languageChoice}
+                  triggerKeys={[TriggerKeys.KEY_TAB]}
+                />
+              </div>
+            </Tooltip>
           </div>
+
           <Grid
             container
             spacing={this.state.pipelineOutput ? 30 : 0}
@@ -286,20 +294,28 @@ export default class TTS extends React.Component {
           {this.showProgress()}
           <div className="a4b-output">
             <div className="a4b-transliterate-container">
-              <IndicTransliterate
-                onKeyUp={(e) => {
-                  _this.getStreamingOutput(e);
-                }}
-                renderComponent={(props) => (
-                  <textarea className="a4b-transliterate-text" {...props} />
-                )}
-                value={_this.state.streamingText}
-                placeholder="Type your text here to convert...."
-                onChangeText={(text) => {
-                  _this.setState({ streamingText: text });
-                }}
-                lang={_this.state.languageChoice}
-              />
+              <Tooltip
+                placement="top-start"
+                title={
+                  "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Tab or Click on the word suggestion to apply that word."
+                }
+              >
+                <IndicTransliterate
+                  onKeyUp={(e) => {
+                    _this.getStreamingOutput(e);
+                  }}
+                  renderComponent={(props) => (
+                    <textarea className="a4b-transliterate-text" {...props} />
+                  )}
+                  value={_this.state.streamingText}
+                  placeholder="Type your text here to convert...."
+                  onChangeText={(text) => {
+                    _this.setState({ streamingText: text });
+                  }}
+                  lang={_this.state.languageChoice}
+                  triggerKeys={[TriggerKeys.KEY_TAB]}
+                />
+              </Tooltip>
             </div>
           </div>
           <div className="a4b-tts-convert">

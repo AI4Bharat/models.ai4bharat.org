@@ -10,6 +10,7 @@ import {
   Grid,
   Snackbar,
   Switch,
+  Tooltip,
 } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
@@ -224,6 +225,7 @@ export default class NMTV2 extends React.Component {
 
   handleClose(event, reason) {
     if (reason === "clickaway") {
+      this.setState({ open: false });
       return;
     }
     this.setState({ open: false });
@@ -314,18 +316,25 @@ export default class NMTV2 extends React.Component {
                 xs={12}
                 sx={{ display: "flex", flexDirection: "column" }}
               >
-                <IndicTransliterate
-                  className="a4b-transliterate-text"
-                  enabled={this.state.sourceLanguage !== "en"}
-                  renderComponent={(props) => <textarea {...props} />}
-                  value={this.state.transliteratedText}
-                  placeholder="Type your text here to Translate...."
-                  onChangeText={(text) => {
-                    this.setTransliteratedText(text);
-                  }}
-                  lang={this.state.sourceLanguage}
-                  triggerKeys={[TriggerKeys.KEY_TAB]}
-                />
+                <Tooltip
+                  placement="top-start"
+                  title={
+                    "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Tab or Click on the word suggestion to apply that word."
+                  }
+                >
+                  <IndicTransliterate
+                    className="a4b-transliterate-text"
+                    enabled={this.state.sourceLanguage !== "en"}
+                    renderComponent={(props) => <textarea {...props} />}
+                    value={this.state.transliteratedText}
+                    placeholder="Type your text here to Translate...."
+                    onChangeText={(text) => {
+                      this.setTransliteratedText(text);
+                    }}
+                    lang={this.state.sourceLanguage}
+                    triggerKeys={[TriggerKeys.KEY_TAB]}
+                  />
+                </Tooltip>
                 <Button
                   onClick={() => {
                     this.getTranslation();
@@ -393,7 +402,7 @@ export default class NMTV2 extends React.Component {
 
                 <Snackbar
                   open={this.state.open}
-                  autoHideDuration={6000}
+                  autoHideDuration={3000}
                   onClose={() => this.handleClose()}
                 >
                   <Alert

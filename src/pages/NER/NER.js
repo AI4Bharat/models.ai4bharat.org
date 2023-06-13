@@ -5,7 +5,7 @@ import {
 } from "@ai4bharat/indic-transliterate";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 import { nerDocumentation } from "./nerDocumentation";
 
@@ -145,17 +145,24 @@ export default class NER extends React.Component {
         <div className="a4b-interface">
           <div className="a4b-output-grid">
             <div className="a4b-transliterate-container">
-              <IndicTransliterate
-                className="a4b-transliterate-text"
-                renderComponent={(props) => <textarea {...props} />}
-                value={this.state.transliteratedText}
-                placeholder="Type your text here to convert...."
-                onChangeText={(text) => {
-                  this.setState({ transliteratedText: text });
-                }}
-                lang={this.state.languageChoice}
-                triggerKeys={[TriggerKeys.KEY_TAB]}
-              />
+              <Tooltip
+                placement="top-start"
+                title={
+                  "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Tab or Click on the word suggestion to apply that word."
+                }
+              >
+                <IndicTransliterate
+                  className="a4b-transliterate-text"
+                  renderComponent={(props) => <textarea {...props} />}
+                  value={this.state.transliteratedText}
+                  placeholder="Type your text here to convert...."
+                  onChangeText={(text) => {
+                    this.setState({ transliteratedText: text });
+                  }}
+                  lang={this.state.languageChoice}
+                  triggerKeys={[TriggerKeys.KEY_TAB]}
+                />
+              </Tooltip>
             </div>
             <div className="a4b-nmt-buttons">
               <Button
