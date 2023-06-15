@@ -1,5 +1,5 @@
 import { IndicTransliterate } from "@ai4bharat/indic-transliterate";
-import { Button } from "@mui/material";
+import { Button, Switch, Tooltip } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -20,6 +20,7 @@ export default class NLG extends React.Component {
       transliteratedText: "",
       generatedText: "",
       isFetching: false,
+      enableTransliteration: true,
     };
 
     this.languages = {
@@ -45,6 +46,7 @@ export default class NLG extends React.Component {
     ];
 
     this.sortedLanguages = {};
+    this.toggleTransliteration = this.toggleTransliteration.bind(this);
   }
 
   componentWillMount() {
@@ -54,6 +56,10 @@ export default class NLG extends React.Component {
     languages.forEach((key) => {
       _this.sortedLanguages[key] = _this.languages[key];
     });
+  }
+
+  toggleTransliteration() {
+    this.setState({ enableTransliteration: !this.state.enableTransliteration });
   }
 
   getGeneratedText() {
@@ -170,24 +176,43 @@ export default class NLG extends React.Component {
               })}
             </Select>
           </label>
+          <label className="a4b-option">
+            Enable Transliteration:
+            <Switch
+              checked={this.state.enableTransliteration}
+              onChange={this.toggleTransliteration}
+              inputProps={{ "aria-label": "controlled" }}
+            />
+          </label>
         </div>
         <div className="a4b-interface">
           {this.showProgress()}
           <div className="a4b-output-grid">
             <div className="a4b-output">
-              <div className="a4b-transliterate-container">
-                <IndicTransliterate
-                  renderComponent={(props) => (
-                    <textarea className="a4b-transliterate-text" {...props} />
-                  )}
-                  value={this.state.transliteratedText}
-                  placeholder="Type your text here...."
-                  onChangeText={(text) => {
-                    this.setState({ transliteratedText: text });
-                  }}
-                  lang={this.state.languageChoice}
-                />
-              </div>
+              <Tooltip
+                placement="top-start"
+                title={
+                  "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Space or Click on the word suggestion to apply that word."
+                }
+              >
+                <div className="a4b-transliterate-container">
+                  <IndicTransliterate
+                    renderComponent={(props) => (
+                      <textarea className="a4b-transliterate-text" {...props} />
+                    )}
+                    enabled={
+                      this.state.from !== "en" &&
+                      this.state.enableTransliteration
+                    }
+                    value={this.state.transliteratedText}
+                    placeholder="Type your text here...."
+                    onChangeText={(text) => {
+                      this.setState({ transliteratedText: text });
+                    }}
+                    lang={this.state.languageChoice}
+                  />
+                </div>
+              </Tooltip>
             </div>
             <div className="a4b-nmt-buttons">
               <Button

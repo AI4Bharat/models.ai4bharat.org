@@ -131,7 +131,7 @@ export default class XLit extends React.Component {
               <Tooltip
                 placement="top-start"
                 title={
-                  "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Tab or Click on the word suggestion to apply that word."
+                  "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Space or Click on the word suggestion to apply that word."
                 }
               >
                 <IndicTransliterate
@@ -143,7 +143,6 @@ export default class XLit extends React.Component {
                     this.setTransliteratedText(text);
                   }}
                   lang={this.state.languageChoice}
-                  triggerKeys={[TriggerKeys.KEY_TAB]}
                 />
               </Tooltip>
             </div>

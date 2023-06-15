@@ -5,7 +5,7 @@ import {
 } from "@ai4bharat/indic-transliterate";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { Button, Tooltip } from "@mui/material";
+import { Button, Tooltip, Switch } from "@mui/material";
 import Documentation from "../../components/A4BDocumentation/Documentation";
 import { nerDocumentation } from "./nerDocumentation";
 
@@ -62,6 +62,7 @@ export default class NER extends React.Component {
       languageChoice: localStorage.getItem("nerLanguageChoice"),
       transliteratedText: "",
       nerOutput: [],
+      enableTransliteration: true,
     };
     this.languages = {
       as: "Assamese - অসমীয়া",
@@ -78,6 +79,11 @@ export default class NER extends React.Component {
     };
 
     this.getNER = this.getNER.bind(this);
+    this.toggleTransliteration = this.toggleTransliteration.bind(this);
+  }
+
+  toggleTransliteration() {
+    this.setState({ enableTransliteration: !this.state.enableTransliteration });
   }
 
   getNER() {
@@ -141,6 +147,14 @@ export default class NER extends React.Component {
               })}
             </Select>
           </label>
+          <label className="a4b-option">
+            Enable Transliteration:
+            <Switch
+              checked={this.state.enableTransliteration}
+              onChange={this.toggleTransliteration}
+              inputProps={{ "aria-label": "controlled" }}
+            />
+          </label>
         </div>
         <div className="a4b-interface">
           <div className="a4b-output-grid">
@@ -148,19 +162,22 @@ export default class NER extends React.Component {
               <Tooltip
                 placement="top-start"
                 title={
-                  "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Tab or Click on the word suggestion to apply that word."
+                  "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Space or Click on the word suggestion to apply that word."
                 }
               >
                 <IndicTransliterate
                   className="a4b-transliterate-text"
                   renderComponent={(props) => <textarea {...props} />}
+                  enabled={
+                    this.state.languageChoice !== "en" &&
+                    this.state.enableTransliteration
+                  }
                   value={this.state.transliteratedText}
                   placeholder="Type your text here to convert...."
                   onChangeText={(text) => {
                     this.setState({ transliteratedText: text });
                   }}
                   lang={this.state.languageChoice}
-                  triggerKeys={[TriggerKeys.KEY_TAB]}
                 />
               </Tooltip>
             </div>

@@ -32,6 +32,7 @@ export default class NMT extends React.Component {
       dataTracking: true,
       pipelineOutput: null,
       isFetching: false,
+      enableTransliteration: true,
     };
 
     this.languages = {
@@ -52,6 +53,11 @@ export default class NMT extends React.Component {
     this.sortedLanguages = {};
 
     this.getTranslation = this.getTranslation.bind(this);
+    this.toggleTransliteration = this.toggleTransliteration.bind(this);
+  }
+
+  toggleTransliteration() {
+    this.setState({ enableTransliteration: !this.state.enableTransliteration });
   }
 
   componentWillMount() {
@@ -224,6 +230,14 @@ export default class NMT extends React.Component {
                 )}
               </Select>
             </label>
+            <label className="a4b-option">
+              Enable Transliteration:
+              <Switch
+                checked={this.state.enableTransliteration}
+                onChange={this.toggleTransliteration}
+                inputProps={{ "aria-label": "controlled" }}
+              />
+            </label>
           </div>
           <div className="a4b-interface">
             {this.showProgress()}
@@ -238,12 +252,15 @@ export default class NMT extends React.Component {
                   <Tooltip
                     placement="top-start"
                     title={
-                      "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Tab or Click on the word suggestion to apply that word."
+                      "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Space or Click on the word suggestion to apply that word."
                     }
                   >
                     <IndicTransliterate
                       className="a4b-transliterate-text"
-                      enabled={this.state.from !== "en"}
+                      enabled={
+                        this.state.from !== "en" &&
+                        this.state.enableTransliteration
+                      }
                       renderComponent={(props) => <textarea {...props} />}
                       value={this.state.transliteratedText}
                       placeholder="Type your text here to Translate...."
@@ -251,7 +268,6 @@ export default class NMT extends React.Component {
                         this.setTransliteratedText(text);
                       }}
                       lang={this.state.from}
-                      triggerKeys={[TriggerKeys.KEY_TAB]}
                     />
                   </Tooltip>
                 </div>

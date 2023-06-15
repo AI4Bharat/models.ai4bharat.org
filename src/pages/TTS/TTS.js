@@ -41,6 +41,7 @@ export default class TTS extends React.Component {
       pipelineInput: null,
       pipelineOutput: null,
       inferenceMode: "REST",
+      enableTransliteration: true,
     };
 
     this.languages = {
@@ -62,6 +63,11 @@ export default class TTS extends React.Component {
     };
 
     this.getAudioOutput = this.getAudioOutput.bind(this);
+    this.toggleTransliteration = this.toggleTransliteration.bind(this);
+  }
+
+  toggleTransliteration() {
+    this.setState({ enableTransliteration: !this.state.enableTransliteration });
   }
 
   getAudioOutput() {
@@ -203,12 +209,14 @@ export default class TTS extends React.Component {
             <Tooltip
               placement="top-start"
               title={
-                "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Tab or Click on the word suggestion to apply that word."
+                "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Space or Click on the word suggestion to apply that word."
               }
             >
               <div className="a4b-transliterate-container">
                 <IndicTransliterate
-                  enabled={this.state.languageChoice !== "en"}
+                  enabled={
+                    this.state.from !== "en" && this.state.enableTransliteration
+                  }
                   renderComponent={(props) => (
                     <textarea className="a4b-transliterate-text" {...props} />
                   )}
@@ -218,7 +226,6 @@ export default class TTS extends React.Component {
                     this.setState({ transliteratedText: text });
                   }}
                   lang={this.state.languageChoice}
-                  triggerKeys={[TriggerKeys.KEY_TAB]}
                 />
               </div>
             </Tooltip>
@@ -297,7 +304,7 @@ export default class TTS extends React.Component {
               <Tooltip
                 placement="top-start"
                 title={
-                  "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Tab or Click on the word suggestion to apply that word."
+                  "You can choose your suggestion using Arrow Keys or Scroll using the mouse and then either use Space or Click on the word suggestion to apply that word."
                 }
               >
                 <IndicTransliterate
@@ -307,13 +314,15 @@ export default class TTS extends React.Component {
                   renderComponent={(props) => (
                     <textarea className="a4b-transliterate-text" {...props} />
                   )}
+                  enabled={
+                    this.state.from !== "en" && this.state.enableTransliteration
+                  }
                   value={_this.state.streamingText}
                   placeholder="Type your text here to convert...."
                   onChangeText={(text) => {
                     _this.setState({ streamingText: text });
                   }}
                   lang={_this.state.languageChoice}
-                  triggerKeys={[TriggerKeys.KEY_TAB]}
                 />
               </Tooltip>
             </div>
@@ -444,6 +453,14 @@ export default class TTS extends React.Component {
                 Female
               </MenuItem>
             </Select>
+          </label>
+          <label className="a4b-option">
+            Enable Transliteration:
+            <Switch
+              checked={this.state.enableTransliteration}
+              onChange={this.toggleTransliteration}
+              inputProps={{ "aria-label": "controlled" }}
+            />
           </label>
         </div>
         {this.setInferenceInterface()}
