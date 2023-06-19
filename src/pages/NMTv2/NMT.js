@@ -340,7 +340,7 @@ export default class NMTV2 extends React.Component {
                   <IndicTransliterate
                     className="a4b-transliterate-text"
                     enabled={
-                      this.state.from !== "en" &&
+                      this.state.sourceLanguage !== "en" &&
                       this.state.enableTransliteration
                     }
                     renderComponent={(props) => <textarea {...props} />}

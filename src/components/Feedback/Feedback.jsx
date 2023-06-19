@@ -631,11 +631,7 @@ const Feedback = ({
                                     rows={6}
                                     fontSize="md"
                                     fontWeight="bold"
-                                    value={
-                                      output.target
-                                        ? output.target
-                                        : output.source
-                                    }
+                                    value={output.target}
                                     onChange={(e) => {
                                       let newSuggestedPipelineOutput = {
                                         ...suggestedPipelineOutput,
