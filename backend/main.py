@@ -58,15 +58,14 @@ async def root():
 @app.post("/inference/feedback")
 async def feedback(request: ULCAFeedbackRequest):
     request = request.dict()
+    request["pipelineInput"]["controlConfig"] = {"dataTracking": True}
     response = requests.post(
         f"{BASE_DHRUVA_URL}/services/feedback/submit",
         data=json.dumps(request),
         headers={"x-auth-source": "API_KEY", "Authorization": API_KEY},
     )
-    try:
-        result = json.loads(response.text)
-    except:
-        result = response.text
+    response.raise_for_status()
+    result = json.loads(response.text)
     return result
 
 
@@ -91,7 +90,6 @@ async def fetch_languages(request: Request):
 async def translation(body: ULCATranslationInferenceRequest, request: Request):
     request = body.dict()
     request["config"]["serviceId"] = "ai4bharat/indictrans-fairseq-all-gpu--t4"
-    print(request)
     response = requests.post(
         f"{BASE_DHRUVA_URL}/services/inference/translation?serviceId={request['config']['serviceId']}",
         data=json.dumps(request),
@@ -146,25 +144,36 @@ async def tts_misc(body: ULCATtsInferenceRequest, request: Request):
 
 @app.post("/inference/asr/conformer")
 @limiter.limit("6/minute")
-async def asr_en(body: ULCAAsrInferenceRequest, request: Request):
+async def asr_cnf(body: ULCAAsrInferenceRequest, request: Request):
     request = body.dict()
-    if request["config"]["language"] in ["en"]:
+    if request["config"]["language"]["sourceLanguage"] in ["en"]:
         request["config"]["serviceId"] = "ai4bharat/conformer-en-gpu--t4"
-    elif request["config"]["language"] in ["hi"]:
+    elif request["config"]["language"]["sourceLanguage"] in ["hi"]:
         request["config"]["serviceId"] = "ai4bharat/conformer-hi-gpu--t4"
-    elif request["config"]["language"] in ["gu", "mr", "or", "pa", "bn", "as", "ur", "sa"]:
-        request["config"]["serviceId"] = "ai4bharat/conformer-multilingual-indo_aryan-gpu"
-    elif request["config"]["language"] in ["ta", "te", "kn", "ml"]:
-        request["config"]["serviceId"] = "ai4bharat/conformer-multilingual-dravidian-gpu"
+    elif request["config"]["language"]["sourceLanguage"] in ["gu", "mr", "or", "pa", "bn", "as", "ur", "sa"]:
+        request["config"]["serviceId"] = "ai4bharat/conformer-multilingual-indo_aryan-gpu--t4"
+    elif request["config"]["language"]["sourceLanguage"] in ["ta", "te", "kn", "ml"]:
+        request["config"]["serviceId"] = "ai4bharat/conformer-multilingual-dravidian-gpu--t4"
+
+    response = requests.post(
+        f"{BASE_DHRUVA_URL}/services/inference/asr?serviceId={request['config']['serviceId']}",
+        data=json.dumps(request),
+        headers={"x-auth-source": "API_KEY", "Authorization": API_KEY},
+    )
+    try:
+        result = json.loads(response.text)
+    except:
+        result = response.text
+    return result
 
 
 @app.post("/inference/asr/whisper")
 @limiter.limit("6/minute")
 async def asr_en(body: ULCAAsrInferenceRequest, request: Request):
     request = body.dict()
-    if request["config"]["language"] in ["en"]:
+    if request["config"]["language"]["sourceLanguage"] in ["en"]:
         request["config"]["serviceId"] = "ai4bharat/whisper-medium-en--gpu--t4"
-    elif request["config"]["language"] in ["hi"]:
+    elif request["config"]["language"]["sourceLanguage"] in ["hi"]:
         request["config"]["serviceId"] = "ai4bharat/whisper-medium-hi--gpu--t4"
 
     response = requests.post(
