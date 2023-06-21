@@ -37,8 +37,9 @@ const Feedback = ({
   };
 
   const [suggest, setSuggest] = useState(false);
-  const [suggestedPipelineOutput, setSuggestedPipelineOutput] =
-    useState(pipelineOutput);
+  const [suggestedPipelineOutput, setSuggestedPipelineOutput] = useState(
+    JSON.parse(JSON.stringify(pipelineOutput))
+  );
 
   const getFeedbackTypeString = (feedbackType) => {
     if (feedbackType.includes("-") === false) {
