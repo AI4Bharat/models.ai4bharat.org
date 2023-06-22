@@ -485,14 +485,30 @@ const Feedback = ({
   };
 
   const onSubmitFeedback = async () => {
-    let feedbackRequest = {
+
+    let feedbackRequest;
+    if (!suggest)
+    {
+    feedbackRequest = {
       ...feedback,
       pipelineInput: pipelineInput,
       pipelineOutput: pipelineOutput,
-      suggestedPipelineOutput: suggestedPipelineOutput,
-      feedbackTimeStamp: Math.floor(Date.now() / 1000),
+      suggestedPipelineOutput: null,
+      // feedbackTimeStamp: Math.floor(Date.now() / 1000),
       feedbackLanguage: "en",
     };
+    }
+    else
+    {
+      feedbackRequest = {
+        ...feedback,
+        pipelineInput: pipelineInput,
+        pipelineOutput: pipelineOutput,
+        suggestedPipelineOutput: suggestedPipelineOutput,
+        // feedbackTimeStamp: Math.floor(Date.now() / 1000),
+        feedbackLanguage: "en",
+      };
+    }
 
     const requiredRatings = checkRatingMandatory(feedback.taskFeedback[0]);
     if (requiredRatings.length !== 0) {
