@@ -26,7 +26,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
       ...feedback,
       pipelineInput: pipelineInput,
       pipelineOutput: pipelineOutput,
-      feedbackTimeStamp: Math.floor(Date.now() / 1000),
+      // feedbackTimeStamp: Math.floor(Date.now() / 1000),
       feedbackLanguage: "en",
     };
     try {
