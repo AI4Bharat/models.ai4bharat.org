@@ -494,7 +494,7 @@ const Feedback = ({
       pipelineInput: pipelineInput,
       pipelineOutput: pipelineOutput,
       suggestedPipelineOutput: null,
-      // feedbackTimeStamp: Math.floor(Date.now() / 1000),
+      feedbackTimeStamp: Math.floor(Date.now() / 1000),
       feedbackLanguage: "en",
     };
     }
@@ -505,7 +505,7 @@ const Feedback = ({
         pipelineInput: pipelineInput,
         pipelineOutput: pipelineOutput,
         suggestedPipelineOutput: suggestedPipelineOutput,
-        // feedbackTimeStamp: Math.floor(Date.now() / 1000),
+        feedbackTimeStamp: Math.floor(Date.now() / 1000),
         feedbackLanguage: "en",
       };
     }
