@@ -13,7 +13,7 @@ import Select from "@mui/material/Select";
 import Skeleton from "@mui/material/Skeleton";
 import { FeedbackModal } from "../../components/Feedback/Feedback.jsx";
 
-import { FormControl, FormLabel, Grid, Switch, Tooltip } from "@mui/material";
+import { FormControl, FormLabel, Grid, Switch, Tooltip, Snackbar, Alert, TextField } from "@mui/material";
 import { io } from "socket.io-client";
 import QuickFeedback from "../../components/Feedback/QuickFeedback.jsx";
 
@@ -42,6 +42,7 @@ export default class TTS extends React.Component {
       pipelineOutput: null,
       inferenceMode: "REST",
       enableTransliteration: true,
+      openLimit: false,
     };
 
     this.languages = {
@@ -68,6 +69,14 @@ export default class TTS extends React.Component {
 
   toggleTransliteration() {
     this.setState({ enableTransliteration: !this.state.enableTransliteration });
+  }
+
+  handleClose(event, reason) {
+    if (reason === "clickaway") {
+      this.setState({ openLimit: false });
+      return;
+    }
+    this.setState({ openLimit: false });
   }
 
   getAudioOutput() {
@@ -218,7 +227,10 @@ export default class TTS extends React.Component {
                     this.state.from !== "en" && this.state.enableTransliteration
                   }
                   renderComponent={(props) => (
-                    <textarea className="a4b-transliterate-text" {...props} />
+                    <>
+                      <textarea className="a4b-transliterate-text" {...props} />
+                      <span style={{ float: "right", fontSize: "small", color: this.state.transliteratedText.length <= 512 ? "grey" : "red" }}>{_this.state.transliteratedText.length}/512</span>
+                    </>
                   )}
                   value={this.state.transliteratedText}
                   placeholder="Type your text here to convert...."
@@ -239,7 +251,18 @@ export default class TTS extends React.Component {
           >
             <Grid item>
               <div className="a4b-tts-convert">
-                <button onClick={this.getAudioOutput} className="asr-button">
+                <button onClick={()=>
+                  {
+                    // if((this.state.streamingText.length <= 512 && _this.state.inferenceMode === "WebSocket")||(this.state.transliteratedText.length <= 512 && _this.state.transliteratedText === "REST"))
+                    if((this.state.transliteratedText.length <= 512))
+                    {
+                      this.getAudioOutput()
+                    }
+                    else
+                    {
+                      this.setState({openLimit:true});
+                    }
+                  } } className="asr-button">
                   Convert
                 </button>
                 {this.state.isFetching ? (
@@ -312,7 +335,10 @@ export default class TTS extends React.Component {
                     _this.getStreamingOutput(e);
                   }}
                   renderComponent={(props) => (
-                    <textarea className="a4b-transliterate-text" {...props} />
+                    <>
+                      <textarea className="a4b-transliterate-text" {...props} />
+                      <TextField float={"right"} fontSize={"sm"} color={(this.state.streamingText.length<=512 ?"grey":"red")}>{this.state.streamingText.length}/512</TextField>
+                    </>
                   )}
                   enabled={
                     this.state.from !== "en" && this.state.enableTransliteration
@@ -464,7 +490,21 @@ export default class TTS extends React.Component {
           </label>
         </div>
         {this.setInferenceInterface()}
+        <Snackbar
+          open={this.state.openLimit}
+          autoHideDuration={3000}
+          onClose={() => this.handleClose()}
+        >
+          <Alert
+            onClose={() => this.handleClose()}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            Character Limit Exceeded
+          </Alert>
+        </Snackbar>
       </div>
+      
     );
   }
 }

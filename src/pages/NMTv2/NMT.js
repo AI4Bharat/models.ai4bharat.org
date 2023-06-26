@@ -30,6 +30,7 @@ export default class NMTV2 extends React.Component {
       translatedText: "",
       pipelineInput: null,
       pipelineOutput: null,
+      openLimit : false,
       isFetching: false,
       dataTracking: true,
       // nmtLanguages: [],
@@ -238,6 +239,14 @@ export default class NMTV2 extends React.Component {
     this.setState({ open: false });
   }
 
+  handleCloseLimit(event, reason) {
+    if (reason === "clickaway") {
+      this.setState({ openLimit: false });
+      return;
+    }
+    this.setState({ openLimit: false });
+  }
+
   render() {
     return (
       <div>
@@ -343,7 +352,12 @@ export default class NMTV2 extends React.Component {
                       this.state.sourceLanguage !== "en" &&
                       this.state.enableTransliteration
                     }
-                    renderComponent={(props) => <textarea {...props} />}
+                    renderComponent={(props) => 
+                      <>
+                      <textarea className="a4b-transliterate-text" {...props} />
+                      <span style={{ float: "right", fontSize: "small", color: this.state.transliteratedText.length <= 512 ? "grey" : "red" }}>{this.state.transliteratedText.length}/512</span>
+                      </>
+                  }
                     value={this.state.transliteratedText}
                     placeholder="Type your text here to Translate...."
                     onChangeText={(text) => {
@@ -354,7 +368,14 @@ export default class NMTV2 extends React.Component {
                 </Tooltip>
                 <Button
                   onClick={() => {
-                    this.getTranslation();
+                    if((this.state.transliteratedText.length <= 512))
+                    {
+                      this.getTranslation()
+                    }
+                    else
+                    {
+                      this.setState({openLimit:true});
+                    }
                   }}
                   sx={{
                     backgroundColor: "#f06b42",
@@ -428,6 +449,19 @@ export default class NMTV2 extends React.Component {
                     sx={{ width: "100%" }}
                   >
                     Translation Copied to Clipboard!
+                  </Alert>
+                </Snackbar>
+                <Snackbar
+                  open={this.state.openLimit}
+                  autoHideDuration={3000}
+                  onClose={() => this.handleCloseLimit()}
+                >
+                  <Alert
+                    onClose={() => this.handleCloseLimit()}
+                    severity="error"
+                    sx={{ width: "100%" }}
+                  >
+                    Character Limit Exceeded
                   </Alert>
                 </Snackbar>
                 {this.state.pipelineOutput && (
