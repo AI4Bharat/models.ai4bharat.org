@@ -22,7 +22,7 @@ import Select from "@mui/material/Select";
 import { FaMicrophone, FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation.js";
 
-import { Button } from "@mui/material";
+import { Button, Snackbar,Alert } from "@mui/material";
 
 import Recorder from "./Recorder.js";
 
@@ -33,6 +33,9 @@ export default class ASRWV extends React.Component {
     this.samplingRates = [48000, 16000, 8000];
 
     this.state = {
+      timer : 0,
+      timerInterval : null,
+      openLimit : false,
       inferenceMode: "WebSocket",
       languageChoice: localStorage.getItem("asrLanguageChoice"),
       samplingRateChoice: localStorage.getItem("samplingRateChoice"),
@@ -63,10 +66,34 @@ export default class ASRWV extends React.Component {
     console.log(window.Recorder);
   }
 
+
+  handleCloseLimit(event, reason) {
+    if (reason === "clickaway") {
+      this.setState({ openLimit: false });
+      return;
+    }
+    this.setState({ openLimit: false });
+  }
+
+
   startRecording() {
     const _this = this;
     _this.setState({ isRecording: !_this.state.isRecording });
     _this.setState({ asrAPIResult: "Recording Audio...." });
+
+    this.setState({ timer: 0 }, () => {
+      const interval = setInterval(() => {
+        this.setState(prevState => {
+          const newTimer = prevState.timer + 1;
+          if (newTimer > 120) {
+            this.setState({openLimit:true})
+            this.stopRecording() // Stop recording
+          }
+          return { timer: newTimer };
+        });
+      }, 1000);
+      this.setState({ timerInterval: interval });
+    });
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -97,6 +124,8 @@ export default class ASRWV extends React.Component {
 
   stopRecording() {
     console.log("Stopping Recording...");
+    clearInterval(this.state.timerInterval);
+    this.setState({ timerInterval: null });
     const _this = this;
     _this.setState({ isRecording: !_this.state.isRecording });
     _this.recorder.stop();
@@ -313,6 +342,9 @@ export default class ASRWV extends React.Component {
               className="a4b-text"
             ></textarea>
           </div>
+          {
+            this.state.isRecording && <span style={{color:"gray"}}>Recording Time : {this.state.timer}/120 seconds</span>
+          }
           <Documentation documentation={asrStreamingDocumentation} />
         </div>
       );
@@ -349,6 +381,9 @@ export default class ASRWV extends React.Component {
               className="a4b-text"
             />
           </div>
+          {
+            this.state.isRecording && <span style={{color:"gray"}}>Recording Time : {this.state.timer}/120 seconds</span>
+          }
           <div>
             <audio
               src={this.state.audioData}
@@ -543,6 +578,19 @@ export default class ASRWV extends React.Component {
           </label>
         </div>
         {this.setInferenceInterface()}
+        <Snackbar
+          open={this.state.openLimit}
+          autoHideDuration={3000}
+          onClose={() => this.handleCloseLimit()}
+        >
+          <Alert
+            onClose={() => this.handleCloseLimit()}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            Audio Time Limit Exceeded
+          </Alert>
+        </Snackbar>
       </div>
     );
   }
