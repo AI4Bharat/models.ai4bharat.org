@@ -15,11 +15,18 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
   const [feedback, setFeedback] = useState(initialFeedback);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openError, setOpenError] = useState(false);
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
     setOpen(false);
+  };
+  const handleError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenError(false);
   };
   const onSubmitFeedback = async () => {
     let feedbackRequest = {
@@ -37,8 +44,9 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
         },
         body: JSON.stringify(feedbackRequest),
       });
+      setOpen(true);
     } catch {
-      //   setErrorOpen(true);
+        setOpenError(true);
     }
   };
   useEffect(() => {
@@ -91,7 +99,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
                 },
               });
               setButtonClicked(true);
-              setOpen(true);
+              // setOpen(true);
             }}
             disabled={buttonClicked}
             sx={{
@@ -132,7 +140,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
                 },
               });
               setButtonClicked(true);
-              setOpen(true);
+              // setOpen(true);
             }}
             disabled={buttonClicked}
             sx={{
@@ -161,6 +169,15 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
               onClose={handleClose}
             >
               Feedback Submitted!
+            </Alert>
+          </Snackbar>
+          <Snackbar open={openError} onClose={handleError} autoHideDuration={3000}>
+            <Alert
+              severity="error"
+              sx={{ width: "100%" }}
+              onClose={handleClose}
+            >
+              Something went wrong, please try again later
             </Alert>
           </Snackbar>
         </div>

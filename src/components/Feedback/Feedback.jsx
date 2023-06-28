@@ -25,6 +25,8 @@ const Feedback = ({
   pipelineInput,
   pipelineOutput,
   taskType,
+  change,
+  setIsError
 }) => {
   const [feedback, setFeedback] = useState();
   const [alertOpen, setalertOpen] = useState(false);
@@ -54,6 +56,7 @@ const Feedback = ({
   };
 
   const fetchQuestions = async () => {
+    try{
     let response = await fetchFeedbackQuestions({
       feedbackLanguage: "en",
       supportedTasks: [taskType],
@@ -70,6 +73,12 @@ const Feedback = ({
     });
     response.taskFeedback = temp;
     setFeedback(response);
+  }
+  catch
+  {
+    setIsError(true);
+    change();
+  }
   };
 
   useEffect(() => {
@@ -533,8 +542,9 @@ const Feedback = ({
     }
   };
 
+  if(feedback)
   return (
-    feedback && (
+    (
       <>
         <h1 style={{ marginTop: "0rem" }}>Feedback</h1>
         {
@@ -707,10 +717,12 @@ const Feedback = ({
       </>
     )
   );
+  else return null;
 };
 
 export const FeedbackModal = (props) => {
   const [open, setOpen] = React.useState(false);
+  const [isError, setIsError] = useState(false);
   const handleOpen = () => {
     setIsLoading(true);
     setOpen(true);
@@ -722,6 +734,11 @@ export const FeedbackModal = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const handleClose = () => setOpen(false);
   useEffect(() => {}, []);
+
+  function handleState() {
+    handleClose()
+ }
+
 
   return (
     <>
@@ -774,16 +791,24 @@ export const FeedbackModal = (props) => {
         maxWidth="xl"
       >
         <DialogContent>
-          {/* <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
-            <CircularProgress />
-          </div> */}
           <Feedback
             {...props}
             setIsLoading={setIsLoading}
             handleModalClose={handleClose}
+            change = {handleState}
+            setIsError={setIsError}
           />
         </DialogContent>
       </Dialog>
+      <Snackbar
+        open={isError}
+        autoHideDuration={5000}
+        onClose={() => {
+          setIsError(false);
+        }}
+      >
+        <Alert severity="error">Something went wrong, please try again later.</Alert>
+      </Snackbar>
     </>
   );
 };
