@@ -23,12 +23,12 @@ const models = {
     about: `IndicXlit is a transformer-based multilingual transliteration model (~11M) for Roman to native script conversion and vice-versa that supports 21 Indic languages. It is trained on the Aksharantar dataset which is the largest publicly available parallel corpus containing 26 million word pairs spanning 20 Indic languages.`,
     link: "https://ai4bharat.org/transliteration",
   },
-  nmt: {
-    path: "nmt",
-    title: "Indic Translation v1",
-    about: `Translation model trained using Transformers v1`,
-    link: "https://ai4bharat.org/indic-trans",
-  },
+  // nmt: {
+  //   path: "nmt",
+  //   title: "Indic Translation v1",
+  //   about: `Translation model trained using Transformers v1`,
+  //   link: "https://ai4bharat.org/indic-trans",
+  // },
   nmtv2: {
     path: "nmt/v2",
     title: "Indic Translation v2",

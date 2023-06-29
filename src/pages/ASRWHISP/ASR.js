@@ -518,22 +518,12 @@ export default class ASRWhipserer extends React.Component {
           {LANGUAGE_KEY_TEXT.en}
         </MenuItem>
       );
-      choices.push(
-        <MenuItem key="hi" value="hi">
-          {LANGUAGE_KEY_TEXT.hi}
-        </MenuItem>
-      );
     }
 
     if (this.state.inferenceMode === "REST") {
       choices.push(
         <MenuItem key="en" value="en">
           {LANGUAGE_KEY_TEXT.en}
-        </MenuItem>
-      );
-      choices.push(
-        <MenuItem key="hi" value="hi">
-          {LANGUAGE_KEY_TEXT.hi}
         </MenuItem>
       );
     }

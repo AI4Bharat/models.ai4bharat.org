@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import ASRConformer from "./pages/ASRCONF/ASR";
@@ -32,7 +32,7 @@ root.render(
         <Route path="sts" element={<STS />} />
         <Route path="xlit" element={<XLit />} />
         <Route path="nlg" element={<NLG />} />
-        <Route path="nmt" element={<NMT />} />
+        <Route path="nmt" element={<Navigate to='/nmt/v2' />} />
         <Route path="nmt/v2" element={<NMTV2 />} />
         <Route path="ner" element={<NER />} />
         <Route path="tts">
