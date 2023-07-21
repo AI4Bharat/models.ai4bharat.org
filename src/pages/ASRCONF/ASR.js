@@ -16,7 +16,15 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { FaMicrophone, FaRegCopy } from "react-icons/fa";
 
-import { Button, FormControl, FormLabel, Grid, Switch, Snackbar, Alert } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Grid,
+  Switch,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 
 import Recorder from "./Recorder.js";
 
@@ -49,9 +57,9 @@ export default class ASRConformer extends React.Component {
       audioData: null,
       pipelineInput: null,
       pipelineOutput: null,
-      timer : 0,
-      timerInterval : null,
-      openLimit : false
+      timer: 0,
+      timerInterval: null,
+      openLimit: false,
     };
 
     this.openStream = this.openStream.bind(this);
@@ -73,11 +81,11 @@ export default class ASRConformer extends React.Component {
 
     this.setState({ timer: 0 }, () => {
       const interval = setInterval(() => {
-        this.setState(prevState => {
+        this.setState((prevState) => {
           const newTimer = prevState.timer + 1;
           if (newTimer > 120) {
-            this.setState({openLimit:true})
-            this.stopRecording() // Stop recording
+            this.setState({ openLimit: true });
+            this.stopRecording(); // Stop recording
           }
           return { timer: newTimer };
         });
@@ -383,9 +391,11 @@ export default class ASRConformer extends React.Component {
               className="a4b-text"
             ></textarea>
           </div>
-          {
-            this.state.isRecording && <span style={{color:"gray"}}>Recording Time : {this.state.timer}/120 seconds</span>
-          }
+          {this.state.isRecording && (
+            <span style={{ color: "gray" }}>
+              Recording Time : {this.state.timer}/120 seconds
+            </span>
+          )}
           {/* <Documentation documentation={asrStreamingDocumentation} /> */}
         </div>
       );
@@ -422,9 +432,11 @@ export default class ASRConformer extends React.Component {
               className="a4b-text"
             />
           </div>
-          {
-            this.state.isRecording && <span style={{color:"gray"}}>Recording Time : {this.state.timer}/120 seconds</span>
-          }
+          {this.state.isRecording && (
+            <span style={{ color: "gray" }}>
+              Recording Time : {this.state.timer}/120 seconds
+            </span>
+          )}
           <div>
             <Grid
               container
@@ -515,7 +527,10 @@ export default class ASRConformer extends React.Component {
     let choices = [];
     if (this.state.inferenceMode === "WebSocket") {
       this.ASR_LANGUAGE_CONFIGS.streaming
-        .filter((language) => language !== "ne" && language !== "si")
+        .filter(
+          (language) =>
+            language !== "ne" && language !== "si" && language !== "en"
+        )
         .map((language) => {
           choices.push(
             <MenuItem key={language} value={language}>
@@ -528,7 +543,10 @@ export default class ASRConformer extends React.Component {
 
     if (this.state.inferenceMode === "REST") {
       this.ASR_LANGUAGE_CONFIGS.rest
-        .filter((language) => language !== "ne" && language !== "si")
+        .filter(
+          (language) =>
+            language !== "ne" && language !== "si" && language !== "en"
+        )
         .map((language) => {
           choices.push(
             <MenuItem key={language} value={language}>
