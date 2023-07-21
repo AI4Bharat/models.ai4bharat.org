@@ -29,7 +29,7 @@ root.render(
         <Route path="asr" element={<ASRWV />} />
         <Route path="asr/conformer" element={<ASRConformer />} />
         <Route path="asr/" element={<ASRConformer />} />
-        <Route path="asr/whisperer" element={<ASRWhipserer />} />
+        <Route path="asr/whisper" element={<ASRWhipserer />} />
         <Route path="sts" element={<STS />} />
         <Route path="xlit" element={<XLit />} />
         <Route path="nlg" element={<NLG />} />
