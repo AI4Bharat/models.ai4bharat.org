@@ -1,14 +1,8 @@
 const models = {
-  asr: {
-    path: "asr",
-    title: "Indic Wave2Vec",
-    about: `IndicTinyASR is a conformer based ASR model containing only 30M parameters, to support real-time ASR systems for Indian languages. The model is trained on KathBath, Shrutilipi and MUCS datasets. The model can be deployed on an android device and can be accessed via websockets. It supports both streaming and non-streaming mode.`,
-    link: "",
-  },
   asrconf: {
     path: "asr/conformer",
     title: "Indic Speech-to-Text Conformer",
-    about: `ASR model trained using Conformer architecture`,
+    about: `IndicConformer is a conformer based ASR model containing only 30M parameters, to support real-time ASR systems for Indian languages. The model is trained on ULCA, KathBath, Shrutilipi and MUCS datasets. The model can be deployed on an android device and can be accessed via websockets.`,
     link: "",
   },
   asrwhisp: {

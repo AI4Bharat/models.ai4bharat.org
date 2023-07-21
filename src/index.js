@@ -9,7 +9,7 @@ import XLit from "./pages/XLIT/XLIT";
 import Home from "./pages/Home/Home";
 import NLG from "./pages/NLG/NLG";
 import NMT from "./pages/NMTv1/NMT";
-import NMTV2  from "./pages/NMTv2/NMT";
+import NMTV2 from "./pages/NMTv2/NMT";
 import TTS from "./pages/TTS/TTS";
 import NER from "./pages/NER/NER";
 import STS from "./pages/STS/STS";
@@ -28,11 +28,11 @@ root.render(
         <Route index element={<Home />} />
         <Route path="asr" element={<ASRWV />} />
         <Route path="asr/conformer" element={<ASRConformer />} />
-        <Route path="asr/whisper" element={<ASRWhipserer />} />
+        <Route path="asr/" element={<ASRConformer />} />
         <Route path="sts" element={<STS />} />
         <Route path="xlit" element={<XLit />} />
         <Route path="nlg" element={<NLG />} />
-        <Route path="nmt" element={<Navigate to='/nmt/v2' />} />
+        <Route path="nmt" element={<Navigate to="/nmt/v2" />} />
         <Route path="nmt/v2" element={<NMTV2 />} />
         <Route path="ner" element={<NER />} />
         <Route path="tts">
