@@ -22,7 +22,7 @@ import Select from "@mui/material/Select";
 import { FaMicrophone, FaRegCopy } from "react-icons/fa";
 import Documentation from "../../components/A4BDocumentation/Documentation.js";
 
-import { Button, Snackbar,Alert } from "@mui/material";
+import { Button, Snackbar, Alert } from "@mui/material";
 
 import Recorder from "./Recorder.js";
 
@@ -33,10 +33,10 @@ export default class ASRWV extends React.Component {
     this.samplingRates = [48000, 16000, 8000];
 
     this.state = {
-      timer : 0,
-      timerInterval : null,
-      openLimit : false,
-      inferenceMode: "WebSocket",
+      timer: 0,
+      timerInterval: null,
+      openLimit: false,
+      inferenceMode: "REST",
       languageChoice: localStorage.getItem("asrLanguageChoice"),
       samplingRateChoice: localStorage.getItem("samplingRateChoice"),
       processorChoice: JSON.parse(localStorage.getItem("processorChoice"))[
@@ -66,7 +66,6 @@ export default class ASRWV extends React.Component {
     console.log(window.Recorder);
   }
 
-
   handleCloseLimit(event, reason) {
     if (reason === "clickaway") {
       this.setState({ openLimit: false });
@@ -75,7 +74,6 @@ export default class ASRWV extends React.Component {
     this.setState({ openLimit: false });
   }
 
-
   startRecording() {
     const _this = this;
     _this.setState({ isRecording: !_this.state.isRecording });
@@ -83,11 +81,11 @@ export default class ASRWV extends React.Component {
 
     this.setState({ timer: 0 }, () => {
       const interval = setInterval(() => {
-        this.setState(prevState => {
+        this.setState((prevState) => {
           const newTimer = prevState.timer + 1;
           if (newTimer > 120) {
-            this.setState({openLimit:true})
-            this.stopRecording() // Stop recording
+            this.setState({ openLimit: true });
+            this.stopRecording(); // Stop recording
           }
           return { timer: newTimer };
         });
@@ -148,29 +146,20 @@ export default class ASRWV extends React.Component {
     var payload = JSON.stringify({
       config: {
         language: {
-          sourceLanguage: this.state.languageChoice,
+          sourceLanguage: "hi",
         },
         transcriptionFormat: {
           value: "transcript",
         },
         audioFormat: "wav",
-        samplingRate:
-          this.state.languageChoice === "ta"
-            ? 16000
-            : this.state.samplingRateChoice,
-        postProcessors:
-          this.state.processorChoice.length === 0
-            ? null
-            : this.state.processorChoice,
+        enableInverseTextNormalization: true,
+        postProcessors: ["numbers_only"],
       },
       audio: [
         {
           audioContent: asrInput,
         },
       ],
-      controlConfig: {
-        dataTracking: true,
-      },
     });
 
     var requestOptions = {
@@ -181,10 +170,7 @@ export default class ASRWV extends React.Component {
     };
 
     console.log(payload);
-    const ASR_REST_URL = `${
-      ASR_REST_URLS[this.state.languageChoice]
-    }/asr/v1/recognize/${this.state.languageChoice}`;
-    fetch(ASR_REST_URL, requestOptions)
+    fetch("https://asr-api.ai4bharat.org/asr/v1/recognize/hi", requestOptions)
       .then((response) => response.text())
       .then((result) => {
         console.log(result);
@@ -342,9 +328,11 @@ export default class ASRWV extends React.Component {
               className="a4b-text"
             ></textarea>
           </div>
-          {
-            this.state.isRecording && <span style={{color:"gray"}}>Recording Time : {this.state.timer}/120 seconds</span>
-          }
+          {this.state.isRecording && (
+            <span style={{ color: "gray" }}>
+              Recording Time : {this.state.timer}/120 seconds
+            </span>
+          )}
           <Documentation documentation={asrStreamingDocumentation} />
         </div>
       );
@@ -381,9 +369,11 @@ export default class ASRWV extends React.Component {
               className="a4b-text"
             />
           </div>
-          {
-            this.state.isRecording && <span style={{color:"gray"}}>Recording Time : {this.state.timer}/120 seconds</span>
-          }
+          {this.state.isRecording && (
+            <span style={{ color: "gray" }}>
+              Recording Time : {this.state.timer}/120 seconds
+            </span>
+          )}
           <div>
             <audio
               src={this.state.audioData}
@@ -487,7 +477,7 @@ export default class ASRWV extends React.Component {
         </section>
         <hr className="hr-split" />
         <div className="common-options">
-          <label className="a4b-option">
+          {/* <label className="a4b-option">
             Interface Type :
             <Select
               disabled={this.state.isStreaming || this.state.isRecording}
@@ -505,8 +495,8 @@ export default class ASRWV extends React.Component {
               <MenuItem value="WebSocket">Streaming (WebSocket)</MenuItem>
               <MenuItem value="REST">REST (API)</MenuItem>
             </Select>
-          </label>
-          <label className="a4b-option">
+          </label> */}
+          {/* <label className="a4b-option">
             Language :
             <Select
               disabled={this.state.isStreaming || this.state.isRecording}
@@ -523,7 +513,7 @@ export default class ASRWV extends React.Component {
             >
               {this.renderLanguageChoice()}
             </Select>
-          </label>
+          </label> */}
           <label className="a4b-option">
             Post Processor :
             <Select

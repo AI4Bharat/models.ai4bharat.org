@@ -11,6 +11,12 @@ const models = {
     about: `ASR model trained using Whisperer architecture`,
     link: "",
   },
+  asrnums: {
+    path: "asr/numbers",
+    title: "Indic Speech-to-Text With Numbers",
+    about: `ASR Conformer Models capable of recognizing and parsing Indic Speech followed by numbers.`,
+    link: "",
+  },
   xlit: {
     path: "xlit",
     title: "Indic Transliterate",
