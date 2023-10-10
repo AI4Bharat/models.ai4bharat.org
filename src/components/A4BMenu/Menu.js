@@ -23,10 +23,6 @@ export default class A4BMenu extends React.Component {
       "": ["Home", <FaHome />],
       asr: ["Indic Speech-to-Text (ASR)", <FaRegFileAudio />],
       "asr/whisper": ["Indic Speech-to-Text Whisper (ASR)", <FaRegFileAudio />],
-      "asr/numbers": [
-        "Indic Speech-to-Text Conformer Numbers (ASR)",
-        <FaRegFileAudio />,
-      ],
       "asr/conformer": [
         "Indic Speech-to-Text Conformer (ASR)",
         <FaRegFileAudio />,

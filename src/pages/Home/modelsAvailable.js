@@ -7,14 +7,8 @@ const models = {
   },
   asrwhisp: {
     path: "asr/whisper",
-    title: "Indic Speech-to-Text Whisperer",
-    about: `ASR model trained using Whisperer architecture`,
-    link: "",
-  },
-  asrnums: {
-    path: "asr/numbers",
-    title: "Indic Speech-to-Text With Numbers",
-    about: `ASR Conformer Models capable of recognizing and parsing Indic Speech followed by numbers.`,
+    title: "Indic Speech-to-Text Whisper",
+    about: `ASR model trained using Whisper architecture`,
     link: "",
   },
   xlit: {
@@ -32,7 +26,7 @@ const models = {
   nmtv2: {
     path: "nmt/v2",
     title: "Indic Translation v2",
-    about: `Translation model trained using Transformers v2`,
+    about: `IndicTrans2 is the first open-source transformer-based multilingual NMT model that supports high-quality translations across all the 22 scheduled Indic languages — including multiple scripts for low-resouce languages like Kashmiri, Manipuri and Sindhi. It adopts script unification wherever feasible to leverage transfer learning by lexical sharing between languages. Overall, the model supports five scripts Perso-Arabic (Kashmiri, Sindhi, Urdu), Ol Chiki (Santali), Meitei (Manipuri), Latin (English), and Devanagari (used for all the remaining languages).`,
     link: "https://ai4bharat.org/indic-trans",
   },
   nlg: {
