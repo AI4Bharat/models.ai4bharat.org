@@ -457,7 +457,16 @@ export default class STS extends React.Component {
     if (this.state.inferenceMode === "WebSocket") {
       this.ASR_LANGUAGE_CONFIGS.streaming.map((language) => {
         choices.push(
-          <MenuItem key={language} value={language}>
+          <MenuItem
+            key={language}
+            value={language}
+            sx={{
+              margin: 1,
+              minHeight: "auto",
+              border: "2px solid #d7d7d7",
+              borderRadius: "9px",
+            }}
+          >
             {LANGUAGE_KEY_TEXT[language]}
           </MenuItem>
         );
@@ -467,7 +476,16 @@ export default class STS extends React.Component {
     if (this.state.inferenceMode === "REST") {
       Object.entries(this.languages).forEach(([language, label]) => {
         choices.push(
-          <MenuItem key={language} value={language}>
+          <MenuItem
+            key={language}
+            value={language}
+            sx={{
+              margin: 1,
+              minHeight: "auto",
+              border: "2px solid #d7d7d7",
+              borderRadius: "9px",
+            }}
+          >
             {label}
           </MenuItem>
         );
@@ -503,9 +521,9 @@ export default class STS extends React.Component {
             <img
               alt="a4blogo"
               className="a4b-logo"
-              width={50}
-              height={50}
-              src={require("../../media/ai4bharat.jpg")}
+              width={80}
+              height={80}
+              src={require("../../media/ai4bharatlogo.png")}
             ></img>
             <span className="orange-color">AI4Bharat </span>
             Speech2Speech
@@ -523,9 +541,24 @@ export default class STS extends React.Component {
               disabled={this.state.isStreaming || this.state.isRecording}
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "200px",
+                    padding: "3px",
+                    // Set the width of the dropdown
+                    right: "-9px",
+                    border: "1px solid #ccc",
+                  },
+                },
               }}
               value={this.state.sourceLanguage}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               onChange={(e) => {
                 this.setState({ sourceLanguage: e.target.value, asrText: "" });
               }}
@@ -540,9 +573,24 @@ export default class STS extends React.Component {
               disabled={this.state.isStreaming || this.state.isRecording}
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "200px",
+                    padding: "3px",
+                    // Set the width of the dropdown
+                    right: "-9px",
+                    border: "1px solid #ccc",
+                  },
+                },
               }}
               value={this.state.targetLanguage}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               onChange={(e) => {
                 this.setState({ targetLanguage: e.target.value, asrText: "" });
               }}
@@ -556,19 +604,50 @@ export default class STS extends React.Component {
             <Select
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "200px",
+                    padding: "3px",
+                    // Set the width of the dropdown
+                    right: "-9px",
+                    border: "1px solid #ccc",
+                  },
+                },
               }}
               value={this.state.voiceGender}
               onChange={(e) => {
                 this.setState({ voiceGender: e.target.value });
                 localStorage.setItem("ttsVoiceGender", e.target.value);
               }}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               className="a4b-option-select"
             >
-              <MenuItem sx={{ margin: 1 }} value={"male"}>
+              <MenuItem
+                sx={{
+                  margin: 1,
+                  minHeight: "auto",
+                  border: "2px solid #d7d7d7",
+                  borderRadius: "9px",
+                }}
+                value={"male"}
+              >
                 Male
               </MenuItem>
-              <MenuItem sx={{ margin: 1 }} value={"female"}>
+              <MenuItem
+                sx={{
+                  margin: 1,
+                  minHeight: "auto",
+                  border: "2px solid #d7d7d7",
+                  borderRadius: "9px",
+                }}
+                value={"female"}
+              >
                 Female
               </MenuItem>
             </Select>

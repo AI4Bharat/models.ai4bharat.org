@@ -111,9 +111,9 @@ export default class NER extends React.Component {
             <img
               className="a4b-logo"
               alt="a4blogo"
-              width={50}
-              height={50}
-              src={require("../../media/ai4bharat.jpg")}
+              width={80}
+              height={80}
+              src={require("../../media/ai4bharatlogo.png")}
             ></img>
             <span className="orange-color">AI4Bharat </span>
             Indic Named Entity Recognition (NER)
@@ -122,25 +122,45 @@ export default class NER extends React.Component {
             Try out Named Entity Recognition across 11 Indian Languages!
           </p>
         </section>
-        <hr className="hr-split" />
+
         <div className="common-options">
           <label className="a4b-option">
             Language:
             <Select
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "250px",
+                    borderRadius: "8px",
+                    width: "250px", // Set the width of the dropdown
+                  },
+                },
               }}
               value={this.state.languageChoice}
               onChange={(e) => {
                 this.setState({ languageChoice: e.target.value });
                 localStorage.setItem("ttsLanguageChoice", e.target.value);
               }}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               className="a4b-option-select"
             >
               {Object.entries(this.languages).map(([language, optionText]) => {
                 return (
-                  <MenuItem key={language} sx={{ margin: 1 }} value={language}>
+                  <MenuItem
+                    key={language}
+                    sx={{
+                      margin: 1,
+                      minHeight: "auto",
+                      border: "2px solid #d7d7d7",
+                      borderRadius: "9px",
+                    }}
+                    value={language}
+                  >
                     {optionText}
                   </MenuItem>
                 );

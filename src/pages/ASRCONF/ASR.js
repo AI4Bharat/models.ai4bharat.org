@@ -259,15 +259,37 @@ export default class ASRConformer extends React.Component {
     const _this = this;
     if (_this.state.isStreaming) {
       return (
-        <button onClick={_this.closeStream} className="a4b-mic-recording">
+        <Button
+          onClick={_this.closeStream}
+          sx={{
+            width: "100",
+            height: 50,
+            color: "#4a4a4a",
+            borderColor: "#4a4a4a",
+            marginTop: 1,
+          }}
+          size="large"
+          variant="outlined"
+        >
           <FaMicrophone className="a4b-mic-logo" />
-        </button>
+        </Button>
       );
     } else {
       return (
-        <button onClick={_this.openStream} className="a4b-mic">
+        <Button
+          onClick={_this.openStream}
+          sx={{
+            width: 10,
+            height: 50,
+            color: "#4a4a4a",
+            borderColor: "#4a4a4a",
+            marginTop: 1,
+          }}
+          size="large"
+          variant="outlined"
+        >
           <FaMicrophone className="a4b-mic-logo" />
-        </button>
+        </Button>
       );
     }
   }
@@ -275,15 +297,37 @@ export default class ASRConformer extends React.Component {
   renderRecordButton() {
     if (this.state.isRecording) {
       return (
-        <button onClick={this.stopRecording} className="a4b-mic-recording">
+        <Button
+          onClick={this.stopRecording}
+          sx={{
+            width: 10,
+            height: 50,
+            color: "#4a4a4a",
+            borderColor: "#4a4a4a",
+            marginTop: 1,
+          }}
+          size="large"
+          variant="outlined"
+        >
           <FaMicrophone className="a4b-mic-logo" />
-        </button>
+        </Button>
       );
     } else {
       return (
-        <button onClick={this.startRecording} className="a4b-mic">
+        <Button
+          onClick={this.startRecording}
+          sx={{
+            width: 10,
+            height: 50,
+            color: "#4a4a4a",
+            borderColor: "#4a4a4a",
+            marginTop: 1,
+          }}
+          size="large"
+          variant="outlined"
+        >
           <FaMicrophone className="a4b-mic-logo" />
-        </button>
+        </Button>
       );
     }
   }
@@ -408,7 +452,7 @@ export default class ASRConformer extends React.Component {
               {_this.renderRecordButton()}
               <Button
                 sx={{
-                  width: 10,
+                  width: "100%",
                   height: 50,
                   color: "#4a4a4a",
                   borderColor: "#4a4a4a",
@@ -472,6 +516,7 @@ export default class ASRConformer extends React.Component {
                           this.getASROutput(asrInput);
                         };
                       }}
+                      style={{ cursor: "pointer", display: "none" }}
                     />
                   </label>
                   <span className="a4b-file-upload-name">
@@ -485,7 +530,7 @@ export default class ASRConformer extends React.Component {
                       justifyContent: "center",
                     }}
                   >
-                    <FormLabel>
+                    <FormLabel className="custom-form-label">
                       Allow the AI to be improved by usage analysis.
                     </FormLabel>
                     <Switch
@@ -525,6 +570,16 @@ export default class ASRConformer extends React.Component {
 
   renderLanguageChoice() {
     let choices = [];
+    const optionStyle = {
+      padding: "10px",
+      // Border at the bottom for separation
+      transition: "background-color 0.3s", // Smooth background color transition
+    };
+
+    const hoverStyle = {
+      backgroundColor: "#f9f9f9", // Background color on hover
+    };
+
     if (this.state.inferenceMode === "WebSocket") {
       this.ASR_LANGUAGE_CONFIGS.streaming
         .filter(
@@ -533,7 +588,16 @@ export default class ASRConformer extends React.Component {
         )
         .map((language) => {
           choices.push(
-            <MenuItem key={language} value={language}>
+            <MenuItem
+              key={language}
+              value={language}
+              sx={{
+                margin: 1,
+                minHeight: "auto",
+                border: "2px solid #d7d7d7",
+                borderRadius: "9px",
+              }}
+            >
               {LANGUAGE_KEY_TEXT[language]}
             </MenuItem>
           );
@@ -549,13 +613,24 @@ export default class ASRConformer extends React.Component {
         )
         .map((language) => {
           choices.push(
-            <MenuItem key={language} value={language}>
+            <MenuItem
+              key={language}
+              value={language}
+              style={{ ...optionStyle }}
+              sx={{
+                margin: 1,
+                minHeight: "auto",
+                border: "2px solid #d7d7d7",
+                borderRadius: "9px",
+              }}
+            >
               {LANGUAGE_KEY_TEXT[language]}
             </MenuItem>
           );
           return true;
         });
     }
+
     return choices;
   }
 
@@ -586,9 +661,9 @@ export default class ASRConformer extends React.Component {
             <img
               alt="a4blogo"
               className="a4b-logo"
-              width={50}
-              height={50}
-              src={require("../../media/ai4bharat.jpg")}
+              width={80}
+              height={80}
+              src={require("../../media/ai4bharatlogo.png")}
             ></img>
             <span className="orange-color">AI4Bharat </span>
             Speech-to-Text using {this.state.inferenceMode}
@@ -597,7 +672,7 @@ export default class ASRConformer extends React.Component {
             Run speech models in real-time for Indian Languages!
           </p>
         </section>
-        <hr className="hr-split" />
+
         <div className="common-options">
           <label className="a4b-option">
             Interface Type :
@@ -605,16 +680,36 @@ export default class ASRConformer extends React.Component {
               disabled={this.state.isStreaming || this.state.isRecording}
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "100px", // Set the width of the dropdown
+                  },
+                },
               }}
               value={this.state.inferenceMode}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               className="a4b-option-select"
               onChange={(e) => {
                 this.setInferenceMode(e.target.value);
                 this.handleModeChange();
               }}
             >
-              <MenuItem value="REST">REST (API)</MenuItem>
+              <MenuItem
+                sx={{
+                  margin: 1,
+                  border: "2px solid #d7d7d7",
+                  borderRadius: "6px",
+                }}
+                value="REST"
+              >
+                REST (API)
+              </MenuItem>
             </Select>
           </label>
           <label className="a4b-option">
@@ -623,9 +718,24 @@ export default class ASRConformer extends React.Component {
               disabled={this.state.isStreaming || this.state.isRecording}
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "200px",
+                    padding: "3px",
+                    // Set the width of the dropdown
+                    right: "-9px",
+                    border: "1px solid #ccc",
+                  },
+                },
               }}
               value={this.state.languageChoice}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               onChange={(e) => {
                 this.setState({ languageChoice: e.target.value, asrText: "" });
                 localStorage.setItem("asrLanguageChoice", e.target.value);
@@ -642,9 +752,23 @@ export default class ASRConformer extends React.Component {
               multiple
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "200px",
+                    padding: "3px",
+                    // Set the width of the dropdown
+                    right: "-9px",
+                  },
+                },
               }}
               value={this.state.processorChoice}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               onChange={(event) => {
                 const {
                   target: { value },
@@ -670,7 +794,11 @@ export default class ASRConformer extends React.Component {
               MenuProps={{
                 disableScrollLock: true,
               }}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               value={this.state.samplingRateChoice}
               onChange={(e) => {
                 localStorage.setItem("samplingRateChoice", e.target.value);
@@ -682,19 +810,21 @@ export default class ASRConformer extends React.Component {
             >
               {this.samplingRates.map((value, index) => {
                 return (
-                  <MenuItem key={value} value={value}>{`${value} Hz`}</MenuItem>
+                  <MenuItem
+                    sx={{
+                      margin: 1,
+                      minHeight: "auto",
+                      border: "2px solid #d7d7d7",
+                      borderRadius: "9px",
+                    }}
+                    key={value}
+                    value={value}
+                  >{`${value} Hz`}</MenuItem>
                 );
               })}
             </Select>
           </label>
         </div>
-        {/* {this.state.pipelineOutput && (
-          <FeedbackModal
-            pipelineInput={this.state.pipelineInput}
-            pipelineOutput={this.state.pipelineOutput}
-            taskType={"asr"}
-          />
-        )} */}
         {this.setInferenceInterface()}
         <Snackbar
           open={this.state.openLimit}

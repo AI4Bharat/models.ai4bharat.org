@@ -111,9 +111,9 @@ export default class NLG extends React.Component {
             <img
               className="a4b-logo"
               alt="a4blogo"
-              width={50}
-              height={50}
-              src={require("../../media/ai4bharat.jpg")}
+              width={80}
+              height={80}
+              src={require("../../media/ai4bharatlogo.png")}
             ></img>
             <span className="orange-color">AI4Bharat </span>
             Indic Natural Language Generation (NLG)
@@ -122,19 +122,34 @@ export default class NLG extends React.Component {
             Generate text in real-time across various Indian Languages.
           </p>
         </section>
-        <hr className="hr-split" />
+
         <div className="common-options">
           <label className="a4b-option">
             Language:
             <Select
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "200px",
+                    padding: "3px",
+                    // Set the width of the dropdown
+                    right: "-9px",
+                  },
+                },
               }}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               className="a4b-option-select"
               value={this.state.languageChoice}
               onChange={(e) => {
                 this.setState({ languageChoice: e.target.value });
+
                 localStorage.setItem("nlgLanguageChoice", e.target.value);
               }}
             >
@@ -143,7 +158,11 @@ export default class NLG extends React.Component {
                   return (
                     <MenuItem
                       key={language}
-                      sx={{ margin: 1 }}
+                      sx={{
+                        margin: 1,
+                        border: "2px solid #d7d7d7",
+                        borderRadius: 3,
+                      }}
                       value={language}
                     >
                       {optionText[0]}
@@ -158,8 +177,22 @@ export default class NLG extends React.Component {
             <Select
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "200px",
+                    padding: "3px",
+                    // Set the width of the dropdown
+                    right: "-9px",
+                  },
+                },
               }}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               className="a4b-option-select"
               value={this.state.task}
               onChange={(e) => {
@@ -169,7 +202,16 @@ export default class NLG extends React.Component {
             >
               {this.tasks.map((task) => {
                 return (
-                  <MenuItem key={task} sx={{ margin: 1 }} value={task}>
+                  /*i have updated here*/
+                  <MenuItem
+                    key={task}
+                    sx={{
+                      margin: 1,
+                      border: "2px solid #d7d7d7",
+                      borderRadius: 3,
+                    }}
+                    value={task}
+                  >
                     {task}
                   </MenuItem>
                 );
@@ -253,6 +295,7 @@ export default class NLG extends React.Component {
               placeholder="View Generated Text here....."
               className="a4b-output-text"
               readOnly
+              style={{ width: "100%", minHeight: "100px" }}
             />
           </div>
           <Documentation documentation={nlgDocumentation} />

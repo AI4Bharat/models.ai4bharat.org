@@ -11,7 +11,15 @@ import {
   StreamingClient,
 } from "@project-sunbird/open-speech-streaming-client";
 
-import { Button, FormControl, FormLabel, Grid, Switch, Snackbar, Alert } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Grid,
+  Switch,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -48,9 +56,9 @@ export default class ASRWhipserer extends React.Component {
       audioData: null,
       pipelineInput: null,
       pipelineOutput: null,
-      timer : 0,
-      timerInterval : null,
-      openLimit : false
+      timer: 0,
+      timerInterval: null,
+      openLimit: false,
     };
 
     this.openStream = this.openStream.bind(this);
@@ -72,11 +80,11 @@ export default class ASRWhipserer extends React.Component {
 
     this.setState({ timer: 0 }, () => {
       const interval = setInterval(() => {
-        this.setState(prevState => {
+        this.setState((prevState) => {
           const newTimer = prevState.timer + 1;
           if (newTimer > 120) {
-            this.setState({openLimit:true})
-            this.stopRecording() // Stop recording
+            this.setState({ openLimit: true });
+            this.stopRecording(); // Stop recording
           }
           return { timer: newTimer };
         });
@@ -381,9 +389,11 @@ export default class ASRWhipserer extends React.Component {
               className="a4b-text"
             ></textarea>
           </div>
-          {
-            this.state.isRecording && <span style={{color:"gray"}}>Recording Time : {this.state.timer}/120 seconds</span>
-          }
+          {this.state.isRecording && (
+            <span style={{ color: "gray" }}>
+              Recording Time : {this.state.timer}/120 seconds
+            </span>
+          )}
           {/* <Documentation documentation={asrStreamingDocumentation} /> */}
         </div>
       );
@@ -420,9 +430,11 @@ export default class ASRWhipserer extends React.Component {
               className="a4b-text"
             />
           </div>
-          {
-            this.state.isRecording && <span style={{color:"gray"}}>Recording Time : {this.state.timer}/120 seconds</span>
-          }
+          {this.state.isRecording && (
+            <span style={{ color: "gray" }}>
+              Recording Time : {this.state.timer}/120 seconds
+            </span>
+          )}
           <div>
             <Grid
               container
@@ -522,7 +534,16 @@ export default class ASRWhipserer extends React.Component {
 
     if (this.state.inferenceMode === "REST") {
       choices.push(
-        <MenuItem key="en" value="en">
+        <MenuItem
+          key="en"
+          value="en"
+          sx={{
+            margin: 1,
+            minHeight: "auto",
+            border: "2px solid #d7d7d7",
+            borderRadius: "9px",
+          }}
+        >
           {LANGUAGE_KEY_TEXT.en}
         </MenuItem>
       );
@@ -558,9 +579,9 @@ export default class ASRWhipserer extends React.Component {
             <img
               alt="a4blogo"
               className="a4b-logo"
-              width={50}
-              height={50}
-              src={require("../../media/ai4bharat.jpg")}
+              width={80}
+              height={80}
+              src={require("../../media/ai4bharatlogo.png")}
             ></img>
             <span className="orange-color">AI4Bharat </span>
             Speech-to-Text using {this.state.inferenceMode}
@@ -569,7 +590,7 @@ export default class ASRWhipserer extends React.Component {
             Run speech models in real-time for Indian Languages!
           </p>
         </section>
-        <hr className="hr-split" />
+
         <div className="common-options">
           <label className="a4b-option">
             Interface Type :
@@ -577,16 +598,36 @@ export default class ASRWhipserer extends React.Component {
               disabled={this.state.isStreaming || this.state.isRecording}
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "100px", // Set the width of the dropdown
+                  },
+                },
               }}
               value={this.state.inferenceMode}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               className="a4b-option-select"
               onChange={(e) => {
                 this.setInferenceMode(e.target.value);
                 this.handleModeChange();
               }}
             >
-              <MenuItem value="REST">REST (API)</MenuItem>
+              <MenuItem
+                sx={{
+                  margin: 1,
+                  border: "2px solid #d7d7d7",
+                  borderRadius: "6px",
+                }}
+                value="REST"
+              >
+                REST (API)
+              </MenuItem>
             </Select>
           </label>
           <label className="a4b-option">
@@ -595,9 +636,24 @@ export default class ASRWhipserer extends React.Component {
               disabled={this.state.isStreaming || this.state.isRecording}
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "200px",
+                    padding: "3px",
+                    // Set the width of the dropdown
+                    right: "-9px",
+                    border: "1px solid #ccc",
+                  },
+                },
               }}
               value={this.state.languageChoice}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               onChange={(e) => {
                 this.setState({ languageChoice: e.target.value, asrText: "" });
                 localStorage.setItem("asrLanguageChoice", e.target.value);
@@ -614,9 +670,23 @@ export default class ASRWhipserer extends React.Component {
               multiple
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "200px",
+                    padding: "3px",
+                    // Set the width of the dropdown
+                    right: "-9px",
+                  },
+                },
               }}
               value={this.state.processorChoice}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               onChange={(event) => {
                 const {
                   target: { value },
@@ -642,7 +712,11 @@ export default class ASRWhipserer extends React.Component {
               MenuProps={{
                 disableScrollLock: true,
               }}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               value={this.state.samplingRateChoice}
               onChange={(e) => {
                 localStorage.setItem("samplingRateChoice", e.target.value);
@@ -654,7 +728,16 @@ export default class ASRWhipserer extends React.Component {
             >
               {this.samplingRates.map((value, index) => {
                 return (
-                  <MenuItem key={value} value={value}>{`${value} Hz`}</MenuItem>
+                  <MenuItem
+                    sx={{
+                      margin: 1,
+                      minHeight: "auto",
+                      border: "2px solid #d7d7d7",
+                      borderRadius: "9px",
+                    }}
+                    key={value}
+                    value={value}
+                  >{`${value} Hz`}</MenuItem>
                 );
               })}
             </Select>

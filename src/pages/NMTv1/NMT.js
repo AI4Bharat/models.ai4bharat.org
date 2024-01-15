@@ -32,7 +32,7 @@ export default class NMT extends React.Component {
       dataTracking: true,
       pipelineOutput: null,
       isFetching: false,
-      openLimit : false,
+      openLimit: false,
       enableTransliteration: true,
     };
 
@@ -167,7 +167,6 @@ export default class NMT extends React.Component {
     this.setState({ openLimit: false });
   }
 
-
   render() {
     return (
       <div>
@@ -176,9 +175,9 @@ export default class NMT extends React.Component {
             <img
               className="a4b-logo"
               alt="a4blogo"
-              width={50}
-              height={50}
-              src={require("../../media/ai4bharat.jpg")}
+              width={80}
+              height={80}
+              src={require("../../media/ai4bharatlogo.png")}
             ></img>
             <span className="orange-color">AI4Bharat </span>
             Indic Translation (NMT)
@@ -187,7 +186,7 @@ export default class NMT extends React.Component {
             Translate in real-time across various Indian Languages!
           </p>
         </section>
-        <hr className="hr-split" />
+
         <>
           <div className="common-options">
             <label className="a4b-option">
@@ -279,12 +278,26 @@ export default class NMT extends React.Component {
                         this.state.from !== "en" &&
                         this.state.enableTransliteration
                       }
-                      renderComponent={(props) => 
+                      renderComponent={(props) => (
                         <>
-                        <textarea className="a4b-transliterate-text" {...props} />
-                        <span style={{ float: "right", fontSize: "small", color: this.state.transliteratedText.length <= 512 ? "grey" : "red" }}>{this.state.transliteratedText.length}/512</span>
+                          <textarea
+                            className="a4b-transliterate-text"
+                            {...props}
+                          />
+                          <span
+                            style={{
+                              float: "right",
+                              fontSize: "small",
+                              color:
+                                this.state.transliteratedText.length <= 512
+                                  ? "#d7d7d7"
+                                  : "red",
+                            }}
+                          >
+                            {this.state.transliteratedText.length}/512
+                          </span>
                         </>
-                    }
+                      )}
                       value={this.state.transliteratedText}
                       placeholder="Type your text here to Translate...."
                       onChangeText={(text) => {
@@ -296,13 +309,10 @@ export default class NMT extends React.Component {
                 </div>
                 <Button
                   onClick={() => {
-                    if((this.state.transliteratedText.length <= 512))
-                    {
-                      this.getTranslation()
-                    }
-                    else
-                    {
-                      this.setState({openLimit:true});
+                    if (this.state.transliteratedText.length <= 512) {
+                      this.getTranslation();
+                    } else {
+                      this.setState({ openLimit: true });
                     }
                   }}
                   sx={{

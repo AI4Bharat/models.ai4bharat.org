@@ -13,7 +13,16 @@ import Select from "@mui/material/Select";
 import Skeleton from "@mui/material/Skeleton";
 import { FeedbackModal } from "../../components/Feedback/Feedback.jsx";
 
-import { FormControl, FormLabel, Grid, Switch, Tooltip, Snackbar, Alert, TextField } from "@mui/material";
+import {
+  FormControl,
+  FormLabel,
+  Grid,
+  Switch,
+  Tooltip,
+  Snackbar,
+  Alert,
+  TextField,
+} from "@mui/material";
 import { io } from "socket.io-client";
 import QuickFeedback from "../../components/Feedback/QuickFeedback.jsx";
 
@@ -229,7 +238,18 @@ export default class TTS extends React.Component {
                   renderComponent={(props) => (
                     <>
                       <textarea className="a4b-transliterate-text" {...props} />
-                      <span style={{ float: "right", fontSize: "small", color: this.state.transliteratedText.length <= 512 ? "grey" : "red" }}>{_this.state.transliteratedText.length}/512</span>
+                      <span
+                        style={{
+                          float: "right",
+                          fontSize: "small",
+                          color:
+                            this.state.transliteratedText.length <= 512
+                              ? "#d7d7d7"
+                              : "red",
+                        }}
+                      >
+                        {_this.state.transliteratedText.length}/512
+                      </span>
                     </>
                   )}
                   value={this.state.transliteratedText}
@@ -251,18 +271,17 @@ export default class TTS extends React.Component {
           >
             <Grid item>
               <div className="a4b-tts-convert">
-                <button onClick={()=>
-                  {
+                <button
+                  onClick={() => {
                     // if((this.state.streamingText.length <= 512 && _this.state.inferenceMode === "WebSocket")||(this.state.transliteratedText.length <= 512 && _this.state.transliteratedText === "REST"))
-                    if((this.state.transliteratedText.length <= 512))
-                    {
-                      this.getAudioOutput()
+                    if (this.state.transliteratedText.length <= 512) {
+                      this.getAudioOutput();
+                    } else {
+                      this.setState({ openLimit: true });
                     }
-                    else
-                    {
-                      this.setState({openLimit:true});
-                    }
-                  } } className="asr-button">
+                  }}
+                  className="asr-button"
+                >
                   Convert
                 </button>
                 {this.state.isFetching ? (
@@ -337,7 +356,17 @@ export default class TTS extends React.Component {
                   renderComponent={(props) => (
                     <>
                       <textarea className="a4b-transliterate-text" {...props} />
-                      <TextField float={"right"} fontSize={"sm"} color={(this.state.streamingText.length<=512 ?"grey":"red")}>{this.state.streamingText.length}/512</TextField>
+                      <TextField
+                        float={"right"}
+                        fontSize={"sm"}
+                        color={
+                          this.state.streamingText.length <= 512
+                            ? "#d7d7d7"
+                            : "red"
+                        }
+                      >
+                        {this.state.streamingText.length}/512
+                      </TextField>
                     </>
                   )}
                   enabled={
@@ -380,7 +409,7 @@ export default class TTS extends React.Component {
               alt="a4blogo"
               width={50}
               height={50}
-              src={require("../../media/ai4bharat.jpg")}
+              src={require("../../media/ai4bharatlogo.png")}
             ></img>
             <span className="orange-color">AI4Bharat </span>
             Indic Text-to-Speech (TTS)
@@ -414,18 +443,40 @@ export default class TTS extends React.Component {
             <Select
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "200px",
+                    padding: "3px",
+                    // Set the width of the dropdown
+                    right: "-9px",
+                  },
+                },
               }}
               value={this.state.languageChoice}
               onChange={(e) => {
                 this.setState({ languageChoice: e.target.value });
                 localStorage.setItem("ttsLanguageChoice", e.target.value);
               }}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               className="a4b-option-select"
             >
               {Object.entries(this.languages).map(([language, optionText]) => {
                 return (
-                  <MenuItem key={language} sx={{ margin: 1 }} value={language}>
+                  <MenuItem
+                    sx={{
+                      margin: 1,
+                      border: "2px solid #d7d7d7",
+                      borderRadius: "6px",
+                    }}
+                    key={language}
+                    value={language}
+                  >
                     {optionText}
                   </MenuItem>
                 );
@@ -446,12 +497,25 @@ export default class TTS extends React.Component {
                   streamingText: null,
                 });
               }}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               className="a4b-option-select"
             >
               {Object.entries(this.modes).map(([language, optionText]) => {
                 return (
-                  <MenuItem key={language} sx={{ margin: 1 }} value={language}>
+                  <MenuItem
+                    key={language}
+                    sx={{
+                      margin: 1,
+                      minHeight: "auto",
+                      border: "2px solid #d7d7d7",
+                      borderRadius: "9px",
+                    }}
+                    value={language}
+                  >
                     {optionText}
                   </MenuItem>
                 );
@@ -463,30 +527,64 @@ export default class TTS extends React.Component {
             <Select
               MenuProps={{
                 disableScrollLock: true,
+                PaperProps: {
+                  style: {
+                    maxHeight: "350px",
+                    borderRadius: "8px",
+                    width: "200px",
+                    padding: "3px",
+                    // Set the width of the dropdown
+                    right: "-9px",
+                  },
+                },
               }}
               value={this.state.voiceGender}
               onChange={(e) => {
                 this.setState({ voiceGender: e.target.value });
                 localStorage.setItem("ttsVoiceGender", e.target.value);
               }}
-              sx={{ borderRadius: 15 }}
+              sx={{
+                borderRadius: "8px",
+
+                width: "260px",
+              }}
               className="a4b-option-select"
             >
-              <MenuItem sx={{ margin: 1 }} value={"male"}>
+              <MenuItem
+                sx={{
+                  margin: 1,
+                  minHeight: "auto",
+                  border: "2px solid #d7d7d7",
+                  borderRadius: "9px",
+                }}
+                value={"male"}
+              >
                 Male
               </MenuItem>
-              <MenuItem sx={{ margin: 1 }} value={"female"}>
+              <MenuItem
+                sx={{
+                  margin: 1,
+                  minHeight: "auto",
+                  border: "2px solid #d7d7d7",
+                  borderRadius: "9px",
+                }}
+                value={"female"}
+              >
                 Female
               </MenuItem>
             </Select>
           </label>
           <label className="a4b-option">
-            Enable Transliteration:
-            <Switch
-              checked={this.state.enableTransliteration}
-              onChange={this.toggleTransliteration}
-              inputProps={{ "aria-label": "controlled" }}
-            />
+            <span className="a4b-option-label">Enable Transliteration:</span>
+            <div className="a4b-enable-transliteration">
+              <span className="a4b-enable-transliteration-label">No</span>
+              <Switch
+                checked={this.state.enableTransliteration}
+                onChange={this.toggleTransliteration}
+                inputProps={{ "aria-label": "controlled" }}
+              />
+              <span className="a4b-enable-transliteration-label">Yes</span>
+            </div>
           </label>
         </div>
         {this.setInferenceInterface()}
@@ -504,7 +602,6 @@ export default class TTS extends React.Component {
           </Alert>
         </Snackbar>
       </div>
-      
     );
   }
 }

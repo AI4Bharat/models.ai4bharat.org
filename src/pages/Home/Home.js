@@ -107,28 +107,47 @@ export default class Home extends React.Component {
 
   render() {
     return (
-      <div className="a4b-component-container">
-        <section className="title-section">
-          <h1 className="title">
-            <img
-              className="a4b-logo"
-              alt="a4blogo"
-              width={50}
-              height={50}
-              src={require("../../media/ai4bharat.jpg")}
-            ></img>
-            Welcome to <span className="orange-color">AI4Bharat</span> Models.
-          </h1>
-          <p className="subtitle">
-            Try real-time Language Models and Tools in one place.
-          </p>
+      <div className="landing-page">
+        <section className="landing-section">
+          <div className="landing-text">
+            <h1 className="title">
+              Welcome to <span className="orange-color">AI4Bharat</span> Models.
+            </h1>
+            <p className="subtitle">
+              Try real-time Language Models and Tools in one place.
+            </p>
+          </div>
+          <div className="landing-logos">
+            <div className="landing-logo">
+              <img
+                className="a4b-logo-home"
+                alt="a4blogo"
+                width={200}
+                height={200}
+                src={require("../../media/ai4bharat .png")}
+              ></img>
+            </div>
+            <div className="landing-logo">
+              <img
+                className="additional-logo"
+                alt="additionalLogo"
+                width={195}
+                height={195}
+                src={require("../../media/IIT_Madras_Logo.svg.png")}
+              ></img>
+            </div>
+          </div>
         </section>
-        <hr className="hr-split" />
         <div className="a4b-home-container">
           {Object.entries(models).map(([path, cardContent]) => {
             return (
               <Card
-                sx={{ position: "relative", borderRadius: 5, boxShadow: 10 }}
+                sx={{
+                  position: "relative",
+                  borderRadius: 5,
+                  border: "10px solid #f3f3f3",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                }}
                 className="a4b-home-card"
                 key={path}
               >
@@ -148,7 +167,7 @@ export default class Home extends React.Component {
                       marginTop: 1,
                       overflow: "auto",
                       height: 165,
-                      textAlign: "justify",
+
                       paddingRight: 1,
                     }}
                     variant="body2"
