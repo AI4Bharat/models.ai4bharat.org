@@ -64,42 +64,42 @@ class App extends React.Component {
           <div className="footer-social-icons">
             {/* Add your social icons here */}
             <a
-              href="mailto:your-email@example.com"
+              href="mailto:"
               target="_blank"
               rel="noopener noreferrer"
             >
               <AiFillMail size={20} />
             </a>
             <a
-              href="https://twitter.com/your-twitter"
+              href=""
               target="_blank"
               rel="noopener noreferrer"
             >
               <BsTwitter size={20} />
             </a>
             <a
-              href="https://youtube.com/your-youtube"
+              href=""
               target="_blank"
               rel="noopener noreferrer"
             >
               <AiFillYoutube size={25} />
             </a>
             <a
-              href="https://linkedin.com/in/your-linkedin"
+              href=""
               target="_blank"
               rel="noopener noreferrer"
             >
               <BsLinkedin size={18} />
             </a>
             <a
-              href="https://github.com/your-github"
+              href=""
               target="_blank"
               rel="noopener noreferrer"
             >
               <BsGithub size={20} />
             </a>
             <a
-              href="https://github.com/your-github"
+              href=""
               target="_blank"
               rel="noopener noreferrer"
             >
