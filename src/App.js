@@ -64,42 +64,42 @@ class App extends React.Component {
           <div className="footer-social-icons">
             {/* Add your social icons here */}
             <a
-              href="mailto:"
+              href="mailto:enquiry@ai4bharat.org"
               target="_blank"
               rel="noopener noreferrer"
             >
               <AiFillMail size={20} />
             </a>
             <a
-              href=""
+              href="https://twitter.com/ai4bharat"
               target="_blank"
               rel="noopener noreferrer"
             >
               <BsTwitter size={20} />
             </a>
             <a
-              href=""
+              href="https://www.youtube.com/@ai4bharat"
               target="_blank"
               rel="noopener noreferrer"
             >
               <AiFillYoutube size={25} />
             </a>
             <a
-              href=""
+              href="https://www.linkedin.com/company/ai4bharat"
               target="_blank"
               rel="noopener noreferrer"
             >
               <BsLinkedin size={18} />
             </a>
             <a
-              href=""
+              href="http://github.com/AI4Bharat"
               target="_blank"
               rel="noopener noreferrer"
             >
               <BsGithub size={20} />
             </a>
             <a
-              href=""
+              href="https://www.cse.iitm.ac.in/"
               target="_blank"
               rel="noopener noreferrer"
             >
