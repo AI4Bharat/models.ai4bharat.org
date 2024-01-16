@@ -109,7 +109,7 @@ class App extends React.Component {
 
           <div className="footer-about-container">
             <div className="footer-title-container">
-              Made with 🧡 and open-source by AI4Bhārat
+              Made with 🧡 and open-source by AI4Bhārat 
             </div>
           </div>
         </footer>

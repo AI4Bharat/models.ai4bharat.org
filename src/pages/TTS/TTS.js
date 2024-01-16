@@ -407,8 +407,8 @@ export default class TTS extends React.Component {
             <img
               className="a4b-logo"
               alt="a4blogo"
-              width={50}
-              height={50}
+              width={80}
+              height={80}
               src={require("../../media/ai4bharatlogo.png")}
             ></img>
             <span className="orange-color">AI4Bharat </span>
