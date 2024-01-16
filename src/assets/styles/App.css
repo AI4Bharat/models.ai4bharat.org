@@ -763,14 +763,39 @@ background-color: #363636;
 
 @media (max-width:600px) {
   
-   .common-options {
+  .a4b-text-container {
+    display: flex;
+    flex-direction: column;
+    /* Add any other necessary styles */
+  }
+
+  .a4b-text {
+    /* Adjust styles for smaller screens */
+    width: 100%;
+    box-sizing: border-box;
+    /* Add any other necessary styles */
+  } 
+  
+  
+  .common-options {
     flex-direction: column; /* Stack buttons vertically on smaller screens */
   
   }
+ .a4b-text {
+    /* Adjust styles for smaller screens */
+    width: 100%;
+    box-sizing: border-box;
+    display: block; /* Set to block to make it display vertically */
+    /* Add any other necessary styles */
+  }
+
   .custom-form-label{
-    font-size: 12px;
+   font-size: 13px !important;
 
   }
+  .documentation-title {
+    font-size: 16px;
+}
   .a4b-option {
     margin: 4px;
     font-size: 16px;
@@ -824,7 +849,7 @@ background-color: #363636;
 }
 .subtitle {
     font-size: 14px;
-    /* margin: 3px; */
+    margin: 3px;
 }
 .orange-color {
   

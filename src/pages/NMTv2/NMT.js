@@ -21,56 +21,7 @@ import { FeedbackModal } from "../../components/Feedback/Feedback";
 import QuickFeedback from "../../components/Feedback/QuickFeedback";
 import languages from "./languages_dict.json";
 
-const styles = {
-  title: {
-    fontSize: "32px",
-  },
 
-  languageSelect: {
-    borderRadius: "8px",
-    backgroundColor: "#fff",
-    width: "180%",
-    padding: "10px",
-    fontSize: "16px",
-    border: "1px solid #ddd",
-  },
-  translateButton: {
-    backgroundColor: "#4285f4",
-    color: "#fff",
-    borderRadius: "8px",
-    padding: "15px",
-    cursor: "pointer",
-    transition: "background-color 0.3s",
-    fontSize: "16px",
-    border: "none",
-    width: "100%",
-    marginTop: "10px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    outline: "none",
-    "&:hover": {
-      backgroundColor: "#3c76e4",
-    },
-  },
-
-  commonOptions: {
-    display: "flex",
-    flexDirection: "row", // Changed from "column" to "row"
-    alignItems: "center",
-    marginBottom: "20px",
-  },
-  option: {
-    flex: 1,
-    margin: "0 10px",
-  },
-  switchLabel: {
-    display: "flex",
-    alignItems: "center",
-    right: "-6px",
-  },
-  interfaceContainer: {
-    marginTop: "20px",
-  },
-};
 
 export default class NMTV2 extends React.Component {
   constructor(props) {
@@ -319,8 +270,8 @@ export default class NMTV2 extends React.Component {
         </section>
 
         <>
-          <div style={styles.commonOptions}>
-            <div style={styles.option}>
+          <div>
+            <div>
               <FormControl>
                 <FormLabel style={{ right: "-6px" }}>
                   Select Source Language:
@@ -339,7 +290,7 @@ export default class NMTV2 extends React.Component {
                       },
                     },
                   }}
-                  style={styles.languageSelect}
+                  
                   className="a4b-option-select"
                   value={this.state.sourceLanguage}
                   onChange={(e) => {
@@ -365,7 +316,7 @@ export default class NMTV2 extends React.Component {
               </FormControl>
             </div>
 
-            <div style={styles.option}>
+            <div>
               <FormControl>
                 <FormLabel style={{ right: "-6px" }}>
                   Select Target Language:
@@ -381,7 +332,7 @@ export default class NMTV2 extends React.Component {
                       },
                     },
                   }}
-                  style={styles.languageSelect}
+                  
                   className="a4b-option-select"
                   value={this.state.targetLanguage}
                   onChange={(e) => {
@@ -410,9 +361,9 @@ export default class NMTV2 extends React.Component {
               </FormControl>
             </div>
 
-            <div style={styles.option}>
+            <div>
               <FormControl>
-                <FormLabel style={styles.switchLabel}>
+                <FormLabel>
                   Enable Transliteration:
                   <Switch
                     checked={this.state.enableTransliteration}
@@ -471,6 +422,7 @@ export default class NMTV2 extends React.Component {
                       this.setTransliteratedText(text);
                     }}
                     lang={this.state.sourceLanguage}
+                    
                   />
                 </Tooltip>
                 <Button
@@ -502,7 +454,7 @@ export default class NMTV2 extends React.Component {
                     justifyContent: "center",
                   }}
                 >
-                  <FormLabel>
+                  <FormLabel className="custom-form-label">
                     Allow the AI to be improved by usage analysis.
                   </FormLabel>
                   <Switch

@@ -483,7 +483,7 @@ export default class ASRWhipserer extends React.Component {
                       justifyContent: "center",
                     }}
                   >
-                    <FormLabel>
+                    <FormLabel className="custom-form-label">
                       Allow the AI to be improved by usage analysis.
                     </FormLabel>
                     <Switch
