@@ -8,6 +8,16 @@
   transition: color 0.3s ease;
 }
 
+.menu-navbar{
+height: 100%;
+
+background: #222222;
+}
+
+.css-4t3x6l-MuiPaper-root-MuiDrawer-paper{
+  background: #000000;
+}
+
 .footer-social-icons a:hover {
   color: #FF6422;
 }
@@ -21,6 +31,16 @@
 .title-section {
   text-align: center;
   margin-bottom: 20px;
+}
+.title1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+
+  font-weight: 200;
+    margin-bottom: 20px; /* Add space between the title and the subtitle */
+
 }
 
 .title {
@@ -269,7 +289,9 @@
 .title {
     font-size: 3.2rem;
 }
-
+.title1 {
+    font-size: 3.2rem;
+}
 .subtitle {
   position: relative;
   font-size: 1.5rem;
@@ -753,6 +775,9 @@ background-color: #363636;
   .title {
     font-size: 28px;
 }
+.title1 {
+    font-size: 28px;
+}
 .subtitle {
    
     font-size: 20px;
@@ -847,6 +872,10 @@ background-color: #363636;
     font-size: 14px;
     white-space: pre;
 }
+.title1 {
+    font-size: 16px;
+    white-space: pre;
+}
 .subtitle {
     font-size: 14px;
     margin: 3px;
@@ -858,15 +887,21 @@ background-color: #363636;
     margin-left: 1px;
 }
 
-.MuiTypography-root {
-    font-size: 13px !important;
+.css-12qul6p-MuiTypography-root {
+    font-size: 20px !important;
 }
 }
 @media (max-width: 600px) {
+.menu-navbar{
 
- .css-u4tvz2-MuiFormLabel-root.custom-form-label {
-        font-size: 12px;
-    }
+padding: "20px";
+height: 116%;
+font-size: small;
+}
+.css-10hburv-MuiTypography-root{
+  font-size: 12px !important ;
+}
+
 
   .title-section {
     position: relative;

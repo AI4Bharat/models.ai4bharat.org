@@ -62,12 +62,12 @@ export default class A4BMenu extends React.Component {
           }}
         >
           <div
+            className="menu-navbar"
             style={{
               display: "flex",
               flexDirection: "column",
-              height: "100%",
+          background:"#222222",
               padding: "20px",
-              background: "#222222",
             }}
           >
             {/* Closing Button at the Top */}

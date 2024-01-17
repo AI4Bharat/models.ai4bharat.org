@@ -110,7 +110,7 @@ export default class Home extends React.Component {
       <div className="landing-page">
         <section className="landing-section">
           <div className="landing-text">
-            <h1 className="title">
+            <h1 className="title1">
               Welcome to <span className="orange-color">AI4Bharat</span> Models.
             </h1>
             <p className="subtitle">
