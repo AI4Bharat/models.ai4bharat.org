@@ -963,6 +963,9 @@ font-size: small;
 }
 }
 @media (min-width: 600px) and (max-width: 1024px) {
+  .a4b-text-container, .common-options {
+    flex-direction: column;
+}
   .footer-title-container {
     display: flex;
     flex-direction: row;
