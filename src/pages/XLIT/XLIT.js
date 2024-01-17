@@ -19,7 +19,7 @@ const languages = {
   ml: "Malayalam - മലയാളം",
   mni: "Manipuri",
   ne: "Nepali - नेपाली",
-  or: "Oriya - ଓଡ଼ିଆ",
+  or: "Odia - ଓଡ଼ିଆ",
   pa: "Punjabi - ਪੰਜਾਬੀ",
   sa: "Sanskrit - संस्कृतम्",
   sd: "Sindhi - سنڌي",

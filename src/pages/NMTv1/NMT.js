@@ -43,7 +43,7 @@ export default class NMT extends React.Component {
       gu: ["Gujarati - ગુજરાતી", "Gujarati"],
       kn: ["Kannada - ಕನ್ನಡ", "Kannada"],
       ml: ["Malayalam - മലയാളം", "Malayalam"],
-      or: ["Oriya - ଓଡ଼ିଆ", "Odia"],
+      or: ["Odia - ଓଡ଼ିଆ", "Odia"],
       pa: ["Punjabi - ਪੰਜਾਬੀ", "Punjabi"],
       ta: ["Tamil - தமிழ்", "Tamil"],
       te: ["Telugu - తెలుగు", "Telugu"],

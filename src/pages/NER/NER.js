@@ -72,7 +72,7 @@ export default class NER extends React.Component {
       kn: "Kannada - ಕನ್ನಡ",
       ml: "Malayalam - മലയാളം",
       mr: "Marathi - मराठी",
-      or: "Oriya - ଓଡ଼ିଆ",
+      or: "Odia - ଓଡ଼ିଆ",
       ta: "Tamil - தமிழ்",
       te: "Telugu - తెలుగు",
       pa: "Punjabi - ਪੰਜਾਬੀ",

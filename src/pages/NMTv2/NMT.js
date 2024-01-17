@@ -67,7 +67,7 @@ export default class NMTV2 extends React.Component {
       mni_Beng: "Manipuri (Bengali)",
       mr: "Marathi",
       ne: "Nepali",
-      or: "Oriya",
+      or: "Odia",
       pa: "Panjabi",
       raj: "Rajasthani",
       sa: "Sanskrit",

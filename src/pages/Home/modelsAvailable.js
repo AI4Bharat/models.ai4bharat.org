@@ -47,14 +47,14 @@ const models = {
     path: "",
     title: "Indic BERT",
     about:
-      "IndicBERT is a multilingual ALBERT model trained on large-scale corpora, covering 12 major Indian languages: Assamese, Bengali, English, Gujarati, Hindi, Kannada, Malayalam, Marathi, Oriya, Punjabi, Tamil, Telugu. IndicBERT has much less parameters than other public models like mBERT and XLM-R while it still manages to give state of the art performance on several tasks.",
+      "IndicBERT is a multilingual ALBERT model trained on large-scale corpora, covering 12 major Indian languages: Assamese, Bengali, English, Gujarati, Hindi, Kannada, Malayalam, Marathi, Odia, Punjabi, Tamil, Telugu. IndicBERT has much less parameters than other public models like mBERT and XLM-R while it still manages to give state of the art performance on several tasks.",
     link: "https://ai4bharat.iitm.ac.in/indicbert/",
   },
   ner: {
     path: "ner",
     title: "Indic Named Entity Recognition",
     about:
-      "IndicNER is a model trained to complete the task of identifying named entities from sentences in Indian languages. Our model is specifically fine-tuned to the 11 Indian languages mentioned above over millions of sentences. The model is then benchmarked over a human annotated testset and multiple other publicly available Indian NER datasets. The 11 languages covered by IndicNER are: Assamese, Bengali, Gujarati, Hindi, Kannada, Malayalam, Marathi, Oriya, Punjabi, Tamil, Telugu.",
+      "IndicNER is a model trained to complete the task of identifying named entities from sentences in Indian languages. Our model is specifically fine-tuned to the 11 Indian languages mentioned above over millions of sentences. The model is then benchmarked over a human annotated testset and multiple other publicly available Indian NER datasets. The 11 languages covered by IndicNER are: Assamese, Bengali, Gujarati, Hindi, Kannada, Malayalam, Marathi, Odia, Punjabi, Tamil, Telugu.",
     link: "https://huggingface.co/ai4bharat/IndicNER",
   },
   sts: {

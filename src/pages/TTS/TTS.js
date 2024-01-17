@@ -65,7 +65,7 @@ export default class TTS extends React.Component {
       ml: "Malayalam - മലയാളം",
       mni: "Manipuri - মণিপুরী/ꯃꯩꯇꯩꯂꯣꯟ",
       mr: "Marathi - मराठी",
-      or: "Oriya - ଓଡ଼ିଆ",
+      or: "Odia - ଓଡ଼ିଆ",
       pa: "Panjabi - ਪੰਜਾਬੀ",
       raj: "Rajasthani - राजस्थानी",
       ta: "Tamil - தமிழ்",

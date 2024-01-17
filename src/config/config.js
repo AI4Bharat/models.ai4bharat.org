@@ -10,7 +10,7 @@ const LANGUAGE_KEY_TEXT = {
   ml: "Malayalam - മലയാളം",
   mni: "Manipuri - মিতৈলোন",
   mr: "Marathi - मराठी",
-  or: "Oriya - ଓଡ଼ିଆ",
+  or: "Odia - ଓଡ଼ିଆ",
   raj: "Rajasthani - राजस्थानी",
   ta: "Tamil - தமிழ்",
   te: "Telugu - తెలుగు",
