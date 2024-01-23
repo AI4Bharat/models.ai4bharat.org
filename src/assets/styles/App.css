@@ -54,6 +54,50 @@ background: #222222;
 
 }
 
+/* Animation for logo */
+.a4b-logo-home,
+.additional-logo {
+  opacity: 0;
+  animation: fadeIn 1.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Animation for card hover effects */
+.a4b-home-card:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease-in-out;
+}
+
+.a4b-home-card {
+  transform: translateY(50px);
+  animation: slideIn 0.5s ease-in-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(50px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.a4b-home-card:hover {
+  transform: rotate(5deg);
+  transition: transform 0.3s ease-in-out;
+}
+
+
+
+
 .orange-color {
     color: #FF6422;
     margin-left: 10px;
@@ -955,6 +999,8 @@ font-size: small;
     margin-top: 10px;
   }
  
+
+
 
 
 .asr-button:hover,
