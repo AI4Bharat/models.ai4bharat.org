@@ -433,7 +433,9 @@ background: #222222;
 }
 
 .documentation-title {
-  color: #363636;
+    color: #363636;
+    font-size: 25px;
+    font-weight: 500;
 }
 
 /* Box Styles */
@@ -862,9 +864,7 @@ background-color: #363636;
    font-size: 13px !important;
 
   }
-  .documentation-title {
-    font-size: 16px;
-}
+ 
   .a4b-option {
     margin: 4px;
     font-size: 16px;
