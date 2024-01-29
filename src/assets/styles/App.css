@@ -913,8 +913,8 @@ background-color: #363636;
     margin-bottom: 0px;
 }
 .title {
-    font-size: 14px;
-    white-space: pre;
+    font-size: 20px;
+  
 }
 .title1 {
     font-size: 16px;
@@ -940,10 +940,10 @@ background-color: #363636;
 
 padding: "20px";
 height: 116%;
-font-size: small;
+font-size: 14px;
 }
 .css-10hburv-MuiTypography-root{
-  font-size: 12px !important ;
+  font-size: 14px !important ;
 }
 
 
