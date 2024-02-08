@@ -741,7 +741,7 @@ td {
     padding: 15px;
     margin-left: 25px;
     font-size: 1.3rem;
-    color: #ffffff;
+    color: #252525;
     background-color: #ffe7d9e8;
     border: 10px solid #fff4f4;
     font-family: "Open Sans", sans-serif;
@@ -781,6 +781,7 @@ td {
   justify-content: center;
   position: relative;
   width: 100%;
+  color: #000000;
 }
 
 .a4b-output-grid {
