@@ -192,32 +192,31 @@ export default class STS extends React.Component {
       redirect: "follow",
     };
 
-    const ASR_REST_URL =
-      "https://api.dhruva.ekstep.ai/services/inference/s2s";
+const ASR_REST_URL = "https://api.dhruva.ekstep.ai/services/inference/s2s";
+const startTime = Date.now();
 
-    const startTime = Date.now();
-    fetch(ASR_REST_URL, requestOptions)
-      .then((response) => {
-        response.text();
-        this.setState({
-          pipelineOutput: {
-            pipelineResponse: response.data["pipelineResponse"],
-          },
-        });
-      })
-      .then((result) => {
-        const duration = Date.now() - startTime;
-        var apiResponse = JSON.parse(result);
-        this.setState({
-          latency: duration / 1000,
-          asrAPISource: apiResponse["output"][0]["source"],
-          asrAPIResult: apiResponse["output"][0]["target"],
-          isFetching: false,
-          audioData:
-            "data:audio/wav;base64," + apiResponse["audio"][0]["audioContent"],
-        });
-      })
-      .catch((error) => console.log("error", error));
+fetch(ASR_REST_URL, requestOptions)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.text();
+  })
+  .then((result) => {
+    const parsedResult = JSON.parse(result);
+    const duration = Date.now() - startTime;
+    this.setState({
+      pipelineOutput: {
+        pipelineResponse: parsedResult["pipelineResponse"],
+      },
+      latency: duration / 1000,
+      asrAPISource: parsedResult["output"][0]["source"],
+      asrAPIResult: parsedResult["output"][0]["target"],
+      isFetching: false,
+      audioData: "data:audio/wav;base64," + parsedResult["audio"][0]["audioContent"],
+    });
+  })
+  .catch((error) => console.log("error", error));
   }
 
   setInferenceMode(mode) {
