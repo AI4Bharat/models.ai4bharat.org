@@ -192,8 +192,7 @@ export default class STS extends React.Component {
       redirect: "follow",
     };
 
-    const ASR_REST_URL =
-      "https://api.dhruva.ai4bharat.org/services/inference/s2s";
+    const ASR_REST_URL = `${process.env.REACT_APP_BACKEND_URL}/inference/s2s`;
 
     const startTime = Date.now();
     fetch(ASR_REST_URL, requestOptions)
