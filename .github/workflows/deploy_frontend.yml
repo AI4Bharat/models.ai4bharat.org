@@ -5,6 +5,7 @@ on:
             - master
 env:
   REACT_APP_BACKEND_URL: ${{ vars.REACT_APP_BACKEND_URL }}
+  REACT_APP_DHRUVA_API_KEY: ${{ secrets.REACT_APP_DHRUVA_API_KEY }}
 jobs:
     build-and-deploy:
         concurrency: ci-${{ github.ref }}
