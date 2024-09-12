@@ -29,13 +29,13 @@ const models = {
     about: `IndicTrans2 is the first open-source transformer-based multilingual NMT model that supports high-quality translations across all the 22 scheduled Indic languages — including multiple scripts for low-resouce languages like Kashmiri, Manipuri and Sindhi. It adopts script unification wherever feasible to leverage transfer learning by lexical sharing between languages. Overall, the model supports five scripts Perso-Arabic (Kashmiri, Sindhi, Urdu), Ol Chiki (Santali), Meitei (Manipuri), Latin (English), and Devanagari (used for all the remaining languages).`,
     link: "https://ai4bharat.org/indic-trans",
   },
-  nlg: {
-    path: "nlg",
-    title: "Indic Natural Language Generation",
-    about:
-      "IndicBART is a multilingual, sequence-to-sequence pre-trained model focusing on Indic languages and English. It currently supports 11 Indian languages and is based on the mBART architecture. You can use IndicBART model to build natural language generation applications for Indian languages by finetuning the model with supervised training data for tasks like machine translation, summarization, question generation, etc.",
-    link: "https://ai4bharat.org/language-generation",
-  },
+  // nlg: {
+  //   path: "nlg",
+  //   title: "Indic Natural Language Generation",
+  //   about:
+  //     "IndicBART is a multilingual, sequence-to-sequence pre-trained model focusing on Indic languages and English. It currently supports 11 Indian languages and is based on the mBART architecture. You can use IndicBART model to build natural language generation applications for Indian languages by finetuning the model with supervised training data for tasks like machine translation, summarization, question generation, etc.",
+  //   link: "https://ai4bharat.org/language-generation",
+  // },
   tts: {
     path: "tts",
     title: "Indic Text-to-Speech",

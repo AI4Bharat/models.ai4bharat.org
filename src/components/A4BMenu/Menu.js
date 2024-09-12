@@ -30,7 +30,7 @@ export default class A4BMenu extends React.Component {
         <FaRegFileAudio />,
       ],
       xlit: ["Indic Transliteration (XLit)", <FaRegKeyboard />],
-      nlg: ["Indic Natural Language Generation (NLG)", <BsFileTextFill />],
+      // nlg: ["Indic Natural Language Generation (NLG)", <BsFileTextFill />],
       nmt: ["Indic Natural Language Translation (NMT) v1", <BiWorld />],
       "nmt/v2": ["Indic Natural Language Translation (NMT) v2", <BiWorld />],
       tts: ["Indic Text-to-Speech (TTS)", <SiAudiomack />],
@@ -66,7 +66,7 @@ export default class A4BMenu extends React.Component {
             style={{
               display: "flex",
               flexDirection: "column",
-          background:"#222222",
+              background: "#222222",
               padding: "20px",
             }}
           >
