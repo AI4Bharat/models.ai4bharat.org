@@ -122,7 +122,7 @@ export default class STS extends React.Component {
   getSTSOutput(asrInput) {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", process.env.REACT_APP_DHRUVA_API_KEY);
+    myHeaders.append("Authorization", "WFnd73od69zLMhG7SZ4z5PF2GCyrAPOFF9NZbPulQpInX65mu9ysqZt2YLoP3nOl");
     this.setState({ isFetching: true });
 
     this.setState({
