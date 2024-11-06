@@ -76,7 +76,7 @@ const QuickFeedback = ({ pipelineInput, pipelineOutput }) => {
         }}
       >
         <FormLabel sx={{ fontSize: "1.3rem", color: "black" }}>
-          Are you satisified with the results? &nbsp;
+          Are you satisfied with the results? &nbsp;
         </FormLabel>
         <div>
           <Button
